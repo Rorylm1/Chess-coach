@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chess Coach — What is the useful lesson here?</title>
+
+  <!-- Fonts: Bricolage Grotesque (display) + Hanken Grotesk (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      /* Brand palette */
+      --forest:        #1F3D33;  /* dominant brand */
+      --forest-deep:   #16302A;
+      --forest-soft:   #234A3C;
+      --cream:         #F4F0E7;  /* warm bone background */
+      --cream-card:    #FBF8F1;
+      --cream-deep:    #ECE5D5;
+      --gold:          #C8A24B;  /* sharp accent */
+      --gold-deep:     #B08B36;
+      --ink:           #20312B;  /* primary text on cream */
+      --ink-soft:      #4A5A52;  /* secondary text */
+      --on-forest:     #EFEDE2;  /* text on forest */
+      --on-forest-dim: #B7C4BB;
+
+      /* Board square tones */
+      --sq-light:      #E7DEC9;
+      --sq-dark:       #2E5244;
+
+      --shadow-soft:   0 1px 2px rgba(28, 46, 39, .06),
+                       0 12px 28px -14px rgba(28, 46, 39, .28);
+      --shadow-lift:   0 2px 4px rgba(28, 46, 39, .08),
+                       0 22px 44px -18px rgba(28, 46, 39, .40);
+
+      --r-xs: 6px;
+      --r-sm: 10px;
+      --r-md: 18px;
+      --r-lg: 28px;
+      --r-pill: 999px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      font-family: "Hanken Grotesk", sans-serif;
+      background-color: var(--cream);
+      background-image:
+        radial-gradient(1200px 600px at 88% -8%, rgba(200, 162, 75, .10), transparent 60%),
+        radial-gradient(900px 700px at -6% 110%, rgba(31, 61, 51, .07), transparent 55%);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ---- Focus visibility ---- */
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2.5px solid var(--forest);
+      outline-offset: 3px;
+      border-radius: var(--r-xs);
+    }
+    .btn-primary:focus-visible { outline-color: var(--gold); }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 22px;
+    }
+
+    /* ============ NAV ============ */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: none;
+      background: linear-gradient(var(--cream) 64%, rgba(244, 240, 231, 0));
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 22px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+      color: var(--forest);
+    }
+    .mark {
+      width: 34px; height: 34px;
+      flex: 0 0 34px;
+      border-radius: 10px 10px 10px 3px;
+      background: var(--forest);
+      color: var(--cream);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      line-height: 1;
+      box-shadow: inset 0 0 0 1.5px rgba(200,162,75,.55);
+    }
+    .mark span { transform: translateY(-1px); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      margin: 0; padding: 0;
+    }
+    .nav-links a {
+      display: inline-block;
+      padding: 9px 15px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      border-radius: var(--r-pill);
+      transition: color .18s ease, background-color .18s ease;
+    }
+    .nav-links a:hover { color: var(--forest); background: var(--cream-deep); }
+    .nav-links a[aria-current="page"] {
+      color: var(--forest);
+      font-weight: 600;
+    }
+    .nav-links a[aria-current="page"]::after {
+      content: "";
+      display: block;
+      height: 2px;
+      margin: 5px auto 0;
+      width: 18px;
+      border-radius: 2px;
+      background: var(--gold);
+    }
+
+    .nav-cta {
+      display: none;
+      padding: 10px 18px;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--cream);
+      background: var(--forest);
+      border-radius: var(--r-pill);
+      transition: background-color .18s ease;
+    }
+    .nav-cta:hover { background: var(--forest-deep); }
+
+    /* ============ HERO LAYOUT ============ */
+    main { padding-bottom: 90px; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 44px;
+      padding: 26px 0 18px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--forest-soft);
+      background: var(--cream-card);
+      border: 1px solid var(--cream-deep);
+      padding: 7px 14px 7px 11px;
+      border-radius: var(--r-pill);
+      box-shadow: var(--shadow-soft);
+    }
+    .eyebrow .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 4px rgba(200,162,75,.18);
+    }
+
+    h1 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-weight: 700;
+      font-size: clamp(40px, 9vw, 76px);
+      line-height: 0.98;
+      letter-spacing: -0.035em;
+      color: var(--forest);
+      margin: 22px 0 0;
+    }
+    h1 .accent {
+      display: block;
+      font-style: italic;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    h1 .accent em {
+      font-style: italic;
+      color: var(--gold-deep);
+      text-decoration: underline;
+      text-decoration-color: rgba(200,162,75,.42);
+      text-decoration-thickness: 3px;
+      text-underline-offset: 6px;
+    }
+
+    .subhead {
+      margin: 26px 0 0;
+      font-size: clamp(16.5px, 2.4vw, 19px);
+      line-height: 1.55;
+      color: var(--ink-soft);
+      max-width: 33ch;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Hanken Grotesk", sans-serif;
+      font-weight: 700;
+      font-size: 16.5px;
+      color: var(--cream);
+      background: var(--forest);
+      border: none;
+      cursor: pointer;
+      padding: 15px 26px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-soft);
+      transition: transform .2s ease-out, box-shadow .2s ease-out,
+                  background-color .2s ease-out;
+    }
+    .btn-primary .arrow { transition: transform .2s ease-out; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lift);
+      background: var(--forest-deep);
+    }
+    .btn-primary:hover .arrow { transform: translateX(3px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 15.5px;
+      color: var(--forest);
+      padding: 13px 6px;
+    }
+    .btn-ghost span.play {
+      width: 30px; height: 30px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      border: 1.5px solid var(--forest);
+      font-size: 11px;
+      transition: background-color .18s ease, color .18s ease;
+    }
+    .btn-ghost:hover span.play { background: var(--forest); color: var(--cream); }
+
+    .trust {
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13.5px;
+      color: var(--ink-soft);
+    }
+    .trust .sep { width: 1px; height: 15px; background: var(--cream-deep); }
+    .trust b { color: var(--forest); font-weight: 700; }
+
+    /* ============ RIGHT VISUAL COLUMN ============ */
+    .visual {
+      position: relative;
+    }
+
+    /* board */
+    .board-frame {
+      background: var(--forest);
+      padding: 14px;
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-lift);
+      position: relative;
+      overflow: hidden;
+    }
+    .board-frame::before {
+      content: "";
+      position: absolute; inset: 0;
+      border-radius: var(--r-lg);
+      box-shadow: inset 0 0 0 1.5px rgba(200,162,75,.30);
+      pointer-events: none;
+    }
+    .board-caption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 6px 12px;
+      color: var(--on-forest-dim);
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .board-caption .tag {
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px -12px rgba(0,0,0,.5);
+    }
+    .sq {
+      display: grid;
+      place-items: center;
+      font-size: clamp(20px, 5.4vw, 38px);
+      line-height: 1;
+      user-select: none;
+    }
+    .sq.light { background: var(--sq-light); }
+    .sq.dark  { background: var(--sq-dark); }
+    .pc-dark  { color: #1A2A23; }
+    .pc-light { color: #FCFAF3; text-shadow: 0 1px 1px rgba(0,0,0,.28); }
+    .sq.hl {
+      box-shadow: inset 0 0 0 3px var(--gold);
+    }
+    .sq.hint::after {
+      content: "";
+      position: absolute;
+      width: 30%; height: 30%;
+      border-radius: 50%;
+      background: rgba(200,162,75,.55);
+    }
+    .sq { position: relative; }
+
+    /* Floating coaching card overlapping the board */
+    .coach-card {
+      background: var(--cream-card);
+      border-radius: var(--r-md);
+      border: 1px solid var(--cream-deep);
+      box-shadow: var(--shadow-lift);
+      padding: 20px 21px 18px;
+      margin: -34px 14px 0 14px;
+      position: relative;
+      z-index: 3;
+    }
+    .coach-head {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 13px;
+    }
+    .coach-avatar {
+      width: 36px; height: 36px;
+      flex: 0 0 36px;
+      border-radius: 11px 11px 11px 3px;
+      background: var(--forest);
+      color: var(--gold);
+      display: grid; place-items: center;
+      font-size: 18px;
+    }
+    .coach-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--forest);
+      line-height: 1.1;
+    }
+    .coach-role {
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+    .coach-quote {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-weight: 600;
+      font-size: 19px;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin: 0 0 9px;
+    }
+    .coach-quote .pin { color: var(--gold-deep); }
+    .coach-body {
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      margin: 0 0 15px;
+    }
+    .engine-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--forest);
+      background: var(--cream-deep);
+      border-radius: var(--r-sm);
+      padding: 7px 12px 7px 9px;
+    }
+    .engine-chip .eval {
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+      color: #1F3D33;
+      background: rgba(200,162,75,.28);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .engine-chip .engine-label {
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+    .engine-chip .engine-label b { color: var(--forest); font-weight: 700; }
+
+    /* ============ STAGGERED REVEAL ANIMATION ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp .7s cubic-bezier(.22,.61,.36,1) forwards;
+    }
+    .d1 { animation-delay: .05s; }
+    .d2 { animation-delay: .14s; }
+    .d3 { animation-delay: .23s; }
+    .d4 { animation-delay: .32s; }
+    .d5 { animation-delay: .42s; }
+    .d6 { animation-delay: .54s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+      .btn-primary,
+      .btn-primary .arrow { transition: none; }
+    }
+
+    /* ============ DESKTOP ============ */
+    @media (min-width: 880px) {
+      .nav-cta { display: inline-block; }
+      .hero {
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 64px;
+        padding: 56px 0 30px;
+        align-items: center;
+      }
+      .visual { max-width: 440px; margin-left: auto; }
+      .coach-card { margin: -46px 26px 0 -56px; padding: 22px 24px 20px; }
+      .coach-quote { font-size: 21px; }
+    }
+
+    @media (min-width: 1080px) {
+      .hero { gap: 90px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav" aria-label="Primary">
+      <a class="wordmark" href="#" aria-label="Chess Coach home">
+        <span class="mark" aria-hidden="true"><span>♞</span></span>
+        Chess&nbsp;Coach
+      </a>
+      <ul class="nav-links">
+        <li><a href="#" aria-current="page">Play</a></li>
+        <li><a href="#">Review</a></li>
+        <li><a href="#">Openings</a></li>
+        <li><a href="#">Progress</a></li>
+      </ul>
+      <a class="nav-cta" href="#">Play a game</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <!-- LEFT: copy -->
+        <div class="hero-copy">
+          <span class="eyebrow reveal d1">
+            <span class="dot" aria-hidden="true"></span>
+            Engine truth, human teaching
+          </span>
+
+          <h1 class="reveal d2">
+            Every game has a lesson.
+            <span class="accent">We find the <em>useful</em> one.</span>
+          </h1>
+
+          <p class="subhead reveal d3">
+            A chess coach that reads the position like an engine and
+            explains it like a patient mentor — in plain language, after
+            every move that matters.
+          </p>
+
+          <div class="cta-row reveal d4">
+            <button class="btn-primary" type="button">
+              Play a game
+              <span class="arrow" aria-hidden="true">→</span>
+            </button>
+            <a class="btn-ghost" href="#">
+              <span class="play" aria-hidden="true">▶</span>
+              Review your last game
+            </a>
+          </div>
+
+          <div class="trust reveal d5">
+            <span>Grounded in <b>Stockfish</b></span>
+            <span class="sep" aria-hidden="true"></span>
+            <span><b>No</b> jargon walls</span>
+            <span class="sep" aria-hidden="true"></span>
+            <span>Learns <b>your</b> mistakes</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: board + coaching card -->
+        <div class="visual">
+          <div class="board-frame reveal d4">
+            <div class="board-caption">
+              <span>Italian Game · move 9</span>
+              <span class="tag">Teaching moment</span>
+            </div>
+            <div
+              class="board"
+              role="img"
+              aria-label="Decorative chessboard showing a tactical position. White's knight is poised to win material via a pin against the black king."
+            >
+              <!-- Rank 8 -->
+              <div class="sq light"><span class="pc-dark" aria-hidden="true">♜</span></div>
+              <div class="sq dark"></div>
+              <div class="sq light"><span class="pc-dark" aria-hidden="true">♝</span></div>
+              <div class="sq dark"><span class="pc-dark" aria-hidden="true">♛</span></div>
+              <div class="sq light"><span class="pc-dark" aria-hidden="true">♚</span></div>
+              <div class="sq dark"></div>
+              <div class="sq light"></div>
+              <div class="sq dark"><span class="pc-dark" aria-hidden="true">♜</span></div>
+              <!-- Rank 7 -->
+              <div class="sq dark"><span class="pc-dark" aria-hidden="true">♟</span></div>
+              <div class="sq light"><span class="pc-dark" aria-hidden="true">♟</span></div>
+              <div class="sq dark"><span class="pc-dark" aria-hidden="true">♟</span></div>
+              <div class="sq light"></div>
+              <div class="sq dark"></div>
+              <div class="sq light"><span class="pc-dark" aria-hidden="true">♟</span></div>
+              <div class="sq dark"><span class="pc-dark" aria-hidden="true">♟</span></div>
+              <div class="sq light"><span class="pc-dark" aria-hidden="true">♟</span></div>
+              <!-- Rank 6 -->
+              <div class="sq light"></div>
+              <div class="sq dark"></div>
+              <div class="sq light"><span class="pc-dark" aria-hidden="true">♞</span></div>
+              <div class="sq dark"></div>
+              <div class="sq light"></div>
+              <div class="sq dark"><span class="pc-dark" aria-hidden="true">♞</span></div>
+              <div class="sq light"></div>
+              <div class="sq dark"></div>
+              <!-- Rank 5 -->
+              <div class="sq dark"></div>
+              <div class="sq light"><span class="pc-dark" aria-hidden="true">♝</span></div>
+              <div class="sq dark"></div>
+              <div class="sq light"></div>
+              <div class="sq dark hint"></div>
+              <div class="sq light"></div>
+              <div class="sq dark"></div>
+              <div class="sq light"></div>
+              <!-- Rank 4 -->
+              <div class="sq light"></div>
+              <div class="sq dark"></div>
+              <div class="sq light"><span class="pc-light" aria-hidden="true">♙</span></div>
+              <div class="sq dark"></div>
+              <div class="sq light hl"><span class="pc-light" aria-hidden="true">♙</span></div>
+              <div class="sq dark"></div>
+              <div class="sq light"></div>
+              <div class="sq dark"></div>
+              <!-- Rank 3 -->
+              <div class="sq dark"></div>
+              <div class="sq light"></div>
+              <div class="sq dark"><span class="pc-light" aria-hidden="true">♘</span></div>
+              <div class="sq light"></div>
+              <div class="sq dark"></div>
+              <div class="sq light"><span class="pc-light" aria-hidden="true">♘</span></div>
+              <div class="sq dark"></div>
+              <div class="sq light"></div>
+              <!-- Rank 2 -->
+              <div class="sq light"><span class="pc-light" aria-hidden="true">♙</span></div>
+              <div class="sq dark"><span class="pc-light" aria-hidden="true">♙</span></div>
+              <div class="sq light"><span class="pc-light" aria-hidden="true">♙</span></div>
+              <div class="sq dark"></div>
+              <div class="sq light"></div>
+              <div class="sq dark"><span class="pc-light" aria-hidden="true">♙</span></div>
+              <div class="sq light"><span class="pc-light" aria-hidden="true">♙</span></div>
+              <div class="sq dark"><span class="pc-light" aria-hidden="true">♙</span></div>
+              <!-- Rank 1 -->
+              <div class="sq dark"><span class="pc-light" aria-hidden="true">♖</span></div>
+              <div class="sq light"></div>
+              <div class="sq dark"><span class="pc-light" aria-hidden="true">♝</span></div>
+              <div class="sq light"></div>
+              <div class="sq dark"><span class="pc-light" aria-hidden="true">♔</span></div>
+              <div class="sq light"></div>
+              <div class="sq dark"></div>
+              <div class="sq light"><span class="pc-light" aria-hidden="true">♖</span></div>
+            </div>
+          </div>
+
+          <!-- Coaching / lesson card -->
+          <article class="coach-card reveal d6" aria-label="Coaching note">
+            <div class="coach-head">
+              <span class="coach-avatar" aria-hidden="true">♞</span>
+              <div>
+                <div class="coach-name">Coach</div>
+                <div class="coach-role">on your last game</div>
+              </div>
+            </div>
+            <p class="coach-quote">
+              "The tactic was hiding in the <span class="pin">pin</span>."
+            </p>
+            <p class="coach-body">
+              Their knight couldn't move without exposing the queen behind it —
+              so it was really just sitting there, undefended. Pin it, pile on,
+              and it falls.
+            </p>
+            <span class="engine-chip">
+              <span class="eval">+1.4</span>
+              <span class="engine-label">after <b>Nxe5</b> · depth 22</span>
+            </span>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

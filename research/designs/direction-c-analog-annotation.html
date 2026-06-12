@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chess Coach — What is the useful lesson here?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Spline+Sans+Mono:wght@400;500;600&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --paper: #f6f1e7;
+    --paper-shade: #efe8d8;
+    --ink: #22201b;
+    --ink-soft: #4a463c;
+    --ink-faint: #8a8273;
+    --rule: #d8cdb4;
+    --red: #c2402f;
+    --blue: #2f5da8;
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --mono: "Spline Sans Mono", "Courier New", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    /* faint ruled-line + margin grid texture */
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(194, 64, 47, 0.10) 1px, transparent 1px);
+    background-size: 100% 32px, 32px 100%;
+    background-position: 0 0, 0 0;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: inherit; }
+
+  ::selection { background: rgba(47, 93, 168, 0.22); }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 22px 22px 64px;
+  }
+
+  /* ---------- Focus ---------- */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2.5px solid var(--blue);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 16px;
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .wordmark .glyph {
+    font-size: 34px;
+    line-height: 1;
+    color: var(--ink);
+    transform: translateY(2px);
+  }
+
+  .wordmark .name {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+  }
+
+  .wordmark .stamp {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1.5px solid var(--red);
+    padding: 2px 7px;
+    transform: rotate(-3deg);
+    align-self: center;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 4px;
+    margin: 0;
+    padding: 0;
+    font-family: var(--mono);
+    font-size: 13.5px;
+  }
+
+  nav li { display: flex; align-items: center; }
+
+  nav li:not(:last-child)::after {
+    content: "·";
+    color: var(--ink-faint);
+    margin: 0 10px;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    padding: 3px 2px;
+    position: relative;
+    letter-spacing: 0.01em;
+    transition: color 160ms ease-out;
+  }
+
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms ease-out;
+  }
+
+  nav a:hover { color: var(--ink); }
+  nav a:hover::after { transform: scaleX(1); }
+  nav a[aria-current="page"] { color: var(--ink); }
+  nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+  /* ---------- Layout ---------- */
+  main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 38px;
+    margin-top: 40px;
+  }
+
+  @media (min-width: 880px) {
+    .wrap { padding: 34px 40px 80px; }
+    header {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+    main {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 56px;
+      align-items: start;
+      margin-top: 64px;
+    }
+  }
+
+  /* ---------- Hero (left) ---------- */
+  .hero { position: relative; }
+
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 18px;
+  }
+  .kicker b { color: var(--blue); font-weight: 600; }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(40px, 9vw, 74px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+
+  /* the headline question, circled like a margin note */
+  .circled {
+    position: relative;
+    display: inline;
+    font-style: italic;
+    font-weight: 500;
+  }
+  .circled svg {
+    position: absolute;
+    left: -3%;
+    top: -16%;
+    width: 106%;
+    height: 132%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .circled svg path {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    animation: draw 1100ms 700ms ease-out forwards;
+  }
+
+  .subhead {
+    font-family: var(--serif);
+    font-size: clamp(18px, 2.4vw, 21px);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 30ch;
+    margin: 26px 0 0;
+  }
+
+  /* margin note clipped beside subhead */
+  .margin-note {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--blue);
+    border-left: 2px solid var(--blue);
+    padding-left: 14px;
+    margin: 22px 0 0;
+    max-width: 34ch;
+    line-height: 1.5;
+  }
+  .margin-note .pen {
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: block;
+    color: var(--ink-faint);
+    margin-bottom: 3px;
+  }
+
+  .cta-row {
+    margin-top: 34px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--paper);
+    background: var(--ink);
+    border: 2px solid var(--ink);
+    padding: 14px 26px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 3px 3px 0 rgba(34, 32, 27, 0.18);
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out,
+      background 200ms ease-out;
+  }
+  .btn .arrow { transition: transform 200ms ease-out; }
+  .btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--red);
+    background: #2b2822;
+  }
+  .btn:hover .arrow { transform: translateX(4px); }
+  .btn:active { transform: translate(0, 0); box-shadow: 2px 2px 0 var(--red); }
+
+  .link-quiet {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1.5px dashed var(--ink-faint);
+    padding-bottom: 1px;
+    transition: color 160ms ease-out, border-color 160ms ease-out;
+  }
+  .link-quiet:hover { color: var(--red); border-color: var(--red); }
+
+  /* ---------- Right column ---------- */
+  .study {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  /* Board motif */
+  .board-figure {
+    position: relative;
+    margin: 0;
+  }
+  .board-figure figcaption {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .board-figure figcaption .pos { color: var(--ink-soft); }
+
+  .board {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    aspect-ratio: 1 / 1;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    box-shadow: 5px 5px 0 rgba(34, 32, 27, 0.14);
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+  }
+  .sq {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(20px, 5vw, 30px);
+    line-height: 1;
+  }
+  .sq.dark { background: rgba(34, 32, 27, 0.10); }
+  .piece-dark { color: var(--ink); }
+  .piece-light {
+    color: var(--paper);
+    text-shadow: 0 0 0 var(--ink);
+    -webkit-text-stroke: 1.2px var(--ink);
+  }
+  .sq.focus-sq::after {
+    content: "";
+    position: absolute;
+    inset: 12%;
+    border: 2px solid var(--red);
+    border-radius: 50%;
+    animation: draw-circle 700ms 1100ms ease-out both;
+  }
+
+  /* hand-drawn arrow over board */
+  .board-arrow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .board-arrow path,
+  .board-arrow line {
+    fill: none;
+    stroke: var(--blue);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    animation: draw 900ms 1500ms ease-out forwards;
+  }
+  .board-arrow polygon {
+    fill: var(--blue);
+    opacity: 0;
+    animation: pop-in 300ms 2300ms ease-out forwards;
+  }
+
+  /* Coaching / lesson card — annotated note */
+  .lesson {
+    position: relative;
+    background: #fbf7ef;
+    border: 1.5px solid var(--ink);
+    border-left: 5px solid var(--red);
+    border-radius: 2px 10px 4px 10px;
+    padding: 22px 24px 24px;
+    box-shadow: 4px 4px 0 rgba(34, 32, 27, 0.10);
+    max-width: 420px;
+  }
+  .lesson::before {
+    content: "lesson 12";
+    position: absolute;
+    top: -11px;
+    right: 16px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--red);
+    padding: 2px 9px;
+    transform: rotate(2deg);
+  }
+  .lesson .coach-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 8px;
+  }
+  .lesson .coach-voice {
+    font-family: var(--serif);
+    font-size: 24px;
+    line-height: 1.3;
+    font-weight: 500;
+    margin: 0;
+    color: var(--ink);
+  }
+  .lesson .coach-voice .ul {
+    text-decoration: underline;
+    text-decoration-color: var(--red);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  .lesson .gloss {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15.5px;
+    color: var(--ink-soft);
+    margin: 12px 0 0;
+    line-height: 1.5;
+  }
+
+  .engine-line {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--rule);
+    font-family: var(--mono);
+    font-size: 13.5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 14px;
+    color: var(--ink-soft);
+  }
+  .engine-line .eval {
+    color: var(--paper);
+    background: var(--ink);
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .engine-line .sep { color: var(--ink-faint); }
+  .engine-line .best { color: var(--blue); font-weight: 600; }
+  .engine-line .tag {
+    color: var(--ink-faint);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  footer {
+    margin-top: 56px;
+    border-top: 1px solid var(--rule);
+    padding-top: 16px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  footer .blue { color: var(--blue); }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fade-up 620ms cubic-bezier(0.2, 0.6, 0.25, 1) forwards;
+  }
+  .d1 { animation-delay: 120ms; }
+  .d2 { animation-delay: 240ms; }
+  .d3 { animation-delay: 360ms; }
+  .d4 { animation-delay: 480ms; }
+  .d5 { animation-delay: 600ms; }
+
+  @keyframes fade-up {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes draw {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes draw-circle {
+    from { opacity: 0; transform: scale(0.7); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pop-in {
+    to { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; animation: none; }
+    .circled svg path,
+    .board-arrow path,
+    .board-arrow line { stroke-dashoffset: 0; animation: none; }
+    .board-arrow polygon { opacity: 1; animation: none; }
+    .sq.focus-sq::after { animation: none; }
+    .btn, .btn .arrow, nav a::after { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="wordmark reveal" href="#" aria-label="Chess Coach home">
+        <span class="glyph" aria-hidden="true">♞</span>
+        <span class="name">Chess&nbsp;Coach</span>
+        <span class="stamp" aria-hidden="true">field notes</span>
+      </a>
+      <nav class="reveal d1" aria-label="Primary">
+        <ul>
+          <li><a href="#" aria-current="page">Play</a></li>
+          <li><a href="#">Review</a></li>
+          <li><a href="#">Openings</a></li>
+          <li><a href="#">Progress</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- LEFT: hero -->
+      <section class="hero">
+        <p class="kicker reveal d1">
+          Engine truth, <b>handwritten back to you</b>
+        </p>
+
+        <h1 class="reveal d2">
+          What is the
+          <span class="circled">
+            useful lesson
+            <svg viewBox="0 0 320 110" aria-hidden="true">
+              <path d="M30 58 C 22 24, 120 8, 200 12 C 280 16, 312 40, 300 64 C 288 90, 180 102, 96 96 C 40 92, 14 76, 26 52" />
+            </svg>
+          </span>
+          here?
+        </h1>
+
+        <p class="subhead reveal d3">
+          A patient coach that reads the engine, then tells you the one
+          idea worth keeping from the position in front of you.
+        </p>
+
+        <p class="margin-note reveal d3">
+          <span class="pen">in the margin</span>
+          Not a score to fear — a sentence you can carry into your next game.
+        </p>
+
+        <div class="cta-row reveal d4">
+          <a class="btn" href="#">
+            Play a game
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="link-quiet" href="#">or review your last game ›</a>
+        </div>
+      </section>
+
+      <!-- RIGHT: study -->
+      <aside class="study">
+        <figure class="board-figure reveal d3">
+          <figcaption>
+            <span>Position 24 — the pin</span>
+            <span class="pos">white to move</span>
+          </figcaption>
+          <div
+            class="board"
+            role="img"
+            aria-label="A decorative chess study position. A black knight is pinned and circled in red ink; a hand-drawn blue arrow points to white's recommended capturing move."
+          >
+            <!-- Rank 8 -->
+            <div class="sq dark"></div>
+            <div class="sq"><span class="piece-dark" aria-hidden="true">♜</span></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"><span class="piece-dark" aria-hidden="true">♚</span></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <!-- Rank 7 -->
+            <div class="sq"></div>
+            <div class="sq dark"><span class="piece-dark" aria-hidden="true">♟</span></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"><span class="piece-dark" aria-hidden="true">♟</span></div>
+            <div class="sq dark"><span class="piece-dark" aria-hidden="true">♟</span></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <!-- Rank 6 -->
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark focus-sq"><span class="piece-dark" aria-hidden="true">♞</span></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <!-- Rank 5 -->
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"><span class="piece-light" aria-hidden="true">♙</span></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <!-- Rank 4 -->
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"><span class="piece-light" aria-hidden="true">♗</span></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <!-- Rank 3 -->
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"><span class="piece-light" aria-hidden="true">♘</span></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <!-- Rank 2 -->
+            <div class="sq dark"></div>
+            <div class="sq"><span class="piece-light" aria-hidden="true">♙</span></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"><span class="piece-light" aria-hidden="true">♙</span></div>
+            <div class="sq dark"><span class="piece-light" aria-hidden="true">♙</span></div>
+            <div class="sq"></div>
+            <!-- Rank 1 -->
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"></div>
+            <div class="sq dark"></div>
+            <div class="sq"><span class="piece-light" aria-hidden="true">♔</span></div>
+            <div class="sq dark"></div>
+            <div class="sq"><span class="piece-light" aria-hidden="true">♖</span></div>
+            <div class="sq dark"></div>
+
+            <!-- hand-drawn arrow: from f3 knight area toward e5 -->
+            <svg class="board-arrow" viewBox="0 0 360 360" aria-hidden="true">
+              <path d="M205 230 C 175 205, 150 185, 140 150" />
+              <polygon points="140,150 130,168 152,166" />
+            </svg>
+          </div>
+        </figure>
+
+        <!-- Lesson card -->
+        <article class="lesson reveal d4" aria-label="Sample coaching note">
+          <p class="coach-label">the coach says</p>
+          <p class="coach-voice">
+            The tactic was hiding in the
+            <span class="ul">pin</span>. Your knight was never really
+            defending — it only looked like it was.
+          </p>
+          <p class="gloss">
+            Before you trade, ask what each piece is actually holding
+            together.
+          </p>
+
+          <div class="engine-line" aria-label="Engine evaluation">
+            <span class="tag">engine</span>
+            <span class="eval">eval +1.4</span>
+            <span class="sep">·</span>
+            <span>best&nbsp;move</span>
+            <span class="best">Nxe5</span>
+            <span class="sep">·</span>
+            <span>depth&nbsp;24</span>
+          </div>
+        </article>
+      </aside>
+    </main>
+
+    <footer class="reveal d5">
+      <span>Chess Coach — a personal study notebook</span>
+      <span class="blue">Stockfish calculates · the coach explains</span>
+    </footer>
+  </div>
+</body>
+</html>

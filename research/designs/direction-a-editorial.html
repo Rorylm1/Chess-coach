@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chess Coach — Warm Editorial Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Warm paper + deep ink */
+    --paper:      #FAF5EC;
+    --paper-deep: #F2E9D8;
+    --ink:        #211C16;   /* warm near-black */
+    --ink-soft:   #4A4136;
+    --ink-faint:  #837764;
+    --hairline:   #D8CBB3;
+    /* Committed accent */
+    --amber:      #B5532A;
+    --amber-deep: #8E3D1C;
+    /* Sparing second accent */
+    --teal:       #2F5D54;
+    /* Board */
+    --sq-light:   #EADFC8;
+    --sq-dark:    #C49A6C;
+    --board-edge: #5B4327;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* faint warm vignette + paper grain feel */
+    background-image:
+      radial-gradient(140% 120% at 85% -10%, rgba(181,83,42,0.06), transparent 55%),
+      radial-gradient(120% 100% at 0% 110%, rgba(47,93,84,0.05), transparent 50%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---- Focus visibility ---- */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2.5px solid var(--amber);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 22px;
+  }
+
+  /* =========================================================
+     HEADER / NAV
+     ========================================================= */
+  header {
+    border-bottom: 1px solid var(--hairline);
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 0 18px;
+  }
+  .wordmark {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 23px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .wordmark .glyph {
+    color: var(--amber);
+    font-size: 26px;
+    line-height: 1;
+    transform: translateY(1px);
+  }
+  .wordmark .coach {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  nav a {
+    position: relative;
+    display: inline-block;
+    padding: 8px 13px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    transition: color 180ms ease-out;
+  }
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 13px; right: 13px;
+    bottom: 3px;
+    height: 1.5px;
+    background: var(--amber);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms ease-out;
+  }
+  nav a:hover,
+  nav a[aria-current="page"] { color: var(--ink); }
+  nav a:hover::after,
+  nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+  .nav-toggle { display: none; }
+
+  /* =========================================================
+     HERO  — asymmetric magazine grid
+     ========================================================= */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 56px;
+    align-items: center;
+    padding: 70px 0 64px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--amber-deep);
+    margin-bottom: 26px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 30px;
+    height: 1.5px;
+    background: var(--amber);
+  }
+
+  h1 {
+    font-family: "Fraunces", serif;
+    font-weight: 900;
+    font-size: clamp(3.1rem, 8.4vw, 6rem);
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--amber);
+    /* optical hang */
+    display: block;
+  }
+
+  .subhead {
+    max-width: 30ch;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-bottom: 38px;
+  }
+  .subhead strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    flex-wrap: wrap;
+  }
+  .btn-play {
+    --shadow: 0 3px 0 var(--amber-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    background: var(--amber);
+    color: #FCF6EC;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    padding: 15px 26px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out, background 200ms ease-out;
+  }
+  .btn-play .arrow { transition: transform 200ms ease-out; }
+  .btn-play:hover {
+    transform: translateY(-2px);
+    background: var(--amber-deep);
+    box-shadow: 0 5px 0 #6f2f14, 0 10px 22px rgba(142,61,28,0.28);
+  }
+  .btn-play:hover .arrow { transform: translateX(3px); }
+  .btn-play:active { transform: translateY(0); box-shadow: var(--shadow); }
+
+  .secondary-link {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border-bottom: 1.5px solid var(--hairline);
+    padding-bottom: 2px;
+    transition: color 180ms ease-out, border-color 180ms ease-out;
+  }
+  .secondary-link:hover { color: var(--amber); border-color: var(--amber); }
+
+  /* ---- Board column ---- */
+  .board-col {
+    display: flex;
+    justify-content: center;
+  }
+  .board-frame {
+    position: relative;
+    padding: 16px;
+    background: var(--paper-deep);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 22px 40px -22px rgba(33,28,22,0.4);
+    transform: rotate(-1.4deg);
+  }
+  .board-frame .caption {
+    position: absolute;
+    bottom: -13px; left: 18px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 5px 11px;
+    border-radius: 2px;
+    transform: rotate(0.6deg);
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: min(78vw, 340px);
+    aspect-ratio: 1 / 1;
+    border: 3px solid var(--board-edge);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .sq {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(20px, 6vw, 31px);
+    line-height: 1;
+    user-select: none;
+  }
+  .sq.light { background: var(--sq-light); }
+  .sq.dark  { background: var(--sq-dark); }
+  .pc-dark  { color: #2A211A; }
+  .pc-light { color: #FBF4E6; text-shadow: 0 1px 1px rgba(0,0,0,0.25); }
+  /* the highlighted tactical square */
+  .sq.spot {
+    box-shadow: inset 0 0 0 3px var(--amber);
+    position: relative;
+  }
+
+  /* =========================================================
+     LESSON / COACH CARD  — offset editorial composition
+     ========================================================= */
+  .lesson-section {
+    border-top: 1px solid var(--hairline);
+    padding: 58px 0 84px;
+  }
+  .lesson-grid {
+    display: grid;
+    grid-template-columns: 0.62fr 1fr;
+    gap: 54px;
+    align-items: start;
+  }
+  .lesson-intro .kicker {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--amber-deep);
+    margin-bottom: 14px;
+  }
+  .lesson-intro h2 {
+    font-family: "Fraunces", serif;
+    font-weight: 500;
+    font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+    line-height: 1.05;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .lesson-intro p {
+    font-size: 16px;
+    color: var(--ink-soft);
+    max-width: 34ch;
+  }
+
+  .lesson-card {
+    position: relative;
+    background: #FFFCF5;
+    border: 1px solid var(--hairline);
+    border-left: 4px solid var(--amber);
+    border-radius: 0 6px 6px 0;
+    padding: 36px 38px 30px;
+    box-shadow: 0 18px 38px -26px rgba(33,28,22,0.45);
+  }
+  .lesson-card .coach-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 20px;
+  }
+  .coach-tag .dot {
+    width: 22px; height: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--teal);
+    color: #EFF3EF;
+    border-radius: 50%;
+    font-family: "Fraunces", serif;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  blockquote.coach-quote {
+    font-family: "Fraunces", serif;
+    font-weight: 500;
+    font-size: clamp(1.6rem, 3.4vw, 2.25rem);
+    line-height: 1.16;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin-bottom: 18px;
+    text-wrap: balance;
+  }
+  blockquote.coach-quote .pin { color: var(--amber); font-style: italic; }
+  .coach-explain {
+    font-size: 16.5px;
+    line-height: 1.62;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin-bottom: 26px;
+  }
+
+  .engine-strip {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border-top: 1px dashed var(--hairline);
+    padding-top: 22px;
+  }
+  .engine-fact {
+    display: flex;
+    flex-direction: column;
+    padding-right: 26px;
+  }
+  .engine-fact + .engine-fact {
+    padding-left: 26px;
+    border-left: 1px solid var(--hairline);
+  }
+  .engine-fact .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 5px;
+  }
+  .engine-fact .val {
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 27px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .engine-fact .val.gain { color: var(--teal); }
+  .engine-fact .val .move {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--ink-soft);
+  }
+  .engine-note {
+    margin-left: auto;
+    align-self: flex-end;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--ink-faint);
+    max-width: 16ch;
+    text-align: right;
+  }
+
+  footer {
+    border-top: 1px solid var(--hairline);
+    padding: 22px 0 40px;
+  }
+  .foot-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    flex-wrap: wrap;
+  }
+  .foot-inner .sep { color: var(--amber); }
+
+  /* =========================================================
+     SIGNATURE MOTION — staggered fade-up reveal
+     ========================================================= */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 760ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  }
+  .d1 { animation-delay: 80ms; }
+  .d2 { animation-delay: 180ms; }
+  .d3 { animation-delay: 290ms; }
+  .d4 { animation-delay: 400ms; }
+  .d5 { animation-delay: 520ms; }
+  .d6 { animation-delay: 640ms; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* board pieces settle in with a gentle stagger */
+  .board-frame.reveal { animation-duration: 900ms; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { animation: none; opacity: 1; transform: none; }
+    .btn-play, .btn-play .arrow, nav a::after, .secondary-link { transition: none; }
+  }
+
+  /* =========================================================
+     RESPONSIVE
+     ========================================================= */
+  @media (max-width: 880px) {
+    .hero {
+      grid-template-columns: 1fr;
+      gap: 44px;
+      padding: 48px 0 52px;
+    }
+    .board-col { order: -1; }
+    .lesson-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    nav ul { gap: 0; }
+    nav a { padding: 8px 9px; font-size: 13px; }
+    .topbar { flex-wrap: wrap; }
+    h1 { margin-bottom: 22px; }
+    .subhead { font-size: 17px; margin-bottom: 30px; }
+    .cta-row { gap: 18px; }
+    .btn-play { width: 100%; justify-content: center; }
+    .secondary-link { margin: 0 auto; }
+    .lesson-card { padding: 28px 24px 26px; }
+    .engine-strip { flex-wrap: wrap; gap: 18px; }
+    .engine-note { margin-left: 0; text-align: left; max-width: none; }
+    .board-frame { transform: rotate(-1deg); }
+    .foot-inner { justify-content: flex-start; }
+  }
+
+  @media (max-width: 400px) {
+    nav a { padding: 7px 7px; letter-spacing: 0; }
+    .wordmark { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <a class="wordmark" href="#" aria-label="Chess Coach — home">
+          <span class="glyph" aria-hidden="true">&#9822;</span>
+          <span>Chess<span class="coach">&nbsp;Coach</span></span>
+        </a>
+        <nav aria-label="Primary">
+          <ul>
+            <li><a href="#" aria-current="page">Play</a></li>
+            <li><a href="#">Review</a></li>
+            <li><a href="#">Openings</a></li>
+            <li><a href="#">Progress</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <span class="eyebrow reveal d1">A study, not a scoreboard</span>
+        <h1 id="hero-title" class="reveal d2">
+          What is the
+          <em>useful lesson</em>
+          here?
+        </h1>
+        <p class="subhead reveal d3">
+          Your coach reads every game through a chess engine, then sets the truth
+          aside and tells you the <strong>one idea worth keeping</strong> &mdash; in
+          plain language, the way a patient mentor would.
+        </p>
+        <div class="cta-row reveal d4">
+          <button class="btn-play" type="button">
+            Play a game
+            <span class="arrow" aria-hidden="true">&rarr;</span>
+          </button>
+          <a class="secondary-link" href="#">or review your last game</a>
+        </div>
+      </div>
+
+      <div class="board-col">
+        <figure class="board-frame reveal d5"
+                role="img"
+                aria-label="Decorative chessboard mid-game, with a knight poised to deliver a pin on the highlighted square.">
+          <div class="board" aria-hidden="true">
+            <!-- rank 8 -->
+            <div class="sq light"></div>
+            <div class="sq dark"><span class="pc-dark">&#9820;</span></div>
+            <div class="sq light"></div>
+            <div class="sq dark"><span class="pc-dark">&#9819;</span></div>
+            <div class="sq light"><span class="pc-dark">&#9818;</span></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"><span class="pc-dark">&#9820;</span></div>
+            <!-- rank 7 -->
+            <div class="sq dark"><span class="pc-dark">&#9823;</span></div>
+            <div class="sq light"><span class="pc-dark">&#9823;</span></div>
+            <div class="sq dark"></div>
+            <div class="sq light"><span class="pc-dark">&#9822;</span></div>
+            <div class="sq dark"></div>
+            <div class="sq light"><span class="pc-dark">&#9823;</span></div>
+            <div class="sq dark"><span class="pc-dark">&#9823;</span></div>
+            <div class="sq light"><span class="pc-dark">&#9823;</span></div>
+            <!-- rank 6 -->
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <div class="sq light"><span class="pc-dark">&#9821;</span></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <!-- rank 5 -->
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"><span class="pc-light">&#9817;</span></div>
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <!-- rank 4 -->
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <div class="sq light"><span class="pc-light">&#9815;</span></div>
+            <div class="sq dark spot"><span class="pc-light">&#9816;</span></div>
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <!-- rank 3 -->
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <div class="sq light"><span class="pc-light">&#9816;</span></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <!-- rank 2 -->
+            <div class="sq light"><span class="pc-light">&#9817;</span></div>
+            <div class="sq dark"><span class="pc-light">&#9817;</span></div>
+            <div class="sq light"><span class="pc-light">&#9817;</span></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"><span class="pc-light">&#9817;</span></div>
+            <div class="sq light"><span class="pc-light">&#9817;</span></div>
+            <div class="sq dark"><span class="pc-light">&#9817;</span></div>
+            <!-- rank 1 -->
+            <div class="sq dark"><span class="pc-light">&#9814;</span></div>
+            <div class="sq light"></div>
+            <div class="sq dark"></div>
+            <div class="sq light"></div>
+            <div class="sq dark"><span class="pc-light">&#9813;</span></div>
+            <div class="sq light"><span class="pc-light">&#9818;</span></div>
+            <div class="sq dark"></div>
+            <div class="sq light"><span class="pc-light">&#9814;</span></div>
+          </div>
+          <figcaption class="caption">Game 12 &middot; Move 19</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ LESSON / COACH CARD ============ -->
+    <section class="lesson-section" aria-labelledby="lesson-title">
+      <div class="wrap">
+        <div class="lesson-grid">
+          <div class="lesson-intro reveal d1">
+            <p class="kicker">From your last game</p>
+            <h2 id="lesson-title">Engine truth, said like a human.</h2>
+            <p>
+              Stockfish does the counting. The coach keeps just the part that
+              changes how you&rsquo;ll play next time.
+            </p>
+          </div>
+
+          <article class="lesson-card reveal d3" aria-labelledby="coach-quote">
+            <p class="coach-tag">
+              <span class="dot" aria-hidden="true">C</span>
+              Coach&rsquo;s note
+            </p>
+            <blockquote class="coach-quote" id="coach-quote">
+              The tactic was hiding in the <span class="pin">pin.</span>
+            </blockquote>
+            <p class="coach-explain">
+              Your knight on f3 was already doing two jobs. Once the bishop
+              pinned the defender, that knight could jump into e5 for free &mdash;
+              the piece guarding it couldn&rsquo;t move without losing the queen
+              behind it. You felt the chance; next time, trust it and take.
+            </p>
+            <div class="engine-strip">
+              <div class="engine-fact">
+                <span class="label">After</span>
+                <span class="val"><span class="move">N&times;e5</span></span>
+              </div>
+              <div class="engine-fact">
+                <span class="label">Evaluation</span>
+                <span class="val gain">+1.4</span>
+              </div>
+              <p class="engine-note">Stockfish 16 &middot; depth 22</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-inner">
+        <span>Chess Coach &mdash; a personal study in better moves.</span>
+        <span>
+          Play <span class="sep">&middot;</span> Review
+          <span class="sep">&middot;</span> Openings
+          <span class="sep">&middot;</span> Progress
+        </span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
