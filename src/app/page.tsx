@@ -42,7 +42,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={0.24}>
             <div className="hero-actions">
-              <Link href="/" className="btn btn-primary">
+              <Link href="/play" className="btn btn-primary">
                 Play a game
               </Link>
               <Link href="#" className="btn btn-ghost">
