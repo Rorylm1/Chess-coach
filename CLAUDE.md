@@ -28,6 +28,6 @@ See `spec.md` for the full spec and milestones, `objective.md` for product visio
 - Accessibility is not optional: focus states, contrast, alt text baked in.
 
 ## Tech stack
-Next.js (App Router) on Vercel · react-chessboard (MIT) + chess.js (BSD-2-Clause) · Stockfish WASM (`nmrugg`, GPLv3) in a Web Worker, isolated behind the UCI message boundary · Claude (Anthropic) for the server-side coaching route · IndexedDB (local-first).
+Next.js (App Router) on Vercel · chess.js (BSD-2-Clause) for rules, driving a **custom hand-built board** (we ported the locked sci-fi board verbatim as our own permissive component instead of `react-chessboard` — see `spec.md` M1) · Stockfish 18 WASM (`nmrugg`, GPLv3, single-threaded lite build) in a Web Worker, isolated behind the UCI message boundary · Claude (Anthropic) for the server-side coaching route · IndexedDB (local-first).
 
 **Licensing guardrail:** keep our code permissive. Stockfish WASM stays an isolated static asset; **never** add GPL JS libraries (`chessground`, `chessops`).

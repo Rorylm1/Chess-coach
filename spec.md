@@ -24,7 +24,7 @@ The non-negotiable principle: **separation of calculation from teaching.** The e
 
 Three cleanly separated layers:
 
-- **Play & board (client):** `react-chessboard` (MIT) for UI + `chess.js` (BSD-2-Clause) for rules/legal moves/PGN/FEN. All move validation local and instant.
+- **Play & board (client):** `chess.js` (BSD-2-Clause) for rules/legal moves/PGN/FEN, with a **custom hand-built board** for UI (M1 shipped this in place of the originally-planned `react-chessboard` — see the M1 "✅ Shipped" note for why). All move validation local and instant.
 - **Analysis (client, Web Worker):** Stockfish compiled to WASM (`nmrugg/stockfish.js`, GPLv3), off the main thread. Produces eval (cp/mate), best move, principal variation. **Start with the single-threaded "lite" build** to avoid COOP/COEP cross-origin-isolation complexity on Vercel; upgrade later if needed.
 - **Coaching (server, Vercel Function):** Next.js route handler receives a *structured engine payload* (FEN, side to move, move played, eval before/after, eval delta, best move(s)+PV in SAN, deterministic classification) and calls **Claude** to explain *why it matters*. API key in a server-side env var.
 
@@ -66,6 +66,7 @@ Each is independently demoable. Dependency order is strict where noted. "Done wh
 - Polished, tactile board interaction (piece movement, legal-move hints, last-move highlight) meeting the M0 design bar.
 - **Done when:** Rory can play a complete legal game vs the bot at a chosen strength, on mobile and desktop, and it *feels* good.
 - **Key files:** `components/Board/`, `lib/chess/`, `lib/engine/worker.ts`, `public/stockfish/`.
+- **✅ Shipped (M1).** One deliberate deviation from the plan: instead of `react-chessboard`, the board is a **custom `chess.js`-driven component** (`src/components/Board/Board.tsx`). `DESIGN.md` mandates porting the locked sci-fi board verbatim (bespoke unicode glyphs, neon affordances, coordinate placement), so a hand-built board gives full control of that aesthetic and a touch-friendly click-to-move + drag interaction — while keeping our code permissive (no new dependency). `chess.js` remains the sole source of move legality. Actual key files: `components/Board/Board.tsx`, `components/Play/{PlayClient.tsx,useChessGame.ts}`, `lib/engine/{engine.ts,difficulty.ts}` (the engine wrapper, named `engine.ts` not `worker.ts`), `lib/chess/pieces.ts`, `public/stockfish/` (Stockfish 18 lite-single WASM). Strength uses `Skill Level` (0–20) + per-move think time; `UCI_Elo` was not used (its ~1320 floor can't express genuine-beginner play).
 
 ### M2 — Engine analysis & the grounding spine
 The shared contract coaching *and* openings depend on. Build once, cleanly.

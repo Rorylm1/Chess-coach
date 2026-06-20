@@ -10,20 +10,29 @@ language, grounded in the engine, delivered by a warm playful-mentor coach.
 
 ## Status
 
-**M0 — Foundation & Design System ✅** — Next.js app scaffolded, design system locked
-("Deep-Space Analysis Deck"), responsive shell deployed. See `spec.md` for the full milestone plan
-(M0–M7) and `DESIGN.md` for the design system.
+- **M0 — Foundation & Design System ✅** — Next.js app scaffolded, design system locked
+  ("Deep-Space Analysis Deck"), responsive shell.
+- **M1 — Play vs an adjustable bot ✅** — a full legal game on `/play` against a strength-adjustable
+  Stockfish bot (Learner→Master), with a custom tactile board, move log, captured material,
+  flip / takeback / resign, and end-state detection. Desktop + mobile.
+
+See `spec.md` for the full milestone plan (M0–M7) and `DESIGN.md` for the design system.
 
 ## Tech stack
 
 - **Next.js 16 (App Router)** on Vercel — prod from `main`, preview deploy per PR
 - **TypeScript · Tailwind v4** with semantic CSS-variable tokens
 - **Motion for React** for the signature motion moment (`prefers-reduced-motion` aware)
-- Coming next: `react-chessboard` (MIT) + `chess.js` (BSD-2-Clause) · Stockfish WASM in a Web
-  Worker · Claude via a server-side coaching route · IndexedDB (local-first)
+- **`chess.js`** (BSD-2-Clause) for rules / legal moves / PGN / FEN, driving a **custom hand-built
+  board** — the locked sci-fi board is ported verbatim as our own permissive component (no
+  `react-chessboard`; see `spec.md` M1 for the rationale)
+- **Stockfish 18 WASM** (`nmrugg`, GPLv3) — single-threaded "lite" build, served as an isolated
+  static asset from `public/stockfish/`, reached only over the UCI text protocol in a Web Worker
+- Coming next: Claude via a server-side coaching route (M3) · IndexedDB local-first storage (M6)
 
-**Licensing guardrail:** our code stays permissive. Stockfish WASM (GPLv3) will be an isolated
-static asset behind the UCI message boundary; never add GPL JS libraries (`chessground`, `chessops`).
+**Licensing guardrail:** our code stays permissive. Stockfish WASM (GPLv3) is an isolated static
+asset behind the UCI message boundary (single-threaded, so no COOP/COEP headers needed); never add
+GPL JS libraries (`chessground`, `chessops`).
 
 ## Getting started
 
@@ -43,12 +52,17 @@ Copy `.env.example` to `.env.local` and fill in `ANTHROPIC_API_KEY` (used from M
 ## Project layout
 
 ```
-src/app/         App Router routes, layout, globals.css (design tokens)
-src/components/   Shell + UI components (SiteHeader, DecorativeBoard, Reveal, …)
-DESIGN.md         Design system: tokens, aesthetic, banned-defaults, a11y, motion
-research/designs/ Throwaway design-exploration mockups (the chosen direction is D — sci-fi)
-screenshots/      Rendered references for design self-review
-spec.md           Milestones M0–M7 and acceptance criteria
+src/app/              App Router routes — landing, /play, layout, globals.css (tokens + play styles)
+src/components/Board/  Custom interactive chessboard (chess.js-driven; click-to-move + drag)
+src/components/Play/   Play screen (PlayClient) + the game-loop hook (useChessGame)
+src/components/        Shell + landing components (SiteHeader, DecorativeBoard, Reveal, …)
+src/lib/engine/        Stockfish UCI wrapper (engine.ts) + difficulty presets (difficulty.ts)
+src/lib/chess/         Chess helpers (piece glyphs + names)
+public/stockfish/      Vendored Stockfish WASM (GPLv3) + license / corresponding-source notice
+DESIGN.md              Design system: tokens, aesthetic, banned-defaults, a11y, motion
+research/designs/      Throwaway design-exploration mockups (the chosen direction is D — sci-fi)
+screenshots/           Rendered references for design self-review
+spec.md                Milestones M0–M7 and acceptance criteria
 ```
 
 ## Design
