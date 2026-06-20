@@ -24,4 +24,9 @@ export function pieceName(color: Color, type: PieceSymbol): string {
   return `${color === "w" ? "white" : "black"} ${NAMES[type]}`;
 }
 
+/** Bare piece-type word ("knight"), no colour — used to gloss SAN into plain language. */
+export function pieceTypeName(type: PieceSymbol): string {
+  return NAMES[type];
+}
+
 export const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;

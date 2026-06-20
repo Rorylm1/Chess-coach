@@ -7,9 +7,18 @@
  *
  * Browser-only: instantiate inside a client component (it constructs a `Worker`).
  *
- * For M1 the engine has one job — pick the bot's move. Eval / PV / classification
- * plumbing arrives in M2; the message parser here is kept deliberately small.
+ * Two jobs:
+ *  - `bestMove` — pick the bot's move at a (deliberately weakened) Skill Level. Drives play.
+ *  - `analyse` — full-strength eval + best move + PV for a position. Drives the M2 grounding
+ *    spine (eval bar, graph, classification). `analyse` never sets a Skill Level, so run it
+ *    on a *dedicated* engine instance, separate from the bot, to keep its judgement honest
+ *    and to let analysis run in parallel with the bot's thinking.
  */
+
+import {
+  IN_GAME_ANALYSIS,
+  type AnalysisLine,
+} from "@/lib/engine/analysis";
 
 const ENGINE_URL = "/stockfish/stockfish-18-lite-single.js";
 
@@ -26,6 +35,17 @@ export interface BestMoveOptions {
   signal?: AbortSignal;
 }
 
+export interface AnalyseOptions {
+  /** Position to evaluate, as a FEN string. */
+  fen: string;
+  /** Search depth, in plies. */
+  depth: number;
+  /** Hard time cap (ms) so a single position can't stall the queue. */
+  movetime?: number;
+  /** Abort signal — cancels the search cleanly (the engine is told to `stop`). */
+  signal?: AbortSignal;
+}
+
 /** A move in UCI long-algebraic form, split for chess.js consumption. */
 export interface EngineMove {
   from: string;
@@ -35,17 +55,67 @@ export interface EngineMove {
 
 type Resolver = () => void;
 
+type PendingPlay = {
+  kind: "play";
+  resolve: (m: EngineMove) => void;
+  reject: (e: Error) => void;
+  aborted: boolean;
+};
+
+type PendingAnalyse = {
+  kind: "analyse";
+  resolve: (line: AnalysisLine) => void;
+  reject: (e: Error) => void;
+  aborted: boolean;
+  /** Deepest PV line parsed so far. */
+  best: AnalysisLine | null;
+};
+
+type Pending = PendingPlay | PendingAnalyse;
+
+/** Parse a UCI `info` line into a PV line. Returns null for lines without a usable
+ *  (score + pv) pair, e.g. `currmove` progress or bound-only updates. */
+function parseInfo(line: string): AnalysisLine | null {
+  if (line.includes("lowerbound") || line.includes("upperbound")) return null;
+  const t = line.split(/\s+/);
+  let depth = 0;
+  let cp: number | null = null;
+  let mate: number | null = null;
+  let pvUci: string[] = [];
+  let hasScore = false;
+  for (let i = 1; i < t.length; i++) {
+    const tok = t[i];
+    if (tok === "depth") {
+      depth = parseInt(t[++i], 10);
+    } else if (tok === "score") {
+      const type = t[++i];
+      const val = parseInt(t[++i], 10);
+      if (type === "cp") {
+        cp = val;
+        mate = null;
+        hasScore = true;
+      } else if (type === "mate") {
+        mate = val;
+        cp = null;
+        hasScore = true;
+      }
+    } else if (tok === "pv") {
+      pvUci = t.slice(i + 1);
+      break; // pv is always the last field
+    }
+  }
+  if (!hasScore || pvUci.length === 0) return null;
+  return { depth, cp, mate, bestMoveUci: pvUci[0] ?? null, pvUci };
+}
+
 export class ChessEngine {
   private worker: Worker | null = null;
   private ready: Promise<void> | null = null;
   /** Resolvers waiting on a specific `readyok`/`uciok` token. */
   private readyWaiters: Resolver[] = [];
-  /** The in-flight bestmove search, if any. */
-  private pending: {
-    resolve: (m: EngineMove) => void;
-    reject: (e: Error) => void;
-  } | null = null;
-  /** Serializes requests so we only ever ask for one move at a time. */
+  /** The in-flight search (play or analyse), if any. */
+  private pending: Pending | null = null;
+  /** Serializes requests so we only ever ask the single-threaded engine one thing. */
   private queue: Promise<unknown> = Promise.resolve();
   private lastSkill: number | null = null;
   private terminated = false;
@@ -94,26 +164,52 @@ export class ChessEngine {
     if (typeof line !== "string") return;
 
     if (line === "uciok" || line === "readyok") {
-      const w = this.readyWaiters.shift();
-      w?.();
+      this.readyWaiters.shift()?.();
+      return;
+    }
+
+    const p = this.pending;
+
+    if (line.startsWith("info")) {
+      if (p?.kind === "analyse") {
+        const parsed = parseInfo(line);
+        if (parsed) p.best = parsed; // depth increases monotonically; keep the deepest
+      }
       return;
     }
 
     if (line.startsWith("bestmove")) {
-      const parts = line.split(/\s+/);
-      const uci = parts[1];
-      const p = this.pending;
-      this.pending = null;
       if (!p) return;
-      if (!uci || uci === "(none)") {
-        p.reject(new Error("Engine returned no move"));
+      this.pending = null;
+      // An aborted search still emits a final `bestmove` after `stop`; consuming it here
+      // (rather than nulling pending the instant abort fires) guarantees a stale result
+      // can never be misattributed to the next queued request.
+      if (p.aborted) {
+        p.reject(new DOMException("Aborted", "AbortError"));
         return;
       }
-      p.resolve({
-        from: uci.slice(0, 2),
-        to: uci.slice(2, 4),
-        promotion: uci.length > 4 ? uci[4] : undefined,
-      });
+      const uci = line.split(/\s+/)[1];
+      if (p.kind === "play") {
+        if (!uci || uci === "(none)") {
+          p.reject(new Error("Engine returned no move"));
+          return;
+        }
+        p.resolve({
+          from: uci.slice(0, 2),
+          to: uci.slice(2, 4),
+          promotion: uci.length > 4 ? uci[4] : undefined,
+        });
+      } else {
+        p.resolve(
+          p.best ?? {
+            depth: 0,
+            cp: 0,
+            mate: null,
+            bestMoveUci: uci && uci !== "(none)" ? uci : null,
+            pvUci: uci && uci !== "(none)" ? [uci] : [],
+          },
+        );
+      }
     }
   }
 
@@ -142,14 +238,9 @@ export class ChessEngine {
       }
 
       return new Promise<EngineMove>((resolve, reject) => {
-        const onAbort = () => {
-          this.send("stop");
-          this.pending = null;
-          reject(new DOMException("Aborted", "AbortError"));
-        };
-        opts.signal?.addEventListener("abort", onAbort, { once: true });
-
-        this.pending = {
+        const pending: PendingPlay = {
+          kind: "play",
+          aborted: false,
           resolve: (m) => {
             opts.signal?.removeEventListener("abort", onAbort);
             resolve(m);
@@ -159,16 +250,62 @@ export class ChessEngine {
             reject(e);
           },
         };
+        const onAbort = () => {
+          pending.aborted = true;
+          this.send("stop");
+        };
+        opts.signal?.addEventListener("abort", onAbort, { once: true });
 
+        this.pending = pending;
         this.send(`position fen ${opts.fen}`);
-        const go = opts.depth
-          ? `go depth ${opts.depth} movetime ${opts.movetime}`
-          : `go movetime ${opts.movetime}`;
-        this.send(go);
+        this.send(opts.depth ? `go depth ${opts.depth} movetime ${opts.movetime}` : `go movetime ${opts.movetime}`);
       });
     };
 
     // Chain onto the queue so requests never overlap; isolate failures.
+    const result = this.queue.then(run, run);
+    this.queue = result.catch(() => undefined);
+    return result;
+  }
+
+  /**
+   * Full-strength evaluation of a position: eval (cp/mate), best move and PV (all in
+   * UCI / side-to-move POV — normalize with `lineToWhiteEval`). Serialized like bestMove.
+   * Run on a dedicated instance (no Skill Level is set, so it plays at full strength).
+   */
+  analyse(opts: AnalyseOptions): Promise<AnalysisLine> {
+    const run = async (): Promise<AnalysisLine> => {
+      await this.init();
+      if (this.terminated) throw new Error("Engine terminated");
+      if (opts.signal?.aborted) throw new DOMException("Aborted", "AbortError");
+
+      return new Promise<AnalysisLine>((resolve, reject) => {
+        const pending: PendingAnalyse = {
+          kind: "analyse",
+          aborted: false,
+          best: null,
+          resolve: (line) => {
+            opts.signal?.removeEventListener("abort", onAbort);
+            resolve(line);
+          },
+          reject: (e) => {
+            opts.signal?.removeEventListener("abort", onAbort);
+            reject(e);
+          },
+        };
+        const onAbort = () => {
+          pending.aborted = true;
+          this.send("stop");
+        };
+        opts.signal?.addEventListener("abort", onAbort, { once: true });
+
+        this.pending = pending;
+        const movetime = opts.movetime ?? IN_GAME_ANALYSIS.movetime;
+        this.send(`position fen ${opts.fen}`);
+        this.send(`go depth ${opts.depth} movetime ${movetime}`);
+      });
+    };
+
     const result = this.queue.then(run, run);
     this.queue = result.catch(() => undefined);
     return result;

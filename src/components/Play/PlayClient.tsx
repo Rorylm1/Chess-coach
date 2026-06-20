@@ -1,16 +1,25 @@
 "use client";
 
 /**
- * The Play screen — composes the board, player strips, move log and game controls into
- * the locked "Deep-Space Analysis Deck" layout. M1 scope: a complete legal game vs the
- * adjustable Stockfish bot. (Eval bar, coach and clocks arrive in M2/M3 — deliberately
- * absent here rather than faked.)
+ * The Play screen — composes the board, eval bar, player strips, analysis and game
+ * controls into the locked "Deep-Space Analysis Deck" layout.
+ *
+ * M2 adds the grounding spine in-game: a dedicated full-strength engine (via useAnalysis,
+ * separate from the bot) evaluates each position, driving the eval bar beside the board,
+ * the Analysis card (eval + best line + win% swing graph) and the colour-coded move list.
+ * Analysis is on-demand — toggleable, and never interrupts play. (Coach + clocks: M3.)
  */
 
 import { useState } from "react";
 import type { Color } from "chess.js";
 import { Board } from "@/components/Board/Board";
+import { EvalBar } from "@/components/EvalBar/EvalBar";
+import { EvalGraph } from "@/components/EvalGraph/EvalGraph";
+import { MoveList } from "@/components/MoveList/MoveList";
+import { CoachPanel } from "@/components/Coaching/CoachPanel";
 import { useChessGame } from "@/components/Play/useChessGame";
+import { useAnalysis } from "@/components/Play/useAnalysis";
+import { useCoach } from "@/components/Play/useCoach";
 import {
   DIFFICULTIES,
   DEFAULT_DIFFICULTY,
@@ -22,10 +31,20 @@ import type { PieceSymbol } from "chess.js";
 export function PlayClient() {
   const game = useChessGame("w", DEFAULT_DIFFICULTY);
   const [orientation, setOrientation] = useState<Color>("w");
+  const [analysisOn, setAnalysisOn] = useState(true);
+  const analysis = useAnalysis(game.history, analysisOn);
 
   const diff = getDifficulty(game.difficulty);
   const interactive =
     game.engineReady && !game.thinking && !game.result && game.turn === game.playerColor;
+
+  const coach = useCoach({
+    fen: game.fen,
+    history: game.history,
+    playerColor: game.playerColor,
+    currentPosition: analysis.currentPosition,
+    playerToMove: interactive,
+  });
 
   const opponentColor: Color = game.playerColor === "w" ? "b" : "w";
   const oppStatus = !game.engineReady
@@ -49,6 +68,7 @@ export function PlayClient() {
         />
 
         <div className="board-row">
+          {analysisOn && <EvalBar evaluation={analysis.currentEval} orientation={orientation} />}
           <Board
             fen={game.fen}
             orientation={orientation}
@@ -83,7 +103,37 @@ export function PlayClient() {
 
       {/* ===================== SIDE PANEL ===================== */}
       <aside className="panel" aria-label="Game panel">
-        <MoveLog history={game.history} />
+        <div className="ana-switch">
+          <span className="label">Engine analysis</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={analysisOn}
+            aria-label="Toggle engine analysis"
+            onClick={() => setAnalysisOn((on) => !on)}
+          >
+            <span className="knob" aria-hidden="true" />
+          </button>
+        </div>
+
+        {analysisOn && (
+          <EvalGraph
+            series={analysis.series}
+            moveFacts={analysis.moveFacts}
+            currentEval={analysis.currentEval}
+            currentDepth={analysis.currentDepth}
+            currentPvSan={analysis.currentPvSan}
+            analyzing={analysis.analyzing}
+          />
+        )}
+
+        <CoachPanel coach={coach} />
+
+        <MoveList
+          moveFacts={analysis.moveFacts}
+          onExplain={coach.explain}
+          explainedPly={coach.active?.surface === "explain" ? coach.active.ply : null}
+        />
 
         <section className="card setup-card" aria-label="Opponent settings">
           <div className="card-head">
@@ -210,34 +260,5 @@ function PlayerStrip({
         </span>
       )}
     </div>
-  );
-}
-
-function MoveLog({ history }: { history: string[] }) {
-  const rows: Array<{ n: number; w?: string; b?: string }> = [];
-  for (let i = 0; i < history.length; i += 2) {
-    rows.push({ n: i / 2 + 1, w: history[i], b: history[i + 1] });
-  }
-  const lastIdx = history.length - 1;
-
-  return (
-    <section className="card moves-card">
-      <div className="card-head">
-        <h2>Move Log</h2>
-        <span className="tag">
-          SAN · {Math.ceil(history.length / 2)} {history.length === 1 ? "move" : "moves"}
-        </span>
-      </div>
-      <div className="moves" aria-label="Move list">
-        {rows.length === 0 && <p className="moves-empty">No moves yet — make the first one.</p>}
-        {rows.map((row, ri) => (
-          <div className="moverow" key={row.n}>
-            <span className="n">{row.n}.</span>
-            <span className={`m${ri * 2 === lastIdx ? " cur" : ""}`}>{row.w ?? ""}</span>
-            <span className={`m${ri * 2 + 1 === lastIdx ? " cur" : ""}`}>{row.b ?? ""}</span>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }

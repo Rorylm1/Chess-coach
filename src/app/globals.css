@@ -35,6 +35,14 @@
   /* Pieces */
   --piece-white: #f5fbfb;
   --piece-black: #0b1118;
+
+  /* Move-quality accents — classification (M2). Distinct from cyan/amber so a verdict
+     never reads as a generic interactive/eval cue. */
+  --q-best: var(--cyan);
+  --q-good: var(--ink-soft);
+  --q-inaccuracy: #f2c14e;
+  --q-mistake: #f4923b;
+  --q-blunder: #ff5d6c;
 }
 
 @theme inline {
@@ -699,7 +707,9 @@ a {
 .board-row {
   position: relative;
   display: flex;
+  align-items: stretch;
   justify-content: center;
+  gap: 10px;
 }
 .game .board {
   --c: min(9.6vw, 70px);
@@ -959,11 +969,32 @@ a {
 .moverow .m {
   color: var(--ink-soft);
   padding: 2px 6px;
+  /* it's a <button> now — strip the chrome, keep the mono type */
+  appearance: none;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: color 140ms ease-out, background 140ms ease-out;
+}
+.moverow .m:hover {
+  color: var(--ink);
+  background: rgba(157, 176, 188, 0.07);
+}
+.moverow .m:empty {
+  cursor: default;
 }
 .moverow .m.cur {
   color: var(--cyan);
   background: rgba(70, 224, 208, 0.08);
   box-shadow: inset 0 0 0 1px var(--hairline);
+}
+.moverow .m.explained {
+  color: var(--cyan);
+  background: rgba(70, 224, 208, 0.14);
+  box-shadow: inset 0 0 0 1px var(--cyan-dim);
 }
 
 /* setup card */
@@ -1056,7 +1087,380 @@ a {
   font-size: 13px;
 }
 
+/* ============================================================
+   M2 — ENGINE ANALYSIS & GROUNDING SPINE
+   ============================================================ */
+
+/* ---- vertical eval bar (beside the board) ---- */
+.evalbar {
+  flex: 0 0 auto;
+  width: 20px;
+  align-self: stretch;
+  display: flex;
+}
+.evalbar-track {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  background: var(--sq-dark);
+  border: 1px solid var(--hairline-2);
+  overflow: hidden;
+}
+.evalbar-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, #f7fcfc, #cdd9dc);
+  transition: height 280ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.evalbar-num {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  text-align: center;
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 9.5px;
+  letter-spacing: 0.01em;
+  color: var(--amber);
+  padding: 4px 0;
+  background: linear-gradient(180deg, rgba(7, 10, 15, 0.9), rgba(7, 10, 15, 0));
+}
+/* On phones the board reclaims the full width; eval lives in the Analysis card instead. */
+@media (max-width: 640px) {
+  .evalbar {
+    display: none;
+  }
+}
+
+/* ---- analysis card (eval readout + best line + swing graph) ---- */
+.analysis-card .card-head .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ana-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.analysis-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 14px 16px 10px;
+}
+.ana-eval {
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.7rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--amber);
+  line-height: 1;
+  flex-shrink: 0;
+}
+.ana-eval.black {
+  color: var(--ink);
+}
+.ana-line {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  min-width: 0;
+  overflow: hidden;
+}
+.ana-line .pv-best {
+  color: var(--cyan);
+}
+.ana-line .pv-move {
+  color: var(--ink-soft);
+}
+.ana-line-empty {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* swing graph */
+.evalgraph {
+  position: relative;
+  height: 96px;
+  margin: 2px 14px 14px;
+  border: 1px solid var(--hairline-2);
+  background: linear-gradient(180deg, rgba(70, 224, 208, 0.04), rgba(255, 180, 84, 0.04));
+}
+.evalgraph-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.eg-baseline {
+  stroke: var(--hairline-2);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+.eg-area {
+  fill: rgba(255, 180, 84, 0.16);
+}
+.eg-line {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 1.75;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.eg-marker {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 2px var(--panel);
+  pointer-events: auto;
+}
+.eg-now {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan-glow);
+  transform: translate(-50%, -50%);
+}
+.evalgraph-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  text-align: center;
+  padding: 0 16px;
+}
+
+/* ---- analysis toggle (panel header switch) ---- */
+.ana-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--hairline-2);
+}
+.ana-switch .label {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan-dim);
+}
+.ana-switch button {
+  position: relative;
+  width: 46px;
+  height: 22px;
+  border: 1px solid var(--hairline-2);
+  background: var(--panel-2);
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+.ana-switch button[aria-checked="true"] {
+  border-color: var(--cyan);
+  box-shadow: inset 0 0 10px rgba(70, 224, 208, 0.18);
+}
+.ana-switch button .knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--ink-faint);
+  transition: transform 180ms cubic-bezier(0.2, 0.7, 0.3, 1), background 160ms ease-out;
+}
+.ana-switch button[aria-checked="true"] .knob {
+  transform: translateX(24px);
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan-glow);
+}
+
+/* ---- move list: classification annotations ---- */
+.moverow .m.q {
+  color: var(--q);
+}
+.moverow .m .q-sym {
+  font-size: 10px;
+  margin-left: 2px;
+  vertical-align: 0.5px;
+  color: var(--q);
+  opacity: 0.95;
+}
+
+/* ---- coach panel: the human-teaching voice (Sora, not the mono engine voice) ---- */
+.coach-card .card-head h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.coach-avatar {
+  color: var(--cyan);
+  font-size: 0.9em;
+  text-shadow: 0 0 10px var(--cyan-glow);
+}
+.coach-dismiss {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 2px;
+  transition: color 140ms ease-out, background 140ms ease-out;
+}
+.coach-dismiss:hover {
+  color: var(--ink);
+  background: rgba(157, 176, 188, 0.08);
+}
+.coach-body {
+  padding: 14px 16px 4px;
+  min-height: 46px;
+}
+.coach-label {
+  display: block;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan-dim);
+  margin-bottom: 8px;
+}
+.coach-text {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0;
+}
+.coach-idle {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-faint);
+  margin: 0;
+}
+.coach-thinking {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.coach-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 9px var(--cyan-glow);
+  animation: pulse 1.3s ease-in-out infinite;
+}
+.coach-caret {
+  display: inline-block;
+  width: 7px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan-glow);
+  animation: caret-blink 1s step-end infinite;
+}
+.coach-error {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.84rem;
+  color: var(--amber);
+  margin: 8px 0 0;
+}
+
+/* tiered hint controls */
+.hint-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px 16px;
+}
+.hint-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  /* clipped HUD corner — varied radii, never one uniform pill */
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  background: linear-gradient(180deg, rgba(70, 224, 208, 0.16), rgba(70, 224, 208, 0.06));
+  border: 1px solid var(--cyan-dim);
+  color: var(--cyan);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: transform 180ms ease-out, box-shadow 180ms ease-out, border-color 180ms ease-out;
+}
+.hint-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: var(--cyan);
+  box-shadow: 0 0 16px var(--cyan-glow);
+}
+.hint-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  color: var(--ink-soft);
+}
+.hint-ic {
+  color: var(--cyan);
+  font-size: 0.95em;
+}
+.hint-deeper {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--hairline-2);
+  color: var(--ink-soft);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: color 160ms ease-out, border-color 160ms ease-out, background 160ms ease-out;
+}
+.hint-deeper:hover:not(:disabled) {
+  color: var(--cyan);
+  border-color: var(--cyan-dim);
+  background: rgba(70, 224, 208, 0.06);
+}
+.hint-deeper:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* ---------- Motion ---------- */
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
 @keyframes pulse {
   0%,
   100% {
@@ -1077,7 +1481,9 @@ a {
     animation: none !important;
     transition: none !important;
   }
-  .nav-status .dot {
+  .nav-status .dot,
+  .ana-dot,
+  .coach-caret {
     display: none;
   }
 }
