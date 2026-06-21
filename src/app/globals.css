@@ -1451,6 +1451,494 @@ a {
   cursor: not-allowed;
 }
 
+/* ============================================================
+   M5 — OPENING LEARNING (index + journey)
+   ============================================================ */
+
+/* ---------- Openings index ---------- */
+.openings {
+  position: relative;
+  z-index: 1;
+  padding: 40px 24px 24px;
+}
+.openings-head {
+  max-width: 60ch;
+  margin-bottom: 40px;
+}
+.openings-head h1 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.1rem, 5vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+}
+.openings-head h1 .accent {
+  color: var(--cyan);
+  text-shadow: 0 0 26px rgba(70, 224, 208, 0.35);
+}
+.openings-head .lede {
+  color: var(--ink-soft);
+  font-size: 1.04rem;
+  margin: 0;
+}
+.openings-head .lede em {
+  color: var(--ink);
+  font-style: italic;
+}
+
+/* available journeys — large, inviting; auto-fit so the set scales to four */
+.opening-featured {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (min-width: 760px) {
+  .opening-featured {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+.ocard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--hairline-2);
+  padding: 24px 24px 22px;
+}
+.ocard-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.ocard-eco {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--cyan-dim);
+}
+.ocard-side {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.ocard-side .glyph {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1;
+}
+.ocard h2 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.01em;
+  margin: 0 0 10px;
+}
+.ocard p {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0 0 20px;
+  flex: 1;
+}
+
+/* ready card: interactive, cyan affordances */
+.ocard-ready {
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
+}
+.ocard-ready:hover {
+  transform: translateY(-3px);
+  border-color: var(--cyan-dim);
+  box-shadow: 0 12px 34px rgba(70, 224, 208, 0.12);
+}
+.ocard-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.ocard-cta .arrow {
+  transition: transform 200ms ease-out;
+}
+.ocard-ready:hover .ocard-cta .arrow {
+  transform: translateX(4px);
+}
+
+/* coming-soon cards: clearly subordinate */
+.opening-soon {
+  margin-top: 48px;
+}
+.soon-kicker {
+  display: block;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 16px;
+}
+.opening-soon-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 720px) {
+  .opening-soon-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.ocard-soon {
+  border-style: dashed;
+  opacity: 0.7;
+}
+.ocard-soon h2 {
+  font-size: 1.25rem;
+}
+.ocard-soon p {
+  font-size: 0.88rem;
+  margin-bottom: 14px;
+}
+.ocard-soon-tag {
+  align-self: flex-start;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border: 1px solid var(--hairline-2);
+  padding: 4px 10px;
+}
+
+/* ---------- Journey shell ---------- */
+.journey-shell {
+  position: relative;
+  z-index: 1;
+  padding: 28px 24px 56px;
+}
+.journey-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.journey-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transition: color 160ms ease-out;
+}
+.journey-back:hover {
+  color: var(--cyan);
+}
+.journey-title {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.journey-eco {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--cyan-dim);
+}
+.journey-title h1 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+.journey-side {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.journey-side .glyph {
+  font-size: 15px;
+  color: var(--amber);
+}
+.journey-tabs {
+  max-width: 320px;
+}
+
+/* ---------- Journey layout (board + coach) ---------- */
+.journey {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  align-items: start;
+}
+@media (min-width: 1000px) {
+  .journey {
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 30px;
+  }
+}
+.journey-board-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.journey .board {
+  --c: min(9vw, 66px);
+  margin: 0 auto;
+}
+@media (max-width: 640px) {
+  .journey .board {
+    --c: 11.2vw;
+  }
+}
+.journey .sq {
+  font-size: clamp(28px, 6.6vw, 48px);
+}
+.journey-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+@media (min-width: 1000px) {
+  .journey-panel {
+    position: sticky;
+    top: 86px;
+  }
+}
+
+/* move ribbon */
+.move-ribbon {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 10px 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline-2);
+}
+.move-ribbon.empty {
+  opacity: 0.6;
+}
+.ribbon-chip {
+  appearance: none;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--ink-soft);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: color 140ms ease-out, background 140ms ease-out, border-color 140ms ease-out;
+}
+button.ribbon-chip:hover {
+  color: var(--ink);
+  background: rgba(157, 176, 188, 0.07);
+}
+.ribbon-chip.done {
+  color: var(--ink);
+}
+.ribbon-chip.cur {
+  color: var(--cyan);
+  border-color: var(--cyan-dim);
+  background: rgba(70, 224, 208, 0.1);
+}
+.ribbon-chip.start {
+  color: var(--cyan-dim);
+}
+.ribbon-n {
+  color: var(--ink-faint);
+  margin-right: 3px;
+}
+
+/* journey controls */
+.journey-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.jbtn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--hairline-2);
+  color: var(--ink-soft);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 11px 16px;
+  cursor: pointer;
+  transition: color 160ms ease-out, border-color 160ms ease-out, background 160ms ease-out;
+}
+.jbtn:hover:not(:disabled) {
+  color: var(--cyan);
+  border-color: var(--cyan-dim);
+  background: var(--surface);
+}
+.jbtn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+.journey-progress {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  text-align: center;
+  flex: 1;
+}
+
+/* coach note (read-through) */
+.jnote,
+.jfeedback {
+  position: relative;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--hairline-2);
+  padding: 18px 20px;
+}
+.jnote-label {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan-dim);
+  margin-bottom: 11px;
+}
+.jnote-move {
+  color: var(--ink);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+.jnote-text {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.62;
+  color: var(--ink);
+  margin: 0;
+}
+.jnote-asides {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--hairline-2);
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.jnote-asides li {
+  display: flex;
+  gap: 9px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.aside-mark {
+  color: var(--amber);
+  flex-shrink: 0;
+  font-size: 0.95em;
+}
+
+/* thematic panels (end of read-through) */
+.jpanels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.jpanels-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  margin: 0 0 2px;
+}
+.jpanel {
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--hairline-2);
+  border-left: 2px solid var(--cyan-dim);
+  padding: 14px 16px;
+}
+.jpanel.accent {
+  border-left-color: var(--amber-dim);
+}
+.jpanel-label {
+  display: block;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan-dim);
+  margin-bottom: 8px;
+}
+.jpanel.accent .jpanel-label {
+  color: var(--amber-dim);
+}
+.jpanel p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.jplay-btn {
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* drill feedback tones */
+.jfeedback.tone-good {
+  border-color: var(--cyan-dim);
+  box-shadow: inset 0 0 0 1px rgba(70, 224, 208, 0.12), 0 0 22px rgba(70, 224, 208, 0.08);
+}
+.jfeedback.tone-good .jnote-label {
+  color: var(--cyan);
+}
+.jfeedback.tone-warn {
+  border-color: var(--amber-dim);
+}
+.jfeedback.tone-warn .jnote-label {
+  color: var(--amber);
+}
+.jdone-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.jdone-actions .btn {
+  flex: 1;
+  justify-content: center;
+  min-width: 140px;
+}
+
 /* ---------- Motion ---------- */
 @keyframes caret-blink {
   0%,

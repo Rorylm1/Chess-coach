@@ -1,13 +1,21 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const NAV = [
   { label: "Play", href: "/play" },
   { label: "Review", href: "#" },
-  { label: "Openings", href: "#" },
+  { label: "Openings", href: "/openings" },
   { label: "Progress", href: "#" },
 ];
 
 export function SiteHeader() {
+  const pathname = usePathname();
+
+  const isActive = (href: string) =>
+    href !== "#" && (pathname === href || pathname.startsWith(`${href}/`));
+
   return (
     <header className="site-header">
       <div className="wrap">
@@ -25,10 +33,7 @@ export function SiteHeader() {
           <ul className="nav-links">
             {NAV.map((item) => (
               <li key={item.label}>
-                <Link
-                  href={item.href}
-                  aria-current={item.label === "Play" ? "page" : undefined}
-                >
+                <Link href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
                   {item.label}
                 </Link>
               </li>
