@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored GPLv3 Stockfish engine — isolated static asset, not our source.
+    "public/stockfish/**",
   ]),
 ]);
 
