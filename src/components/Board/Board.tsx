@@ -10,9 +10,10 @@
  * is unified click-to-move + pointer drag, so it feels right on both mouse and touch.
  */
 
-import { useMemo, useRef, useState, useCallback } from "react";
+import { useMemo, useRef, useState, useCallback, useEffect } from "react";
 import { Chess, type Color, type Square } from "chess.js";
 import { GLYPH, FILES, pieceName } from "@/lib/chess/pieces";
+import { CLASSIC_THEME, type BoardTheme } from "@/lib/board/theme";
 
 export interface AttemptedMove {
   from: Square;
@@ -28,6 +29,11 @@ interface BoardProps {
   /** Origin + destination of the last move played, for the amber highlight. */
   lastMove: { from: Square; to: Square } | null;
   onMove: (move: AttemptedMove) => void;
+  /** Per-game randomized palette (M6). Defaults to the classic Deep-Space board. */
+  theme?: BoardTheme;
+  /** Bumped by a user reroll/reset to play the re-tint sweep once. A silent hydrate
+   * from storage leaves it unchanged, so the board settles without animating. */
+  sweepKey?: number;
 }
 
 interface DragState {
@@ -41,10 +47,31 @@ interface DragState {
 
 const PROMO_PIECES: Array<"q" | "r" | "b" | "n"> = ["q", "r", "b", "n"];
 
-export function Board({ fen, orientation, interactive, lastMove, onMove }: BoardProps) {
+export function Board({
+  fen,
+  orientation,
+  interactive,
+  lastMove,
+  onMove,
+  theme,
+  sweepKey = 0,
+}: BoardProps) {
   const game = useMemo(() => new Chess(fen), [fen]);
   const turn = game.turn();
   const gridRef = useRef<HTMLDivElement>(null);
+
+  // Re-tint sweep: a user reroll/reset bumps sweepKey → play the staggered colour sweep
+  // once. The initial mount is skipped, and a hydrate-from-storage never bumps the key.
+  const activeTheme = theme ?? CLASSIC_THEME;
+  const [sweeping, setSweeping] = useState(false);
+  const sweepRef = useRef(sweepKey);
+  useEffect(() => {
+    if (sweepRef.current === sweepKey) return;
+    sweepRef.current = sweepKey;
+    setSweeping(true);
+    const t = setTimeout(() => setSweeping(false), 900);
+    return () => clearTimeout(t);
+  }, [sweepKey]);
 
   const [selected, setSelected] = useState<Square | null>(null);
   const [drag, setDrag] = useState<DragState | null>(null);
@@ -187,7 +214,12 @@ export function Board({ fen, orientation, interactive, lastMove, onMove }: Board
         .join(" ");
 
       squares.push(
-        <div key={square} className={cls} data-square={square}>
+        <div
+          key={square}
+          className={cls}
+          data-square={square}
+          style={{ "--sweep-d": `${(r + c) * 26}ms` } as React.CSSProperties}
+        >
           {c === 0 && <span className="coord rank">{rankNum}</span>}
           {r === 7 && <span className="coord file">{FILES[fileIndex]}</span>}
           {piece && !hidden && (
@@ -210,7 +242,10 @@ export function Board({ fen, orientation, interactive, lastMove, onMove }: Board
   const ariaLabel = describePosition(game, orientation, lastMove);
 
   return (
-    <div className="board-wrap">
+    <div
+      className="board-wrap"
+      style={activeTheme.isClassic ? undefined : (activeTheme.vars as React.CSSProperties)}
+    >
       <span className="brk tl" aria-hidden="true" />
       <span className="brk tr" aria-hidden="true" />
       <span className="brk bl" aria-hidden="true" />
@@ -218,7 +253,7 @@ export function Board({ fen, orientation, interactive, lastMove, onMove }: Board
 
       <div
         ref={gridRef}
-        className={`board${interactive ? " live" : ""}`}
+        className={`board${interactive ? " live" : ""}${sweeping ? " sweeping" : ""}`}
         role="img"
         aria-label={ariaLabel}
         style={{ touchAction: "none" }}

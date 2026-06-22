@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Two live destinations in M6 — Play and Openings. The Coach tab lands in M8.
 const NAV = [
   { label: "Play", href: "/play" },
-  { label: "Review", href: "#" },
   { label: "Openings", href: "/openings" },
-  { label: "Progress", href: "#" },
 ];
 
 export function SiteHeader() {

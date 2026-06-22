@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Board Randomizer — exploration · Chess Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     EXPLORATION MOCKUP — not production code.
+     The real OKLCH generator runs inline (xmur3+mulberry32, 6
+     families, contrast/ΔL/mud-zone backstop). The point is to
+     *see* the decisions on a real board before we port them.
+     Aesthetic borrowed from DESIGN.md "Deep-Space Analysis Deck".
+     ============================================================ */
+  :root {
+    --void: #070a0f;  --bg: #0a0e14;  --panel: #10161f;  --panel-2: #0d131b;
+    --surface: #161e2a;  --slate: #1e2835;
+    --cyan: #46e0d0;  --cyan-dim: #2a8e84;  --cyan-glow: rgba(70,224,208,.45);
+    --amber: #ffb454;
+    --ink: #e8f0f2;  --ink-soft: #9db0bc;  --ink-faint: #607080;
+    --hairline: rgba(70,224,208,.16);  --hairline-2: rgba(157,176,188,.12);
+    --ok: #5fd0a8;  --bad: #ff5d6c;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Sora", system-ui, sans-serif; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; min-height: 100dvh; overflow-x: hidden;
+    background-image:
+      radial-gradient(1100px 700px at 88% -8%, rgba(70,224,208,.07), transparent 60%),
+      radial-gradient(900px 700px at 5% 108%, rgba(255,180,84,.05), transparent 60%);
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  header.top { padding: 56px 0 24px; }
+  .kicker {
+    font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--cyan-dim);
+  }
+  h1 {
+    font-family: "Chakra Petch", system-ui, sans-serif; font-weight: 600;
+    letter-spacing: .04em; font-size: clamp(30px, 5vw, 46px); margin: 8px 0 12px;
+  }
+  .lede { color: var(--ink-soft); max-width: 70ch; margin: 0; font-size: 16.5px; }
+  .lede code { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--amber); }
+
+  section { padding: 40px 0 12px; border-top: 1px solid var(--hairline-2); margin-top: 36px; }
+  section:first-of-type { border-top: none; margin-top: 8px; }
+  h2 {
+    font-family: "Chakra Petch", system-ui, sans-serif; font-weight: 600; letter-spacing: .04em;
+    font-size: 24px; margin: 0 0 6px; display: flex; align-items: baseline; gap: 12px;
+  }
+  h2 .n { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--cyan); }
+  .sub { color: var(--ink-soft); margin: 0 0 26px; max-width: 76ch; }
+  .sub strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------------- board primitive ---------------- */
+  .board {
+    --c: 40px; width: calc(var(--c) * 8); aspect-ratio: 1/1; display: grid;
+    grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr);
+    border: 1px solid var(--frame, var(--cyan)); position: relative;
+    box-shadow: 0 0 30px rgba(70,224,208,.10), inset 0 0 0 1px rgba(255,255,255,.03);
+  }
+  .sq { position: relative; display: grid; place-items: center; line-height: 1; }
+  .sq.lt { background: var(--lt); }
+  .sq.dk { background: var(--dk); }
+  .piece { font-size: calc(var(--c) * .78); user-select: none; position: relative; z-index: 1; }
+  /* outlined-glyph material treatment — legibility lives on the RIM, derived ≥3:1
+     vs BOTH squares, so squares are free to be bright. fill = family extreme tone. */
+  .piece.w {
+    color: var(--pw);
+    text-shadow:
+      0 0 1px var(--rw), .6px .6px 0 var(--rw), -.6px -.6px 0 var(--rw),
+      .6px -.6px 0 var(--rw), -.6px .6px 0 var(--rw), 0 1px 2px rgba(0,0,0,.35);
+  }
+  .piece.b {
+    color: var(--pb);
+    text-shadow:
+      0 0 1px var(--rb), .6px .6px 0 var(--rb), -.6px -.6px 0 var(--rb),
+      .6px -.6px 0 var(--rb), -.6px .6px 0 var(--rb), 0 0 6px var(--acc-glow, transparent);
+  }
+  /* on-board cues — re-hued to the family accent, distinguished by SHAPE too */
+  .sq.last::after {
+    content: ""; position: absolute; inset: 0; background: var(--acc-fill);
+    box-shadow: inset 0 0 0 2px var(--acc);
+  }
+  .sq.sel::after {
+    content: ""; position: absolute; inset: 0;
+    box-shadow: inset 0 0 0 2px var(--acc), inset 0 0 14px var(--acc-glow);
+    background: var(--acc-fill);
+  }
+  .sq.check::before {
+    content: ""; position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(circle at center, rgba(255,90,90,.55), transparent 70%);
+  }
+  .sq .hint {
+    position: absolute; width: 26%; height: 26%; border-radius: 50%;
+    background: var(--acc); opacity: .6; box-shadow: 0 0 8px var(--acc-glow); z-index: 2;
+  }
+  .sq .hint.cap {
+    width: 80%; height: 80%; background: transparent; border: 2px solid var(--acc); opacity: .65;
+  }
+  .coord { position: absolute; font-family: "JetBrains Mono", monospace; font-size: 8px; font-weight: 700; opacity: .8; }
+  .coord.file { bottom: 1px; right: 2px; } .coord.rank { top: 1px; left: 2px; }
+  .sq.dk .coord { color: var(--coord-dk); } .sq.lt .coord { color: var(--coord-lt); }
+  /* re-tint sweep: each square eases its colour with a diagonal delay */
+  .board.sweep .sq { transition: background-color 520ms cubic-bezier(.2,.7,.3,1); }
+
+  /* ---------------- family gallery ---------------- */
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px 22px; }
+  @media (max-width: 880px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .gallery { grid-template-columns: 1fr; } }
+  .fam { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .fam .board { --c: clamp(34px, 11vw, 46px); }
+  .fam-meta { width: 100%; }
+  .fam-name {
+    font-family: "Chakra Petch", system-ui, sans-serif; font-size: 15px; letter-spacing: .04em;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .fam-name .seed { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--ink-faint); }
+  .metrics { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .chip {
+    font-family: "JetBrains Mono", monospace; font-size: 10.5px; padding: 2px 7px;
+    border: 1px solid var(--hairline-2); border-radius: 2px; color: var(--ink-soft);
+    display: inline-flex; gap: 5px; align-items: center;
+  }
+  .chip b { color: var(--ink); font-weight: 500; }
+  .chip.pass { border-color: rgba(95,208,168,.4); } .chip.pass b { color: var(--ok); }
+  .chip.fail { border-color: rgba(255,93,108,.5); } .chip.fail b { color: var(--bad); }
+
+  /* ---------------- stress test ---------------- */
+  .verdict {
+    font-family: "JetBrains Mono", monospace; font-size: 13px; padding: 10px 16px;
+    border: 1px solid var(--hairline); background: var(--panel-2); display: inline-flex;
+    gap: 14px; align-items: center; margin-bottom: 22px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  }
+  .verdict .big { font-size: 18px; color: var(--ok); font-weight: 700; }
+  .verdict.has-fail .big { color: var(--bad); }
+  .swarm { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; }
+  .mini { display: flex; flex-direction: column; gap: 5px; align-items: center; }
+  .mini .board { --c: 11px; border-width: .5px; box-shadow: none; }
+  .mini .piece { font-size: 8px; }
+  .mini .lbl {
+    font-family: "JetBrains Mono", monospace; font-size: 9px; color: var(--ink-faint);
+    text-align: center; letter-spacing: .02em;
+  }
+  .mini .lbl .ok { color: var(--ok); } .mini .lbl .bad { color: var(--bad); }
+
+  /* ---------------- reroll directions ---------------- */
+  .dirs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 920px) { .dirs { grid-template-columns: 1fr; max-width: 440px; } }
+  .dir {
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--hairline-2); padding: 20px 18px 22px; position: relative;
+  }
+  .dir::before, .dir::after {
+    content: ""; position: absolute; width: 11px; height: 11px;
+    border: 1.5px solid var(--cyan); opacity: .5;
+  }
+  .dir::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .dir::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+  .dir h3 {
+    font-family: "Chakra Petch", system-ui, sans-serif; font-weight: 600; letter-spacing: .04em;
+    font-size: 16px; margin: 0 0 2px;
+  }
+  .dir .tag {
+    font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--cyan-dim); display: block; margin-bottom: 14px;
+  }
+  .dir .board { --c: clamp(30px, 9vw, 38px); margin: 0 auto 14px; }
+  .dir .note { font-size: 12.5px; color: var(--ink-soft); margin: 12px 0 0; min-height: 3em; }
+
+  .nameplate {
+    text-align: center; font-family: "Chakra Petch", system-ui, sans-serif;
+    letter-spacing: .05em; font-size: 17px; margin-bottom: 12px;
+  }
+  .nameplate .seed { display: block; font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--ink-faint); letter-spacing: .04em; }
+
+  button.roll, button.ghost {
+    font-family: "Chakra Petch", system-ui, sans-serif; letter-spacing: .08em; font-size: 13px;
+    cursor: pointer; border: 1px solid var(--cyan); color: var(--cyan); background: transparent;
+    padding: 9px 14px; width: 100%; transition: transform .15s ease-out, background .15s, box-shadow .15s;
+    clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  }
+  button.roll:hover { background: rgba(70,224,208,.1); box-shadow: 0 0 16px var(--cyan-glow); transform: translateY(-1px); }
+  button.ghost { border-color: var(--hairline); color: var(--ink-soft); margin-top: 8px; }
+  button.ghost:hover { color: var(--ink); border-color: var(--ink-faint); }
+  .row { display: flex; gap: 8px; }
+  .row button { width: auto; flex: 1; }
+
+  /* Dir B — shelf of swatch chips */
+  .shelf { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px; }
+  .swatch {
+    flex: 0 0 auto; width: 46px; height: 46px; border: 1px solid var(--hairline-2);
+    cursor: pointer; position: relative; padding: 0; transition: transform .12s, border-color .12s;
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+  }
+  .swatch:hover { transform: translateY(-2px); border-color: var(--cyan); }
+  .swatch.on { border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan-glow); }
+  .swatch i { display: block; }
+  .swatch.on::after { content: "●"; position: absolute; top: -7px; right: -4px; color: var(--cyan); font-size: 9px; }
+
+  /* Dir C — seed field */
+  .seedfield { display: flex; gap: 8px; margin-bottom: 8px; }
+  .seedfield input {
+    flex: 1; min-width: 0; background: var(--void); border: 1px solid var(--hairline);
+    color: var(--ink); font-family: "JetBrains Mono", monospace; font-size: 12px; padding: 8px 10px;
+  }
+  .seedfield input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-color: var(--cyan); }
+  .seedfield button { flex: 0 0 auto; width: auto; padding: 8px 12px; }
+  .sharelink {
+    font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--ink-faint);
+    word-break: break-all; margin-top: 10px;
+  }
+  .sharelink b { color: var(--amber); font-weight: 500; }
+
+  .footnote {
+    margin: 30px 0 70px; padding: 18px 20px; border-left: 2px solid var(--cyan-dim);
+    background: var(--panel-2); color: var(--ink-soft); font-size: 14px;
+  }
+  .footnote b { color: var(--ink); }
+  .footnote code { font-family: "JetBrains Mono", monospace; font-size: 12.5px; color: var(--amber); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .board.sweep .sq { transition: none !important; }
+    button.roll:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">M6 · Feature 1 · exploration</div>
+    <h1>The Randomized Board</h1>
+    <p class="lede">
+      A <strong>randomizer, not an editor</strong>: every game rolls a one-of-a-kind 2D board that's
+      legible by construction. The real generator runs on this page — <code>xmur3</code>+<code>mulberry32</code>
+      seeded PRNG, six curated OKLCH families, jitter-within-clamps, and a contrast/ΔL backstop. Nothing
+      here is hand-picked; everything you see is generated, then measured.
+    </p>
+  </header>
+
+  <!-- ======================= 1. FAMILIES ======================= -->
+  <section>
+    <h2><span class="n">01</span> The six families</h2>
+    <p class="sub">
+      Variety comes from <strong>which family</strong> a seed lands in and <strong>how much</strong> it's
+      perturbed — never from raw colour randomness. Each board below is a real position rolled from a real
+      seed. The chips report the measured guarantees: <strong>piece-rim contrast vs both squares ≥ 3:1</strong>
+      and <strong>square ΔL ≥ 0.28</strong>.
+    </p>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <!-- ======================= 2. STRESS TEST ======================= -->
+  <section>
+    <h2><span class="n">02</span> Legibility stress test</h2>
+    <p class="sub">
+      Forty-eight random rolls. The claim is <strong>ugly-by-construction-impossible</strong> — so every
+      single one must pass both floors. Each mini-board shows its weakest measured number; any failure turns red.
+    </p>
+    <div class="verdict" id="verdict">measuring…</div>
+    <div class="swarm" id="swarm"></div>
+  </section>
+
+  <!-- ======================= 3. REROLL / NAMING ======================= -->
+  <section>
+    <h2><span class="n">03</span> Reroll &amp; naming — three directions</h2>
+    <p class="sub">
+      Same generator, three ways to <strong>experience</strong> the roll. Try each. We port the
+      <em>interaction decision</em>, not the markup.
+    </p>
+    <div class="dirs">
+
+      <!-- A: Dealer's roll -->
+      <div class="dir" id="dirA">
+        <h3>A · Dealer's roll</h3>
+        <span class="tag">one tap · minimal</span>
+        <div class="nameplate" id="nameA">— <span class="seed">—</span></div>
+        <div class="board" id="boardA"></div>
+        <button class="roll" id="rollA">↻ Reroll board</button>
+        <button class="ghost" id="resetA">Reset to classic</button>
+        <p class="note">
+          One verb. The board re-tints with a staggered sweep and a nameplate snaps in. Cheapest possible
+          surface — the board <em>is</em> the UI; the randomizer is a single button under it.
+        </p>
+      </div>
+
+      <!-- B: The shelf -->
+      <div class="dir" id="dirB">
+        <h3>B · The shelf</h3>
+        <span class="tag">curatorial · browse &amp; pin</span>
+        <div class="nameplate" id="nameB">— <span class="seed">—</span></div>
+        <div class="board" id="boardB"></div>
+        <div class="shelf" id="shelfB"></div>
+        <button class="roll" id="moreB">↻ Roll six more</button>
+        <p class="note">
+          Rolls become a shelf of swatches you browse and pin. More playful and collectible — you pick a
+          board you like rather than accept the first roll. Heavier surface; risks choice-paralysis.
+        </p>
+      </div>
+
+      <!-- C: Seed field -->
+      <div class="dir" id="dirC">
+        <h3>C · Seed field</h3>
+        <span class="tag">shareable · the seed is the board</span>
+        <div class="nameplate" id="nameC">— <span class="seed">—</span></div>
+        <div class="board" id="boardC"></div>
+        <div class="seedfield">
+          <input id="seedInput" type="text" aria-label="Board seed" value="opening-night" />
+          <button class="roll" id="diceC" aria-label="Random seed">⚄</button>
+        </div>
+        <p class="sharelink">share → <b id="shareC">?b=opening-night</b></p>
+        <p class="note">
+          The seed string <em>is</em> the board's identity. Type one, share one — the M7 live-link reuses
+          exactly this, so both players see the same board. Most powerful, least playful at a glance.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="footnote">
+    <b>Headline finding to port:</b> legibility is guaranteed on the <b>piece rim</b> (a derived
+    near-neutral outline, ≥ 3:1 vs both squares), <em>not</em> the fill — the research doc's
+    "near-white piece ≥ 3:1 vs a bright square" is physically impossible and would ban every classic-wood
+    board. Outlined glyphs (the spec's <code>rim/sheen/emboss</code> treatment) is what frees squares to be
+    bright and varied. Second finding: the <b>mud-zone ban</b> (<code>L .40–.60 ∧ C .05–.12</code>) collides
+    with the family table's own dark squares (e.g. warm-wood dark <code>L.50 C.065</code>); we apply it to the
+    accent/chrome, and govern squares by <code>C ≤ 0.08 ∧ ΔL ≥ 0.28</code> instead.
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   THE GENERATOR (vanilla — mirrors research/randomizer-color-system.md)
+   ============================================================ */
+
+// ---- PRNG (verbatim from the research doc) ----
+function xmur3(str){ for(var i=0,h=1779033703^str.length;i<str.length;i++){
+  h=Math.imul(h^str.charCodeAt(i),3432918353); h=h<<13|h>>>19; }
+  return function(){ h=Math.imul(h^h>>>16,2246822507); h=Math.imul(h^h>>>13,3266489909);
+  return (h^=h>>>16)>>>0; }; }
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0;
+  var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t;
+  return ((t^t>>>14)>>>0)/4294967296; }; }
+
+// ---- OKLCH → sRGB (Björn Ottosson matrices) ----
+function oklchToRgb(L,C,H){
+  const hr=H*Math.PI/180, a=C*Math.cos(hr), b=C*Math.sin(hr);
+  const l_=L+0.3963377774*a+0.2158037573*b,
+        m_=L-0.1055613458*a-0.0638541728*b,
+        s_=L-0.0894841775*a-1.2914855480*b;
+  const l=l_*l_*l_, m=m_*m_*m_, s=s_*s_*s_;
+  let r= 4.0767416621*l-3.3077115913*m+0.2309699292*s,
+      g=-1.2684380046*l+2.6097574011*m-0.3413193965*s,
+      bl=-0.0041960863*l-0.7034186147*m+1.7076147010*s;
+  const inGamut = r>=-1e-4&&r<=1.0001&&g>=-1e-4&&g<=1.0001&&bl>=-1e-4&&bl<=1.0001;
+  const enc=c=>{c=Math.min(1,Math.max(0,c)); return c<=0.0031308?12.92*c:1.055*Math.pow(c,1/2.4)-0.055;};
+  return {r:enc(r),g:enc(g),b:enc(bl),inGamut};
+}
+function clampChroma(L,C,H){ if(oklchToRgb(L,C,H).inGamut) return C;
+  let lo=0,hi=C; for(let i=0;i<22;i++){const mid=(lo+hi)/2; oklchToRgb(L,mid,H).inGamut?lo=mid:hi=mid;} return lo; }
+function relLum({r,g,b}){ const f=c=>c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4);
+  return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b); }
+function contrast(c1,c2){ const a=relLum(c1),z=relLum(c2),hi=Math.max(a,z),lo=Math.min(a,z); return (hi+0.05)/(lo+0.05); }
+const css = ({L,C,H}) => `oklch(${(L*100).toFixed(1)}% ${C.toFixed(3)} ${H.toFixed(1)})`;
+const rgbOf = ({L,C,H}) => oklchToRgb(L,C,H);
+
+// ---- the six families (constant L scaffold; seed jitters hue + small chroma) ----
+const FAMILIES = [
+  {name:"Warm wood",      nick:"Walnut",    weight:3, hue:[30,55],   light:{L:.84,C:.045}, dark:{L:.50,C:.065}, white:{L:.95,C:.015}, black:{L:.22,C:.025}, accOff:155, acc:{L:.60,C:.15}},
+  {name:"Cool slate",     nick:"Slate",     weight:3, hue:[230,260], light:{L:.82,C:.030}, dark:{L:.48,C:.050}, white:{L:.96,C:.008}, black:{L:.24,C:.020}, accOff:150, acc:{L:.58,C:.14}},
+  {name:"Ink & parchment",nick:"Parchment", weight:3, hue:[70,90],   light:{L:.90,C:.020}, dark:{L:.42,C:.030}, white:{L:.97,C:.006}, black:{L:.18,C:.015}, accOff:180, acc:{L:.55,C:.13}},
+  {name:"Sage / olive",   nick:"Sage",      weight:2, hue:[120,150], light:{L:.83,C:.055}, dark:{L:.50,C:.070}, white:{L:.95,C:.012}, black:{L:.23,C:.020}, accOff:155, acc:{L:.60,C:.16}},
+  {name:"Marble",         nick:"Marble",    weight:2, hue:[250,290], light:{L:.88,C:.015}, dark:{L:.58,C:.025}, white:{L:.97,C:.005}, black:{L:.26,C:.015}, accOff:150, acc:{L:.58,C:.15}},
+  {name:"Jewel tones",    nick:"Jewel",     weight:1, hue:[0,360],   light:{L:.80,C:.070}, dark:{L:.45,C:.090}, white:{L:.96,C:.010}, black:{L:.20,C:.020}, accOff:210, acc:{L:.55,C:.19}},
+];
+
+// The classic "Deep-Space Analysis Deck" board — the default / reset target.
+const CLASSIC = {
+  name:"Deep-Space", nick:"Classic", seed:"classic", shortSeed:"deck",
+  light:{L:.52,C:.028,H:233}, dark:{L:.255,C:.030,H:232},
+  pieceW:{L:.97,C:.004,H:200}, pieceB:{L:.13,C:.02,H:233},
+  rimW:{L:.10,C:.01,H:233}, rimB:{L:.86,C:.06,H:185},   // black piece keeps the cyan-ish rim
+  accent:{L:.78,C:.13,H:185}, frame:"var(--cyan)",
+};
+
+// A piece is TWO-TONE: a fill + an opposite-luminance outline. On any square,
+// whichever tone contrasts the square carries legibility — so the guarantee is
+// max(contrast(fill,sq), contrast(rim,sq)) ≥ 3 per square (NOT rim-alone, which
+// is geometrically impossible: a light rim can't clear a pale square). Nudge the
+// rim toward its extreme (then the fill) until both squares are satisfied.
+const legSq = (fill,rim,sq)=>Math.max(contrast(rgbOf(fill),rgbOf(sq)), contrast(rgbOf(rim),rgbOf(sq)));
+function ensureLegible(fill, rim, light, dark, fillUp, rimUp){
+  for(let i=0;i<40;i++){
+    if(legSq(fill,rim,light)>=3 && legSq(fill,rim,dark)>=3) break;
+    rim  = {L: rimUp ?Math.min(0.985,rim.L+0.03):Math.max(0.03,rim.L-0.03),  C:rim.C,  H:rim.H};
+    fill = {L: fillUp?Math.min(0.99, fill.L+0.01):Math.max(0.04,fill.L-0.01), C:fill.C, H:fill.H};
+    rim.C = clampChroma(rim.L,rim.C,rim.H); fill.C = clampChroma(fill.L,fill.C,fill.H);
+  }
+  return {fill, rim, min: Math.min(legSq(fill,rim,light), legSq(fill,rim,dark))};
+}
+
+function generate(seedStr){
+  const rand = mulberry32(xmur3(seedStr)());
+  rand(); rand();                                          // warm-up to kill low-seed correlation
+  // 1. weighted family pick
+  const total = FAMILIES.reduce((s,f)=>s+f.weight,0);
+  let t = rand()*total, fam = FAMILIES[0];
+  for(const f of FAMILIES){ if(t<f.weight){fam=f;break;} t-=f.weight; }
+  // 2. base hue within the family band
+  const H = fam.hue[0] + rand()*(fam.hue[1]-fam.hue[0]);
+  const Hdark = H + (rand()-0.5)*16;                       // ≤ ±8° drift
+  // 3. small chroma jitter (square C capped, mud-zone enforced on accent only)
+  const jit = c => Math.max(0, c + (rand()-0.5)*0.012);
+  let light = {L:fam.light.L, C:Math.min(0.08, jit(fam.light.C)), H};
+  let dark  = {L:fam.dark.L,  C:Math.min(0.09, jit(fam.dark.C)),  H:Hdark};
+  let white = {L:fam.white.L, C:fam.white.C, H};
+  let black = {L:fam.black.L, C:fam.black.C, H};
+  // 4. accent: split-complementary, high chroma
+  let accent = {L:fam.acc.L, C:fam.acc.C, H:(H+fam.accOff)%360};
+  // gamut clamp
+  [light,dark,accent].forEach(c => c.C = clampChroma(c.L,c.C,c.H));
+  // ---- BACKSTOP ----
+  // square ΔL ≥ 0.28
+  const dL = light.L - dark.L;
+  if(dL < 0.28){ const def=(0.28-dL)/2; light.L=Math.min(0.97,light.L+def); dark.L=Math.max(0.30,dark.L-def);
+    [light,dark].forEach(c=>c.C=clampChroma(c.L,c.C,c.H)); }
+  // two-tone pieces — white: light fill + dark rim; black: dark fill + light rim
+  const W = ensureLegible({...white}, {L:0.18,C:0.012,H}, light, dark, true,  false);
+  const B = ensureLegible({...black}, {L:0.92,C:0.012,H}, light, dark, false, true);
+  const minW = W.min, minB = B.min, deltaL = light.L - dark.L;
+  // accent mud-zone fix (L .40–.60 ∧ C .05–.12): brighten L to recover committed chroma
+  if(accent.L>=0.40 && accent.L<=0.60 && accent.C>=0.05 && accent.C<=0.12){
+    accent.L = 0.70; accent.C = clampChroma(accent.L, Math.max(accent.C, 0.14), accent.H);
+  }
+  const shortSeed = (xmur3(seedStr)() >>> 0).toString(16).slice(0,4);
+  return {
+    family:fam.name, nick:fam.nick, seed:seedStr, shortSeed,
+    light, dark, pieceW:W.fill, pieceB:B.fill, rimW:W.rim, rimB:B.rim, accent,
+    frame: `oklch(${(accent.L*100).toFixed(0)}% ${(accent.C*0.6).toFixed(3)} ${accent.H.toFixed(0)})`,
+    metrics:{ minPieceContrast: Math.min(minW,minB), minW, minB, deltaL,
+              pass: minW>=3 && minB>=3 && deltaL>=0.28 },
+  };
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const GLYPH = {k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"};
+// a real middlegame: both colours on both square tones
+const POS = [
+  ["r","","b","q","","r","k",""],
+  ["p","p","","","","p","b","p"],
+  ["","","n","p","","n","p",""],
+  ["","","","","p","","",""],
+  ["","","B","","P","","",""],
+  ["","","N","P","","N","",""],
+  ["P","P","","","","P","P","P"],
+  ["R","","B","Q","","R","K",""],
+];
+// a couple of cue squares for the gallery (last move + selection + a check + hints)
+const CUES = { last:[[4,2],[3,4]], sel:[[6,5]], hint:[[5,5]], cap:[[2,2]] };
+
+function applyTheme(el, th){
+  el.style.setProperty("--lt", css(th.light));
+  el.style.setProperty("--dk", css(th.dark));
+  el.style.setProperty("--pw", css(th.pieceW));
+  el.style.setProperty("--pb", css(th.pieceB));
+  el.style.setProperty("--rw", css(th.rimW));
+  el.style.setProperty("--rb", css(th.rimB));
+  el.style.setProperty("--acc", css(th.accent));
+  el.style.setProperty("--acc-fill", `oklch(${(th.accent.L*100).toFixed(0)}% ${th.accent.C.toFixed(3)} ${th.accent.H.toFixed(0)} / .26)`);
+  el.style.setProperty("--acc-glow", `oklch(${(th.accent.L*100).toFixed(0)}% ${th.accent.C.toFixed(3)} ${th.accent.H.toFixed(0)} / .5)`);
+  el.style.setProperty("--frame", th.frame || css(th.accent));
+  // coordinate ink: dark coord on light squares, light coord on dark squares
+  el.style.setProperty("--coord-lt", css({L:Math.max(0.12,th.dark.L-0.1), C:0.01, H:th.dark.H}));
+  el.style.setProperty("--coord-dk", css({L:Math.min(0.92,th.light.L+0.02), C:0.01, H:th.light.H}));
+}
+
+function buildBoard(opts={}){
+  const board = document.createElement("div");
+  board.className = "board";
+  const { cues=false, coords=false } = opts;
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const isLight = (r+c)%2===0;
+    const sq = document.createElement("div");
+    sq.className = "sq " + (isLight?"lt":"dk");
+    if(cues){
+      if(CUES.last.some(([rr,cc])=>rr===r&&cc===c)) sq.classList.add("last");
+      if(CUES.sel.some(([rr,cc])=>rr===r&&cc===c)) sq.classList.add("sel");
+    }
+    if(coords){
+      if(c===0){ const s=document.createElement("span"); s.className="coord rank"; s.textContent=8-r; sq.appendChild(s); }
+      if(r===7){ const s=document.createElement("span"); s.className="coord file"; s.textContent="abcdefgh"[c]; sq.appendChild(s); }
+    }
+    const code = POS[r][c];
+    if(code){
+      const p = document.createElement("span");
+      const isW = code===code.toUpperCase();
+      p.className = "piece " + (isW?"w":"b");
+      p.textContent = GLYPH[code.toLowerCase()];
+      sq.appendChild(p);
+    }
+    if(cues){
+      if(CUES.hint.some(([rr,cc])=>rr===r&&cc===c)){ const h=document.createElement("span"); h.className="hint"; sq.appendChild(h); }
+      if(CUES.cap.some(([rr,cc])=>rr===r&&cc===c)){ const h=document.createElement("span"); h.className="hint cap"; sq.appendChild(h); }
+    }
+    board.appendChild(sq);
+  }
+  return board;
+}
+
+// ---------- 1. gallery ----------
+const gallery = document.getElementById("gallery");
+// one representative seed per family (search until the seed lands in that family)
+function seedForFamily(name){
+  for(let i=0;i<4000;i++){ const s = "fam-"+name.slice(0,3)+"-"+i; if(generate(s).family===name) return s; }
+  return "fam-"+name;
+}
+FAMILIES.forEach(fam=>{
+  const th = generate(seedForFamily(fam.name));
+  const cell = document.createElement("div"); cell.className="fam";
+  const board = buildBoard({cues:true, coords:true}); applyTheme(board, th);
+  const meta = document.createElement("div"); meta.className="fam-meta";
+  const m = th.metrics;
+  meta.innerHTML =
+    `<div class="fam-name"><span>${fam.nick}</span><span class="seed">${th.nick} · ${th.shortSeed}</span></div>
+     <div class="metrics">
+       <span class="chip ${m.minW>=3?'pass':'fail'}">♔ pc <b>${m.minW.toFixed(2)}:1</b></span>
+       <span class="chip ${m.minB>=3?'pass':'fail'}">♚ pc <b>${m.minB.toFixed(2)}:1</b></span>
+       <span class="chip ${m.deltaL>=0.28?'pass':'fail'}">ΔL <b>${m.deltaL.toFixed(2)}</b></span>
+     </div>`;
+  cell.appendChild(board); cell.appendChild(meta);
+  gallery.appendChild(cell);
+});
+
+// ---------- 2. stress test ----------
+const swarm = document.getElementById("swarm");
+let nFail = 0; let worstC = 99, worstDL = 99;
+for(let i=0;i<48;i++){
+  const th = generate("stress-"+i+"-"+(i*7+3));
+  const m = th.metrics;
+  worstC = Math.min(worstC, m.minPieceContrast); worstDL = Math.min(worstDL, m.deltaL);
+  if(!m.pass) nFail++;
+  const cell = document.createElement("div"); cell.className="mini";
+  const board = buildBoard({}); applyTheme(board, th);
+  const lbl = document.createElement("div"); lbl.className="lbl";
+  const okC = m.minPieceContrast>=3, okDL = m.deltaL>=0.28;
+  lbl.innerHTML = `${th.nick}<br><span class="${okC?'ok':'bad'}">${m.minPieceContrast.toFixed(2)}:1</span> · <span class="${okDL?'ok':'bad'}">Δ${m.deltaL.toFixed(2)}</span>`;
+  cell.appendChild(board); cell.appendChild(lbl); swarm.appendChild(cell);
+}
+const verdict = document.getElementById("verdict");
+if(nFail===0){
+  verdict.innerHTML = `<span class="big">48 / 48 legible</span> <span>worst rim-contrast <b style="color:var(--ink)">${worstC.toFixed(2)}:1</b> · worst ΔL <b style="color:var(--ink)">${worstDL.toFixed(2)}</b> · floors 3.00:1 / 0.28</span>`;
+} else {
+  verdict.classList.add("has-fail");
+  verdict.innerHTML = `<span class="big">${nFail} / 48 FAILED</span> <span>backstop needs tuning</span>`;
+}
+
+/* ============================================================
+   3. REROLL DIRECTIONS (interactive)
+   ============================================================ */
+const RANDOM_SEEDS_USED = new Set();
+function freshSeed(){ let s; do { s = Math.floor(performance.now()*1000%1e9).toString(36)+"-"+Math.floor((performance.now()*7)%9973).toString(36); } while(RANDOM_SEEDS_USED.has(s)); RANDOM_SEEDS_USED.add(s); return s; }
+
+function setName(elId, th){
+  const el = document.getElementById(elId);
+  el.firstChild.textContent = th.nick + " ";
+  el.querySelector(".seed").textContent = "· " + th.shortSeed;
+}
+
+// --- A: Dealer's roll ---
+const boardA = buildBoard({cues:true, coords:true}); boardA.classList.add("sweep");
+document.getElementById("boardA").replaceWith(boardA); boardA.id = "boardA";
+let curA;
+function applyA(th){ applyTheme(boardA, th); setName("nameA", th); curA = th; }
+applyA(generate("opening-night"));
+document.getElementById("rollA").addEventListener("click", ()=>applyA(generate(freshSeed())));
+document.getElementById("resetA").addEventListener("click", ()=>applyA({...CLASSIC, metrics:{}}));
+
+// --- B: The shelf ---
+const boardB = buildBoard({cues:true, coords:true});
+document.getElementById("boardB").replaceWith(boardB); boardB.id="boardB";
+const shelfB = document.getElementById("shelfB");
+function rollShelf(){
+  shelfB.innerHTML="";
+  const themes = Array.from({length:6}, ()=>generate(freshSeed()));
+  themes.forEach((th,idx)=>{
+    const sw = document.createElement("button"); sw.className="swatch"; sw.title=th.nick+" · "+th.shortSeed;
+    sw.setAttribute("aria-label", "Use "+th.nick+" board "+th.shortSeed);
+    const cells = [css(th.light),css(th.dark),css(th.dark),css(th.light)];
+    cells.forEach(col=>{ const i=document.createElement("i"); i.style.background=col; sw.appendChild(i); });
+    sw.addEventListener("click", ()=>{ applyTheme(boardB, th); setName("nameB", th);
+      shelfB.querySelectorAll(".swatch").forEach(s=>s.classList.remove("on")); sw.classList.add("on"); });
+    shelfB.appendChild(sw);
+    if(idx===0){ applyTheme(boardB, th); setName("nameB", th); sw.classList.add("on"); }
+  });
+}
+rollShelf();
+document.getElementById("moreB").addEventListener("click", rollShelf);
+
+// --- C: Seed field ---
+const boardC = buildBoard({cues:true, coords:true});
+document.getElementById("boardC").replaceWith(boardC); boardC.id="boardC";
+const seedInput = document.getElementById("seedInput");
+function applyC(){
+  const seed = seedInput.value.trim() || "classic";
+  const th = generate(seed);
+  applyTheme(boardC, th); setName("nameC", th);
+  document.getElementById("shareC").textContent = "?b=" + encodeURIComponent(seed);
+}
+seedInput.addEventListener("input", applyC);
+document.getElementById("diceC").addEventListener("click", ()=>{ seedInput.value = freshSeed(); applyC(); });
+applyC();
+</script>
+</body>
+</html>

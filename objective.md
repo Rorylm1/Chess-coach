@@ -33,21 +33,24 @@ At its core, the app should answer one question after every meaningful chess mom
 - **On-demand help.** Coaching should feel available, not intrusive. The app should not constantly interrupt play.
 - **Engine-grounded, human-explained.** The engine provides chess accuracy; the coaching layer turns that into useful teaching.
 - **Openings as ideas, not memorization.** Opening study should explain plans, structures, threats, and common continuations, not just drill move orders.
-- **Personal over generic.** The app should get better by learning Rory's recurring mistakes, preferred openings, and weak spots.
+- **Personal over generic.** The app should get better by learning Rory's recurring mistakes, preferred openings, and weak spots. _(A longer-term direction — the dedicated weakness-tracking build is deferred; see Long-Term Direction.)_
+- **Playful and shareable.** Playing should be fun in its own right, not only a means to a lesson. A one-of-a-kind board every game, and the ability to play a friend, are first-class — chess is social.
 - **Fun but not gimmicky.** The tone can be playful, but the learning should stay real.
 - **Small loops beat grand systems.** Each session should leave Rory with one or two memorable chess ideas.
 
 ## V1 Focus
 
-The first version should prove the core learning loop:
+The core learning loop is **proven and shipped**: play a legal game vs an adjustable bot, ask for an on-demand hint, get coaching grounded in engine analysis (M1–M3), and learn openings as ideas through guided journeys (M5).
 
-1. Play a legal game of chess in the browser against an adjustable bot.
-2. Ask for a hint or explanation when stuck.
-3. Receive coaching grounded in engine analysis.
-4. Finish the game and review key moments.
-5. Save the game and track recurring mistake themes locally.
+With that in place, V1's remaining focus is making the app a place worth returning to by organizing it into **three tabs** and making **Play** genuinely fun and social:
 
-V1 does not need accounts, cloud sync, a full curriculum, or a complete opening trainer. It should feel polished enough to use, but narrow enough to actually finish.
+1. **Play** — play the bot, *or* play a real person; coaching available on demand but never in the way. Every game can wear a **one-of-a-kind randomized board**.
+2. **Openings** — the guided opening journeys.
+3. **Coach** — the engine-grounded teaching surface.
+
+Playing a friend starts as **local hot-seat** (same device) and grows into a **shareable live link** so two people play online in real time.
+
+V1 does not need accounts, cloud sync, a full curriculum, or a complete opening trainer. Tracking Rory's recurring weaknesses over time is a real ambition but is **deferred beyond V1** (see Long-Term Direction). It should feel polished enough to use, but narrow enough to actually finish.
 
 ## Opening Learning Vision
 
