@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en" data-corner="bracket" data-frame="glow" data-motion="boot">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Generative Table — exploration · Chess Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Chakra+Petch:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Marcellus&family=Sora:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   EXPLORATION MOCKUP — not production code.
+   ONE canonical Play screen, driven entirely by CSS variables +
+   a few data-attribute variants. A "theme spec" (the JSON an LLM
+   would return) reskins it into a completely fresh, legible world.
+   Six worlds below — incl. two NOVEL blends not in our original
+   five — prove the range. The board stays crisp & legible in all.
+   Port the DECISIONS, not this code.
+   ============================================================ */
+
+/* ---- default world vars (overwritten by applySpec) ---- */
+:root {
+  --ff-display: "Chakra Petch", system-ui, sans-serif;
+  --ff-body: "Sora", system-ui, sans-serif;
+  --ff-mono: "JetBrains Mono", ui-monospace, monospace;
+  --disp-weight: 600;
+  --disp-spacing: 0.05em;
+  --disp-transform: none;
+
+  --bg: #0a0e14;
+  --bg-grad:
+    radial-gradient(120% 90% at 82% -6%, rgba(70,224,208,0.09), transparent 50%),
+    radial-gradient(100% 80% at 2% 106%, rgba(255,180,84,0.06), transparent 46%),
+    radial-gradient(140% 120% at 50% 50%, rgba(20,30,42,0.5), #070a0f 92%);
+  --panel: #10161f;
+  --panel-2: #0d131b;
+  --surface: #161e2a;
+  --hairline: rgba(70,224,208,0.16);
+  --hairline-2: rgba(157,176,188,0.12);
+
+  --ink: #e8f0f2;
+  --ink-soft: #9db0bc;
+  --ink-faint: #607080;
+
+  --ai: #46e0d0;  --ai-dim: #2a8e84;  --ai-glow: rgba(70,224,208,0.45);  --ai-fill: rgba(70,224,208,0.12);
+  --ae: #ffb454;  --ae-dim: #b97e33;  --ae-fill: rgba(255,180,84,0.22);
+
+  --sq-light: #5c7382;  --sq-dark: #1b2733;
+  --piece-white: #f5fbfb;  --piece-white-rim: #0b1118;
+  --piece-black: #0b1118;  --piece-black-rim: #46e0d0;
+  --board-accent: #46e0d0;  --board-accent-fill: rgba(70,224,208,0.16);  --board-accent-glow: rgba(70,224,208,0.45);
+  --board-last: #ffb454;  --board-last-fill: rgba(255,180,84,0.22);
+  --board-frame: #46e0d0;
+  --coord-on-light: rgba(15,22,30,0.82);  --coord-on-dark: rgba(157,176,188,0.8);
+
+  --panel-radius: 0px;  --btn-radius: 0px;  --pill: 999px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg); background-image: var(--bg-grad); background-attachment: fixed;
+  color: var(--ink); font-family: var(--ff-body); font-size: 15px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; min-height: 100dvh; overflow-x: hidden;
+  transition: background-color 700ms ease, color 500ms ease;
+}
+.mono { font-family: var(--ff-mono); font-variant-numeric: tabular-nums; }
+button { font-family: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--ai); outline-offset: 3px; }
+
+/* ============ DEALER CONTROL BAR (the exploration chrome) ============ */
+.dealer {
+  max-width: 1280px; margin: 0 auto; padding: 22px 24px 6px;
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 18px 26px;
+}
+.dealer .lede { flex: 1 1 320px; min-width: 280px; }
+.dealer .kick {
+  font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ai-dim);
+}
+.dealer h1 {
+  font-family: var(--ff-display); font-weight: var(--disp-weight); letter-spacing: var(--disp-spacing);
+  text-transform: var(--disp-transform); font-size: clamp(24px, 3.4vw, 34px); margin: 4px 0 6px;
+  line-height: 1.05;
+}
+.dealer .flavor { color: var(--ink-soft); font-size: 14.5px; max-width: 60ch; min-height: 2.6em; }
+.dealer .flavor em { color: var(--ae); font-style: italic; }
+
+.deal-controls { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+.deal-btn {
+  font-family: var(--ff-display); font-weight: var(--disp-weight); letter-spacing: 0.08em;
+  text-transform: var(--disp-transform); font-size: 14px; color: var(--ai);
+  background: var(--ai-fill); border: 1px solid var(--ai); padding: 12px 22px;
+  display: inline-flex; align-items: center; gap: 10px; border-radius: var(--btn-radius);
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.deal-btn:hover { transform: translateY(-1px); box-shadow: 0 0 20px var(--ai-glow); background: var(--ai-fill); }
+.deal-btn[disabled] { opacity: 0.55; cursor: progress; }
+.deal-btn .spin { display: none; width: 13px; height: 13px; border: 2px solid var(--ai); border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; }
+.deal-btn.loading .spin { display: inline-block; }
+.deal-btn.loading .ic { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.worlds { display: flex; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
+.worlds button {
+  font-family: var(--ff-mono); font-size: 10.5px; letter-spacing: 0.04em; color: var(--ink-faint);
+  background: transparent; border: 1px solid var(--hairline-2); padding: 5px 9px; border-radius: var(--btn-radius);
+  transition: color 150ms, border-color 150ms;
+}
+.worlds button:hover { color: var(--ink); border-color: var(--ink-faint); }
+.worlds button.on { color: var(--ai); border-color: var(--ai); }
+
+.legibility {
+  max-width: 1280px; margin: 0 auto; padding: 6px 24px 0;
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  font-family: var(--ff-mono); font-size: 10.5px; color: var(--ink-faint);
+}
+.legibility .lab { letter-spacing: 0.14em; text-transform: uppercase; }
+.chip {
+  display: inline-flex; gap: 5px; align-items: center; padding: 2px 8px;
+  border: 1px solid var(--hairline-2); border-radius: var(--btn-radius); color: var(--ink-soft);
+}
+.chip b { color: var(--ink); font-weight: 500; }
+.chip.pass { border-color: color-mix(in oklab, var(--ai) 45%, transparent); }
+.chip.pass b { color: var(--ai); }
+.chip.fail { border-color: #ff5d6c; } .chip.fail b { color: #ff5d6c; }
+
+.note-prod {
+  max-width: 1280px; margin: 2px auto 0; padding: 4px 24px 0;
+  font-family: var(--ff-mono); font-size: 10.5px; color: var(--ink-faint); letter-spacing: 0.02em;
+}
+.note-prod b { color: var(--ink-soft); font-weight: 500; }
+
+/* ============ THE CANONICAL PLAY SCREEN ============ */
+.stage { position: relative; }
+
+.game {
+  max-width: 1280px; margin: 0 auto; padding: 18px 24px 56px;
+  display: grid; grid-template-columns: 1fr 372px; gap: 30px; align-items: start;
+}
+@media (max-width: 1000px) { .game { grid-template-columns: 1fr; gap: 22px; } .panel { max-width: 560px; width: 100%; margin: 0 auto; } }
+
+.board-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+/* ---- player strips ---- */
+.pstrip {
+  display: flex; align-items: center; gap: 14px; padding: 11px 14px;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--hairline-2); border-radius: var(--panel-radius);
+}
+.pstrip .avatar {
+  width: 38px; height: 38px; display: grid; place-items: center; flex-shrink: 0;
+  border: 1.5px solid var(--ai-dim); color: var(--ai); font-size: 18px;
+}
+.pstrip.you .avatar { border-color: var(--ae-dim); color: var(--ae); }
+.pstrip .name { font-family: var(--ff-display); font-weight: var(--disp-weight); font-size: 14.5px; letter-spacing: var(--disp-spacing); text-transform: var(--disp-transform); }
+.pstrip .role { font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+.captured { flex: 1; display: flex; gap: 1px; font-size: 17px; color: var(--ink-faint); align-items: center; line-height: 1; overflow: hidden; }
+.clock { font-family: var(--ff-mono); font-weight: 700; font-size: 19px; letter-spacing: 0.04em; padding: 6px 13px; border: 1px solid var(--hairline-2); color: var(--ink-soft); flex-shrink: 0; border-radius: var(--btn-radius); }
+.pstrip.active .clock { color: var(--ai); border-color: var(--ai); box-shadow: 0 0 14px var(--ai-glow); }
+
+/* ---- board + eval ---- */
+.board-row { display: flex; gap: 14px; align-items: stretch; }
+.evalbar { width: 24px; display: flex; flex-direction: column; border: 1px solid var(--hairline); background: var(--bg); position: relative; flex-shrink: 0; border-radius: var(--btn-radius); overflow: hidden; }
+.evalbar .white { background: linear-gradient(180deg, #dce8ea, #aec2c4); flex: 0 0 56%; }
+.evalbar .black { background: var(--sq-dark); flex: 1; }
+.evalbar .mid { position: absolute; left: -2px; right: -2px; top: 56%; height: 1.5px; background: var(--ai); box-shadow: 0 0 8px var(--ai-glow); }
+.evalbar .num { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); font-family: var(--ff-mono); font-size: 9px; font-weight: 700; color: var(--ink-soft); }
+
+.board-wrap { position: relative; flex: 1; min-width: 0; }
+.board {
+  --c: min(9.2vw, 66px); width: calc(var(--c) * 8); max-width: 100%; aspect-ratio: 1/1;
+  display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr);
+  border: 1px solid var(--board-frame); margin: 0 auto; border-radius: var(--panel-radius); overflow: hidden;
+}
+.sq { position: relative; display: grid; place-items: center; font-size: clamp(28px, 7vw, 48px); line-height: 1; user-select: none; }
+.sq.lt { background: var(--sq-light); } .sq.dk { background: var(--sq-dark); }
+.piece { position: relative; z-index: 1; width: 100%; height: 100%; display: grid; place-items: center; }
+.piece.w { color: var(--piece-white); text-shadow: 0 0 1px var(--piece-white-rim), .7px .7px 0 var(--piece-white-rim), -.7px -.7px 0 var(--piece-white-rim), .7px -.7px 0 var(--piece-white-rim), -.7px .7px 0 var(--piece-white-rim), 0 1px 2px rgba(0,0,0,.3); }
+.piece.b { color: var(--piece-black); text-shadow: 0 0 1px var(--piece-black-rim), .7px .7px 0 var(--piece-black-rim), -.7px -.7px 0 var(--piece-black-rim), .7px -.7px 0 var(--piece-black-rim), -.7px .7px 0 var(--piece-black-rim), 0 0 6px var(--board-accent-glow); }
+/* --- SVG pieces (real recolorable silhouettes; per-world treatment) --- */
+.piece svg { width: 88%; height: 88%; display: block; overflow: visible; }
+.piece svg :is(path,text) { stroke-linejoin: round; paint-order: stroke; transition: fill 400ms ease, stroke 400ms ease; }
+.piece svg text { font-family: var(--ff-display); }
+.piece.w svg :is(path,text) { fill: var(--piece-white); stroke: var(--piece-white-rim); }
+.piece.b svg :is(path,text) { fill: var(--piece-black); stroke: var(--piece-black-rim); }
+[data-pieces="filled"] .piece svg :is(path,text) { stroke-width: 16px; }
+[data-pieces="flat"]   .piece svg :is(path,text) { stroke-width: 5px; }
+[data-pieces="bold"]   .piece svg :is(path,text) { stroke-width: 42px; }
+[data-pieces="neon"]   .piece svg :is(path,text) { stroke-width: 18px; }
+[data-pieces="neon"]   .piece svg { filter: drop-shadow(0 0 4px var(--board-accent-glow)) drop-shadow(0 0 9px var(--board-accent-glow)); }
+[data-pieces="letter"] .piece svg text { stroke-width: 12px; }
+.sq.last::after { content: ""; position: absolute; inset: 0; background: var(--board-last-fill); box-shadow: inset 0 0 0 2px var(--board-last); }
+.sq.sel::after { content: ""; position: absolute; inset: 0; background: var(--board-accent-fill); box-shadow: inset 0 0 0 2px var(--board-accent), inset 0 0 16px var(--board-accent-glow); }
+.sq .hint { position: absolute; width: 26%; height: 26%; border-radius: 50%; background: var(--board-accent); opacity: 0.6; box-shadow: 0 0 10px var(--board-accent-glow); z-index: 2; }
+.sq .hint.cap { width: 78%; height: 78%; background: transparent; border: 2.5px solid var(--board-accent); opacity: 0.65; }
+.coord { position: absolute; font-family: var(--ff-mono); font-size: 8.5px; font-weight: 700; }
+.coord.file { bottom: 1px; right: 3px; } .coord.rank { top: 1px; left: 3px; }
+.sq.dk .coord { color: var(--coord-on-dark); } .sq.lt .coord { color: var(--coord-on-light); }
+
+/* board corner brackets / deco — variant-driven */
+.brk { position: absolute; width: 14px; height: 14px; border: 1.5px solid var(--board-frame); opacity: 0.6; pointer-events: none; display: none; }
+.brk.tl { top: -5px; left: -5px; border-right: none; border-bottom: none; }
+.brk.tr { top: -5px; right: -5px; border-left: none; border-bottom: none; }
+.brk.bl { bottom: -5px; left: -5px; border-right: none; border-top: none; }
+.brk.br { bottom: -5px; right: -5px; border-left: none; border-top: none; }
+[data-corner="bracket"] .brk, [data-corner="deco"] .brk { display: block; }
+[data-corner="deco"] .brk { width: 18px; height: 18px; opacity: 0.85; }
+[data-frame="glow"] .board { box-shadow: 0 0 36px var(--board-accent-glow), inset 0 0 0 1px rgba(255,255,255,0.04); }
+[data-frame="shadow"] .board { box-shadow: 0 18px 44px -18px rgba(0,0,0,0.55); }
+[data-frame="rule"] .board-wrap { padding: 12px; background: linear-gradient(135deg, var(--panel), var(--panel-2)); border: 2px solid var(--board-frame); border-radius: var(--panel-radius); }
+[data-frame="rule"] .board-wrap::before { content: ""; position: absolute; inset: 6px; border: 1px solid color-mix(in oklab, var(--board-frame) 40%, transparent); pointer-events: none; }
+[data-frame="rotate"] .board { transform: rotate(-1.2deg); box-shadow: 0 16px 40px -20px rgba(0,0,0,0.5); }
+
+/* ============ SIDE PANEL ============ */
+.panel { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.card { background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid var(--hairline-2); position: relative; border-radius: var(--panel-radius); }
+/* HUD brackets on cards (bracket world only) */
+.card.brkcard::before, .card.brkcard::after { content: ""; position: absolute; width: 11px; height: 11px; border: 1.5px solid var(--ai); opacity: 0.5; }
+.card.brkcard::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.card.brkcard::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+[data-corner="bracket"] .card.brkcard::before, [data-corner="bracket"] .card.brkcard::after,
+[data-corner="deco"] .card.brkcard::before, [data-corner="deco"] .card.brkcard::after { display: block; }
+:not([data-corner="bracket"]):not([data-corner="deco"]) .card.brkcard::before,
+:not([data-corner="bracket"]):not([data-corner="deco"]) .card.brkcard::after { display: none; }
+
+.card-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--hairline-2); }
+.card-head h2 { font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ai-dim); font-weight: 500; }
+.card-head .tag { font-family: var(--ff-mono); font-size: 10px; color: var(--ink-faint); letter-spacing: 0.1em; }
+.coach .card-head h2 { color: var(--ai); }
+
+.moves { max-height: 210px; overflow: hidden; padding: 6px 0; }
+.moverow { display: grid; grid-template-columns: 38px 1fr 1fr; align-items: center; font-family: var(--ff-mono); font-size: 13px; padding: 4px 16px; }
+.moverow:nth-child(odd) { background: rgba(157,176,188,0.025); }
+.moverow .n { color: var(--ink-faint); font-size: 11px; }
+.moverow .m { color: var(--ink-soft); padding: 2px 6px; }
+.moverow .m.cur { color: var(--ai); background: var(--ai-fill); box-shadow: inset 0 0 0 1px var(--hairline); }
+.moverow .m.flag { color: var(--ae); }
+.moverow .m.flag::after { content: "?!"; font-size: 10px; color: var(--ae); margin-left: 5px; opacity: 0.85; }
+
+.coach-body { padding: 16px; }
+.coach-voice { font-family: var(--ff-body); font-size: 15.5px; line-height: 1.5; color: var(--ink); margin-bottom: 14px; }
+.coach-voice .lead { display: block; font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ai-dim); margin-bottom: 9px; }
+.coach-voice em { color: var(--ae); font-style: italic; }
+.engine-chip { display: inline-flex; align-items: center; gap: 11px; font-family: var(--ff-mono); font-size: 11.5px; color: var(--ink-soft); background: var(--bg); border: 1px solid var(--hairline-2); padding: 7px 11px; margin-bottom: 16px; border-radius: var(--btn-radius); }
+.engine-chip .eval { color: var(--ae); font-weight: 700; } .engine-chip .best { color: var(--ai); font-weight: 500; } .engine-chip .sep { color: var(--ink-faint); }
+.hint-btn { width: 100%; font-family: var(--ff-display); font-weight: var(--disp-weight); font-size: 13px; letter-spacing: 0.08em; text-transform: var(--disp-transform); color: var(--ai); background: var(--ai-fill); border: 1px solid var(--ai); padding: 12px; display: flex; align-items: center; justify-content: center; gap: 9px; border-radius: var(--btn-radius); transition: box-shadow 200ms ease, transform 200ms ease; }
+.hint-btn:hover { box-shadow: 0 0 20px var(--ai-glow); transform: translateY(-1px); }
+.actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--hairline-2); border: 1px solid var(--hairline-2); border-radius: var(--panel-radius); overflow: hidden; }
+.actions button { background: var(--panel); border: none; color: var(--ink-soft); font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding: 13px 8px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: color 180ms, background 180ms; }
+.actions button:hover { color: var(--ai); background: var(--surface); }
+.actions button.danger:hover { color: var(--ae); }
+
+/* ============ ENTRANCE MOTION (variant-driven) ============ */
+.rev { opacity: 0; }
+.replay .rev { animation: bootIn 560ms cubic-bezier(0.2,0.7,0.3,1) forwards; }
+[data-motion="rise"].replay .rev { animation-name: riseIn; animation-duration: 640ms; animation-timing-function: ease-out; }
+[data-motion="draw"].replay .rev { animation-name: drawIn; animation-duration: 680ms; animation-timing-function: cubic-bezier(0.2,0.6,0.25,1); }
+.replay .d1{animation-delay:60ms}.replay .d2{animation-delay:150ms}.replay .d3{animation-delay:250ms}
+.replay .d4{animation-delay:360ms}.replay .d5{animation-delay:470ms}.replay .d6{animation-delay:580ms}
+@keyframes bootIn { from { opacity:0; transform:translateY(12px);} to { opacity:1; transform:none; } }
+@keyframes riseIn { from { opacity:0; transform:translateY(16px);} to { opacity:1; transform:none; } }
+@keyframes drawIn { from { opacity:0; transform:scale(0.975);} to { opacity:1; transform:none; } }
+
+/* ============ "GENERATING YOUR TABLE" OVERLAY ============ */
+.gen { position: fixed; inset: 0; z-index: 60; display: none; place-items: center; background: color-mix(in oklab, var(--bg) 86%, transparent); backdrop-filter: blur(2px); }
+.gen.on { display: grid; }
+.gen-inner { text-align: center; max-width: 460px; padding: 0 24px; }
+.gen .deck { display: flex; gap: 6px; justify-content: center; margin-bottom: 24px; }
+.gen .deck i { width: 36px; height: 48px; border: 1px solid var(--ai); border-radius: 4px; background: var(--ai-fill); opacity: 0.25; animation: deckPulse 1.1s ease-in-out infinite; }
+.gen .deck i:nth-child(2){animation-delay:.12s}.gen .deck i:nth-child(3){animation-delay:.24s}.gen .deck i:nth-child(4){animation-delay:.36s}.gen .deck i:nth-child(5){animation-delay:.48s}
+@keyframes deckPulse { 0%,100%{opacity:.2; transform:translateY(0)} 50%{opacity:.9; transform:translateY(-6px); box-shadow:0 0 16px var(--ai-glow)} }
+.gen h3 { font-family: var(--ff-display); font-weight: var(--disp-weight); letter-spacing: var(--disp-spacing); font-size: 20px; color: var(--ink); margin-bottom: 10px; }
+.gen .step { font-family: var(--ff-mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--ai); min-height: 1.4em; }
+.gen .bar { width: 100%; height: 2px; background: var(--hairline-2); margin-top: 22px; position: relative; overflow: hidden; }
+.gen .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--ai); box-shadow: 0 0 10px var(--ai-glow); transition: width 200ms linear; }
+.gen .cap { font-family: var(--ff-mono); font-size: 10.5px; color: var(--ink-faint); margin-top: 14px; letter-spacing: 0.02em; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rev { opacity: 1 !important; }
+  .gen .deck i { opacity: 0.6; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ DEALER CONTROL BAR ============ -->
+<div class="dealer">
+  <div class="lede">
+    <div class="kick">exploration · generative table</div>
+    <h1 id="worldName">Deep-Space Analysis Deck</h1>
+    <p class="flavor" id="worldFlavor">A calm, luminous command deck — neon that carries meaning, never decoration.</p>
+  </div>
+  <div class="deal-controls">
+    <button class="deal-btn" id="dealBtn"><span class="ic" aria-hidden="true">↻</span><span class="spin" aria-hidden="true"></span> Deal a new table</button>
+    <div class="worlds" id="worldChips"></div>
+  </div>
+</div>
+<div class="legibility" id="legibility"><span class="lab">board legibility</span></div>
+<p class="note-prod">▸ <b>In production this re-roll is a live ~10–30s LLM generation</b> — a fresh, coherent design set per game. Staged here so you can flip between outcomes quickly. The board is legible by construction in every world (chips above).</p>
+
+<!-- ============ THE CANONICAL PLAY SCREEN ============ -->
+<div class="stage">
+  <main class="game" id="game">
+    <div class="board-col">
+      <div class="pstrip active rev d1">
+        <span class="avatar" aria-hidden="true">◓</span>
+        <div class="who"><div class="name">Coach Bot</div><div class="role">CPU · Level 6</div></div>
+        <div class="captured">♟ ♟ ♝</div>
+        <div class="clock mono">8:42</div>
+      </div>
+
+      <div class="board-row rev d2">
+        <div class="evalbar"><span class="num mono">+0.6</span><div class="white"></div><div class="mid"></div><div class="black"></div></div>
+        <div class="board-wrap">
+          <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+          <div class="board" id="board" role="img" aria-label="Chess board, mid-game position, White to move. Knight on f3 selected."></div>
+        </div>
+      </div>
+
+      <div class="pstrip you rev d3">
+        <span class="avatar" aria-hidden="true">▲</span>
+        <div class="who"><div class="name">You</div><div class="role">White · 1240</div></div>
+        <div class="captured">♟ ♟ ♞</div>
+        <div class="clock mono">9:15</div>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <section class="card brkcard rev d2">
+        <div class="card-head"><h2>Move Log</h2><span class="tag">SAN · 14 moves</span></div>
+        <div class="moves">
+          <div class="moverow"><span class="n">10.</span><span class="m">Nd5</span><span class="m">Nbd7</span></div>
+          <div class="moverow"><span class="n">11.</span><span class="m">Qd3</span><span class="m">Rc8</span></div>
+          <div class="moverow"><span class="n">12.</span><span class="m">c4</span><span class="m">Bxd5</span></div>
+          <div class="moverow"><span class="n">13.</span><span class="m">cxd5</span><span class="m flag">Nc5</span></div>
+          <div class="moverow"><span class="n">14.</span><span class="m cur">Nf3</span><span class="m">d5</span></div>
+        </div>
+      </section>
+
+      <section class="card coach brkcard rev d4">
+        <div class="card-head"><h2>Coach</h2><span class="tag">non-intrusive</span></div>
+        <div class="coach-body">
+          <p class="coach-voice"><span class="lead">Nudge · tier 1</span>Your knight on <em>f3</em> is doing a lot of work — what happens if it moves? Picture the squares it stops defending before you commit.</p>
+          <span class="engine-chip"><span class="eval">eval +0.6</span><span class="sep">·</span><span>best <span class="best">Nxe5</span></span><span class="sep">·</span><span>depth 24</span></span>
+          <button class="hint-btn"><span aria-hidden="true">◇</span> Reveal next hint</button>
+        </div>
+      </section>
+
+      <section class="actions rev d5">
+        <button><span aria-hidden="true">◇</span> Hint</button>
+        <button><span aria-hidden="true">↩</span> Takeback</button>
+        <button><span aria-hidden="true">⇅</span> Flip</button>
+        <button class="danger"><span aria-hidden="true">✕</span> Resign</button>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<!-- ============ GENERATING OVERLAY ============ -->
+<div class="gen" id="gen" aria-live="polite">
+  <div class="gen-inner">
+    <div class="deck" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <h3 id="genTitle">Composing your table…</h3>
+    <div class="step mono" id="genStep">reading the position</div>
+    <div class="bar"><i id="genBar"></i></div>
+    <div class="cap" id="genCap">a one-of-a-kind design, generated for this game</div>
+  </div>
+</div>
+
+<script src="piece-sets.js"></script>
+<script>
+/* ============================================================
+   1. CONTRAST MATH (for the legibility readout) — sRGB WCAG
+   ============================================================ */
+function hexToRgb(h){ h=h.replace('#',''); if(h.length===3) h=h.split('').map(c=>c+c).join(''); const n=parseInt(h,16); return {r:((n>>16)&255)/255,g:((n>>8)&255)/255,b:(n&255)/255}; }
+function relLum({r,g,b}){ const f=c=>c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4); return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b); }
+function contrast(a,z){ const x=relLum(a),y=relLum(z),hi=Math.max(x,y),lo=Math.min(x,y); return (hi+0.05)/(lo+0.05); }
+// a piece is two-tone (fill + rim); whichever tone contrasts the square carries legibility
+function legSq(fill, rim, sq){ return Math.max(contrast(hexToRgb(fill),hexToRgb(sq)), contrast(hexToRgb(rim),hexToRgb(sq))); }
+function hexA(hex,a){ const c=hexToRgb(hex); return `rgba(${Math.round(c.r*255)},${Math.round(c.g*255)},${Math.round(c.b*255)},${a})`; }
+
+/* ============================================================
+   2. THE SIX WORLDS — each is the JSON "theme spec" an LLM
+      would return. Worlds 5 & 6 are NOVEL blends, not in our
+      original five — proof the model can invent fresh, coherent
+      worlds rather than only shuffle presets.
+   ============================================================ */
+const WORLDS = [
+  {
+    id:"deep-space", chip:"Deep-Space", name:"Deep-Space Analysis Deck",
+    flavor:"A calm, luminous command deck — neon that carries <em>meaning</em>, never decoration.",
+    corner:"bracket", frame:"glow", motion:"boot",
+    ff:{display:'"Chakra Petch", sans-serif', body:'"Sora", sans-serif', mono:'"JetBrains Mono", monospace', weight:600, spacing:"0.05em", transform:"none"},
+    bg:"#0a0e14",
+    grad:"radial-gradient(120% 90% at 82% -6%, rgba(70,224,208,0.10), transparent 50%), radial-gradient(100% 80% at 2% 106%, rgba(255,180,84,0.06), transparent 46%), radial-gradient(140% 120% at 50% 50%, rgba(20,30,42,0.5), #070a0f 92%)",
+    panel:"#10161f", panel2:"#0d131b", surface:"#161e2a",
+    hairline:"rgba(70,224,208,0.16)", hairline2:"rgba(157,176,188,0.12)",
+    ink:"#e8f0f2", inkSoft:"#9db0bc", inkFaint:"#607080",
+    ai:"#46e0d0", aiDim:"#2a8e84", ae:"#ffb454", aeDim:"#b97e33",
+    radius:0,
+    board:{ light:"#5c7382", dark:"#1b2733", pw:"#f5fbfb", pwRim:"#0b1118", pb:"#0b1118", pbRim:"#7fe6da", accent:"#46e0d0", last:"#ffb454", coordLt:"#0f161e", coordDk:"#9db0bc" },
+  },
+  {
+    id:"grand-salon", chip:"Grand Salon", name:"The Grand Salon",
+    flavor:"Emerald baize and gilt — a 1920s card room, played by candlelight.",
+    corner:"deco", frame:"rule", motion:"rise",
+    ff:{display:'"Marcellus", serif', body:'"EB Garamond", serif', mono:'"Marcellus", serif', weight:400, spacing:"0.05em", transform:"none"},
+    bg:"#0c2620",
+    grad:"radial-gradient(120% 80% at 50% -10%, #16433a 0%, #0c2620 60%, #081c17 100%)",
+    panel:"#103229", panel2:"#0b211c", surface:"#16433a",
+    hairline:"rgba(201,162,74,0.34)", hairline2:"rgba(201,162,74,0.22)",
+    ink:"#f3ebd9", inkSoft:"#cabfa6", inkFaint:"#a07d2e",
+    ai:"#d9b35e", aiDim:"#a07d2e", ae:"#9ec7a8", aeDim:"#6f9a82",
+    radius:2,
+    board:{ light:"#f3ebd9", dark:"#1d564a", pw:"#fbf6ea", pwRim:"#0c1f1a", pb:"#0c1f1a", pbRim:"#e7d7ac", accent:"#d9b35e", last:"#9ec7a8", coordLt:"#0c2a22", coordDk:"#e7d7ac" },
+  },
+  {
+    id:"editorial", chip:"Editorial", name:"Warm Editorial Study",
+    flavor:"Ink on warm paper — <em>a study, not a scoreboard</em>. Serif display, generous margins.",
+    corner:"round", frame:"rotate", motion:"rise",
+    ff:{display:'"Fraunces", serif', body:'"Hanken Grotesk", sans-serif', mono:'"IBM Plex Mono", monospace', weight:600, spacing:"0", transform:"none"},
+    bg:"#f6efe2",
+    grad:"radial-gradient(900px 600px at 88% -6%, rgba(181,83,42,0.08), transparent 60%), radial-gradient(800px 600px at 2% 108%, rgba(47,93,84,0.07), transparent 60%)",
+    panel:"#fdf8ee", panel2:"#f3e9d6", surface:"#efe3cd",
+    hairline:"rgba(33,28,22,0.18)", hairline2:"rgba(33,28,22,0.12)",
+    ink:"#211c16", inkSoft:"#5b5446", inkFaint:"#8a8064",
+    ai:"#b5532a", aiDim:"#8c3f1f", ae:"#2f5d54", aeDim:"#244a43",
+    radius:8,
+    board:{ light:"#e7d6b6", dark:"#a9763f", pw:"#fcf8ef", pwRim:"#2a1f12", pb:"#2a1f12", pbRim:"#f3e6cc", accent:"#b5532a", last:"#2f5d54", coordLt:"#5a4326", coordDk:"#f0e2c4" },
+  },
+  {
+    id:"field-notes", chip:"Field Notes", name:"Analog Field Notes",
+    flavor:"Engine truth, <em>handwritten back to you</em> — pen-and-ink on ruled paper.",
+    corner:"square", frame:"shadow", motion:"draw",
+    ff:{display:'"Fraunces", serif', body:'"EB Garamond", serif', mono:'"Spline Sans Mono", monospace', weight:500, spacing:"0", transform:"none"},
+    bg:"#f4eee1",
+    grad:"linear-gradient(rgba(47,93,168,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34,32,27,0.035) 1px, transparent 1px), radial-gradient(900px 700px at 50% 0%, #faf5ea, #efe7d6 90%)",
+    panel:"#fbf6ec", panel2:"#f1e8d6", surface:"#ece2cd",
+    hairline:"rgba(34,32,27,0.2)", hairline2:"rgba(34,32,27,0.12)",
+    ink:"#22201b", inkSoft:"#55503f", inkFaint:"#8a8369",
+    ai:"#2f5da8", aiDim:"#274d8c", ae:"#c2402f", aeDim:"#9c3324",
+    radius:0,
+    board:{ light:"#e6dcc4", dark:"#9c8a63", pw:"#fbf7ec", pwRim:"#22201b", pb:"#22201b", pbRim:"#efe7d2", accent:"#2f5da8", last:"#c2402f", coordLt:"#4a4534", coordDk:"#efe7d2" },
+  },
+  {
+    /* NOVEL BLEND — not in the original five */
+    id:"conservatory", chip:"Conservatory ✦", name:"The Conservatory",
+    flavor:"A glasshouse at golden hour — botanical green, brass light, soft edges.",
+    corner:"round", frame:"shadow", motion:"rise",
+    ff:{display:'"Bricolage Grotesque", sans-serif', body:'"Sora", sans-serif', mono:'"JetBrains Mono", monospace', weight:700, spacing:"-0.01em", transform:"none"},
+    bg:"#102019",
+    grad:"radial-gradient(110% 90% at 80% -8%, rgba(127,209,168,0.12), transparent 55%), radial-gradient(120% 100% at 10% 110%, rgba(232,162,61,0.10), transparent 55%), radial-gradient(140% 130% at 50% 45%, #16291f, #0c1812 92%)",
+    panel:"#17291f", panel2:"#10201a", surface:"#1e3528",
+    hairline:"rgba(127,209,168,0.2)", hairline2:"rgba(232,225,201,0.12)",
+    ink:"#eef3ec", inkSoft:"#aec3b4", inkFaint:"#6e8a78",
+    ai:"#7fd1a8", aiDim:"#4f9a78", ae:"#e8a23d", aeDim:"#b97e2c",
+    radius:14,
+    board:{ light:"#d4e2c8", dark:"#3f6450", pw:"#f6fbf2", pwRim:"#13271c", pb:"#13271c", pbRim:"#d4e2c8", accent:"#7fd1a8", last:"#e8a23d", coordLt:"#1f3b29", coordDk:"#d4e2c8" },
+  },
+  {
+    /* NOVEL BLEND — bold end, still legible */
+    id:"after-hours", chip:"After Hours ✦", name:"After Hours",
+    flavor:"Neon over felt — plum dark, hot coral, a lime tick. Late-night arcade energy.",
+    corner:"notch", frame:"glow", motion:"boot",
+    ff:{display:'"Chakra Petch", sans-serif', body:'"Sora", sans-serif', mono:'"Space Mono", monospace', weight:700, spacing:"0.04em", transform:"uppercase"},
+    bg:"#160d1a",
+    grad:"radial-gradient(110% 90% at 84% -8%, rgba(255,107,138,0.14), transparent 52%), radial-gradient(120% 100% at 6% 108%, rgba(198,242,78,0.08), transparent 52%), radial-gradient(150% 130% at 50% 50%, #1d1322, #0f0813 92%)",
+    panel:"#1d1322", panel2:"#160d1a", surface:"#271a2e",
+    hairline:"rgba(255,107,138,0.22)", hairline2:"rgba(243,233,242,0.12)",
+    ink:"#f3e9f2", inkSoft:"#c0aec3", inkFaint:"#8a7790",
+    ai:"#ff6b8a", aiDim:"#c14d68", ae:"#c6f24e", aeDim:"#94b93a",
+    radius:0,
+    board:{ light:"#d9c8e2", dark:"#4a2f5c", pw:"#fbf3fa", pwRim:"#1a0f20", pb:"#1a0f20", pbRim:"#e7b8d0", accent:"#ff6b8a", last:"#c6f24e", coordLt:"#3a2147", coordDk:"#e0cfe8" },
+  },
+];
+
+/* ============================================================
+   3. BOARD RENDER
+   ============================================================ */
+const GLYPH = {k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"};
+const POS = [
+  ["r","","b","q","k","b","","r"],
+  ["p","p","p","","","p","p","p"],
+  ["","","n","","","n","",""],
+  ["","","","p","","","",""],
+  ["","","","","P","","",""],
+  ["","","","","","N","",""],
+  ["P","P","P","","","P","P","P"],
+  ["R","","B","Q","K","B","","R"],
+];
+const CUES = { last:[[3,3]], sel:[[5,5]], hint:[[4,4],[4,6],[3,5]], cap:[[2,4]] };
+function buildBoard(){
+  const board = document.getElementById("board");
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const isLight=(r+c)%2===0;
+    const sq=document.createElement("div"); sq.className="sq "+(isLight?"lt":"dk");
+    if(CUES.last.some(([a,b])=>a===r&&b===c)) sq.classList.add("last");
+    if(CUES.sel.some(([a,b])=>a===r&&b===c)) sq.classList.add("sel");
+    if(c===0){ const s=document.createElement("span"); s.className="coord rank"; s.textContent=8-r; sq.appendChild(s); }
+    if(r===7){ const s=document.createElement("span"); s.className="coord file"; s.textContent="abcdefgh"[c]; sq.appendChild(s); }
+    const code=POS[r][c];
+    if(code){ const p=document.createElement("span"); const isW=code===code.toUpperCase(); p.className="piece "+(isW?"w":"b"); p.dataset.type=code.toUpperCase(); p.dataset.glyph=GLYPH[code.toLowerCase()]; sq.appendChild(p); }
+    if(CUES.hint.some(([a,b])=>a===r&&b===c)){ const h=document.createElement("span"); h.className="hint"; sq.appendChild(h); }
+    if(CUES.cap.some(([a,b])=>a===r&&b===c)){ const h=document.createElement("span"); h.className="hint cap"; sq.appendChild(h); }
+    board.appendChild(sq);
+  }
+}
+buildBoard();
+
+// piece-set rendering: map the LLM's pieceStyle -> a real silhouette set + treatment.
+// (sandbox library = chessnut silhouettes [Apache] + authored letter set; more
+//  permissive families — kiwen-suwi CC-BY, maurimo MIT, cburnett-BSD — drop in here.)
+const PIECE_STYLE_MAP = {
+  "classic-staunton":     { set:"chessnut", treat:"filled" },
+  "flat-silhouette":      { set:"chessnut", treat:"flat" },
+  "minimalist-line":      { set:"chessnut", treat:"flat" },
+  "fantasy-illustrative": { set:"chessnut", treat:"bold" },
+  "geometric-spatial":    { set:"chessnut", treat:"bold" },
+  "woodcut-celtic":       { set:"chessnut", treat:"bold" },
+  "neon-outline":         { set:"chessnut", treat:"neon" },
+  "letter-mark":          { set:"letter",   treat:"letter" },
+  "calligraphic":         { set:"letter",   treat:"letter" },
+};
+function renderPieces(setId){
+  const set = (window.PIECE_SETS || {})[setId];
+  document.querySelectorAll(".piece").forEach(p=>{
+    const t = p.dataset.type;
+    if(set && set.inner[t]) p.innerHTML = `<svg viewBox="${set.vb}" aria-hidden="true">${set.inner[t]}</svg>`;
+    else p.textContent = p.dataset.glyph || "";   // glyph fallback if sets not loaded
+  });
+}
+
+/* ============================================================
+   4. APPLY A WORLD SPEC -> CSS variables + variant attributes
+   ============================================================ */
+const root = document.documentElement;
+function applyWorld(w){
+  const S = root.style;
+  S.setProperty("--ff-display", w.ff.display); S.setProperty("--ff-body", w.ff.body); S.setProperty("--ff-mono", w.ff.mono);
+  S.setProperty("--disp-weight", w.ff.weight); S.setProperty("--disp-spacing", w.ff.spacing); S.setProperty("--disp-transform", w.ff.transform);
+  S.setProperty("--bg", w.bg); S.setProperty("--bg-grad", w.grad);
+  S.setProperty("--panel", w.panel); S.setProperty("--panel-2", w.panel2); S.setProperty("--surface", w.surface);
+  S.setProperty("--hairline", w.hairline); S.setProperty("--hairline-2", w.hairline2);
+  S.setProperty("--ink", w.ink); S.setProperty("--ink-soft", w.inkSoft); S.setProperty("--ink-faint", w.inkFaint);
+  S.setProperty("--ai", w.ai); S.setProperty("--ai-dim", w.aiDim); S.setProperty("--ai-glow", hexA(w.ai,0.45)); S.setProperty("--ai-fill", hexA(w.ai,0.12));
+  S.setProperty("--ae", w.ae); S.setProperty("--ae-dim", w.aeDim); S.setProperty("--ae-fill", hexA(w.ae,0.2));
+  S.setProperty("--panel-radius", w.radius+"px"); S.setProperty("--btn-radius", Math.min(w.radius, 10)+"px");
+  // board
+  const b=w.board;
+  S.setProperty("--sq-light", b.light); S.setProperty("--sq-dark", b.dark);
+  S.setProperty("--piece-white", b.pw); S.setProperty("--piece-white-rim", b.pwRim);
+  S.setProperty("--piece-black", b.pb); S.setProperty("--piece-black-rim", b.pbRim);
+  S.setProperty("--board-accent", b.accent); S.setProperty("--board-accent-fill", hexA(b.accent,0.18)); S.setProperty("--board-accent-glow", hexA(b.accent,0.45));
+  S.setProperty("--board-last", b.last); S.setProperty("--board-last-fill", hexA(b.last,0.24));
+  S.setProperty("--board-frame", b.accent);
+  S.setProperty("--coord-on-light", hexA(b.coordLt,0.85)); S.setProperty("--coord-on-dark", hexA(b.coordDk,0.85));
+  // variants
+  root.setAttribute("data-corner", w.corner); root.setAttribute("data-frame", w.frame); root.setAttribute("data-motion", w.motion);
+  // pieces: choose the silhouette set + treatment for this world
+  const ps = PIECE_STYLE_MAP[w.pieceStyle] || { set:"chessnut", treat:"filled" };
+  root.setAttribute("data-pieces", ps.treat);
+  renderPieces(ps.set);
+  // header text
+  document.getElementById("worldName").textContent = w.name;
+  document.getElementById("worldFlavor").innerHTML = w.flavor;
+  // legibility readout (the board-is-legible-by-construction guarantee)
+  const wOnLt=legSq(b.pw,b.pwRim,b.light), wOnDk=legSq(b.pw,b.pwRim,b.dark);
+  const bOnLt=legSq(b.pb,b.pbRim,b.light), bOnDk=legSq(b.pb,b.pbRim,b.dark);
+  const minPc=Math.min(wOnLt,wOnDk,bOnLt,bOnDk);
+  const dL=Math.abs(relLum(hexToRgb(b.light))-relLum(hexToRgb(b.dark)));
+  const sqC=contrast(hexToRgb(b.light),hexToRgb(b.dark));
+  const leg=document.getElementById("legibility");
+  leg.innerHTML = `<span class="lab">board legibility</span>`+
+    `<span class="chip ${minPc>=3?'pass':'fail'}">pieces vs squares <b>${minPc.toFixed(2)}:1</b></span>`+
+    `<span class="chip ${sqC>=1.45?'pass':'fail'}">light vs dark <b>${sqC.toFixed(2)}:1</b></span>`+
+    `<span class="chip ${minPc>=3&&sqC>=1.45?'pass':'fail'}"><b>${minPc>=3&&sqC>=1.45?'✓ legible':'⚠ check'}</b></span>`;
+  // chips active state
+  document.querySelectorAll("#worldChips button").forEach(btn=>btn.classList.toggle("on", btn.dataset.id===w.id));
+  // replay entrance
+  replayMotion();
+}
+function replayMotion(){
+  const stage=document.getElementById("game");
+  stage.classList.remove("replay"); void stage.offsetWidth; stage.classList.add("replay");
+}
+
+/* world chips */
+const chipWrap=document.getElementById("worldChips");
+WORLDS.forEach(w=>{ const b=document.createElement("button"); b.textContent=w.chip; b.dataset.id=w.id; b.addEventListener("click",()=>applyWorld(w)); chipWrap.appendChild(b); });
+
+/* ============================================================
+   5. "DEAL" — LIVE generation. Claude invents a fresh design each
+      roll (POST /api/generate-table). Fonts it picks are loaded on
+      the fly. Falls back to a preset world if the endpoint is offline.
+   ============================================================ */
+const STEPS = ["reading the position","inventing a world","composing the palette","choosing the typography","shaping the frame & motion","tinting the board","laying out the table"];
+const ENDPOINT = "/api/generate-table";
+
+// load whatever Google Fonts Claude chose — one <link> per family so one
+// missing family can't break the others; faux-bold covers any missing weight.
+const _fontsSeen = new Set();
+function loadFonts(world){
+  [world.fonts?.display, world.fonts?.body, world.fonts?.mono].filter(Boolean).forEach(name=>{
+    if(_fontsSeen.has(name)) return; _fontsSeen.add(name);
+    const link=document.createElement("link"); link.rel="stylesheet";
+    link.href="https://fonts.googleapis.com/css2?family="+encodeURIComponent(name).replace(/%20/g,"+")+":wght@400;500;600;700&display=swap";
+    document.head.appendChild(link);
+  });
+  // give the swap a beat; cap so we never hang
+  return Promise.race([ (document.fonts?.ready || Promise.resolve()), new Promise(r=>setTimeout(r, 1400)) ]);
+}
+// append generic fallbacks so a missing font still renders sensibly
+function withFallbacks(world){
+  const f=world.fonts||{};
+  world.ff = world.ff || {};
+  world.ff.display = `"${f.display}", Georgia, serif`;
+  world.ff.body    = `"${f.body}", system-ui, sans-serif`;
+  world.ff.mono    = `"${f.mono}", ui-monospace, monospace`;
+  return world;
+}
+
+let dealing=false, idx=0, stepTimer=null;
+function startOverlay(){
+  const gen=document.getElementById("gen"); gen.classList.add("on");
+  const stepEl=document.getElementById("genStep"), barEl=document.getElementById("genBar");
+  document.getElementById("genTitle").textContent="Inventing your table…";
+  let s=0; stepEl.textContent=STEPS[0]; barEl.style.width="8%";
+  clearInterval(stepTimer);
+  stepTimer=setInterval(()=>{ s=(s+1)%STEPS.length; stepEl.textContent=STEPS[s]; barEl.style.width=(12+Math.min(80, s*12))+"%"; }, 1500);
+}
+function stopOverlay(){ clearInterval(stepTimer); const g=document.getElementById("gen"); document.getElementById("genBar").style.width="100%"; setTimeout(()=>g.classList.remove("on"), 240); }
+
+async function deal(){
+  if(dealing) return; dealing=true;
+  const btn=document.getElementById("dealBtn"); btn.classList.add("loading"); btn.disabled=true;
+  startOverlay();
+  try{
+    const res = await fetch(ENDPOINT, { method:"POST" });
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const world = await res.json();
+    if(world.error) throw new Error(world.error);
+    await loadFonts(world);
+    withFallbacks(world);
+    document.querySelector(".kick").textContent = "✦ invented live by Claude · " + (world.brief || "a fresh world");
+    applyWorld(world);
+  }catch(err){
+    // offline fallback: cycle a preset so the page still demonstrates the idea
+    const next = WORLDS[(idx+1)%WORLDS.length]; idx=(idx+1)%WORLDS.length;
+    document.querySelector(".kick").textContent = "offline · preset world (start table-server.mjs for live generation)";
+    applyWorld(next);
+    console.warn("live generation failed:", err.message);
+  }finally{
+    stopOverlay(); btn.classList.remove("loading"); btn.disabled=false; dealing=false;
+  }
+}
+document.getElementById("dealBtn").addEventListener("click", deal);
+
+/* boot */
+applyWorld(WORLDS[0]);
+</script>
+</body>
+</html>

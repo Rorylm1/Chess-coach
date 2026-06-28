@@ -5,13 +5,13 @@
  *
  * Bot mode keeps the full "Deep-Space Analysis Deck": a dedicated full-strength engine
  * (useAnalysis, separate from the bot) drives the eval bar, Analysis card and coach; the
- * randomized board (useBoardTheme) re-tints either mode. Multiplayer mode is hot-seat —
+ * generative table (useGameTable) reskins either mode. Multiplayer mode is hot-seat —
  * two humans on one device, no coach/analysis (a live best-line beside two competing humans
  * is an engine assist, and Play is "just play"): two player strips, a plain move log, manual
  * flip, single-ply takeback and per-side resign.
  */
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import type { Color } from "chess.js";
 import { Board } from "@/components/Board/Board";
 import { EvalBar } from "@/components/EvalBar/EvalBar";
@@ -21,8 +21,9 @@ import { CoachPanel } from "@/components/Coaching/CoachPanel";
 import { useChessGame, type GameMode } from "@/components/Play/useChessGame";
 import { useAnalysis } from "@/components/Play/useAnalysis";
 import { useCoach } from "@/components/Play/useCoach";
-import { BoardRandomizer } from "@/components/BoardRandomizer/BoardRandomizer";
-import { useBoardTheme } from "@/components/BoardRandomizer/useBoardTheme";
+import { TableDealer } from "@/components/Play/TableDealer";
+import { useGameTable } from "@/components/Play/useGameTable";
+import { specToVars, specToAttrs } from "@/lib/table/spec";
 import {
   DIFFICULTIES,
   DEFAULT_DIFFICULTY,
@@ -33,7 +34,7 @@ import type { PieceSymbol } from "chess.js";
 
 export function PlayClient() {
   const game = useChessGame("w", DEFAULT_DIFFICULTY);
-  const boardTheme = useBoardTheme();
+  const table = useGameTable();
   const [orientation, setOrientation] = useState<Color>("w");
   const [analysisOn, setAnalysisOn] = useState(true);
 
@@ -57,8 +58,19 @@ export function PlayClient() {
     game.setMode(mode);
   };
 
+  // Apply the dealt table to the Play wrapper only (overrides :root tokens here, never
+  // globally). No spec → classic Deep-Space. Nothing is persisted.
+  const gameStyle: CSSProperties | undefined = table.spec
+    ? ({
+        ...specToVars(table.spec),
+        background: table.spec.bg,
+        backgroundImage: table.spec.bgGradient,
+      } as CSSProperties)
+    : undefined;
+  const gameAttrs = table.spec ? specToAttrs(table.spec) : {};
+
   return (
-    <div className="game wrap">
+    <div className="game wrap" style={gameStyle} {...gameAttrs}>
       {/* ===================== BOARD COLUMN ===================== */}
       <div className="board-col">
         <TopStrip game={game} orientation={orientation} diff={diff} />
@@ -71,8 +83,8 @@ export function PlayClient() {
             interactive={interactive}
             lastMove={game.lastMove}
             onMove={game.playerMove}
-            theme={boardTheme.theme}
-            sweepKey={boardTheme.sweepKey}
+            pieceStyle={table.spec?.pieceStyle}
+            sweepKey={table.sweepKey}
           />
           {game.result && (
             <div className="result-overlay" role="status">
@@ -89,6 +101,13 @@ export function PlayClient() {
         </div>
 
         <BottomStrip game={game} orientation={orientation} interactive={interactive} />
+
+        {table.dealing && (
+          <div className="table-dealing" role="status" aria-live="polite">
+            <span className="td-spin" aria-hidden="true" />
+            <span className="td-label">Inventing your table…</span>
+          </div>
+        )}
       </div>
 
       {/* ===================== SIDE PANEL ===================== */}
@@ -113,7 +132,7 @@ export function PlayClient() {
           </div>
         </div>
 
-        <BoardRandomizer {...boardTheme} />
+        <TableDealer table={table} />
 
         {isBot ? (
           <>

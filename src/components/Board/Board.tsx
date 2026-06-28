@@ -13,7 +13,8 @@
 import { useMemo, useRef, useState, useCallback, useEffect } from "react";
 import { Chess, type Color, type Square } from "chess.js";
 import { GLYPH, FILES, pieceName } from "@/lib/chess/pieces";
-import { CLASSIC_THEME, type BoardTheme } from "@/lib/board/theme";
+import { pieceRender, type PieceStyle } from "@/lib/table/spec";
+import { PIECE_SETS, type PieceType } from "@/lib/table/pieceSets";
 
 export interface AttemptedMove {
   from: Square;
@@ -29,10 +30,9 @@ interface BoardProps {
   /** Origin + destination of the last move played, for the amber highlight. */
   lastMove: { from: Square; to: Square } | null;
   onMove: (move: AttemptedMove) => void;
-  /** Per-game randomized palette (M6). Defaults to the classic Deep-Space board. */
-  theme?: BoardTheme;
-  /** Bumped by a user reroll/reset to play the re-tint sweep once. A silent hydrate
-   * from storage leaves it unchanged, so the board settles without animating. */
+  /** Per-game generative table's piece style. Undefined → classic Unicode glyphs. */
+  pieceStyle?: PieceStyle;
+  /** Bumped on each deal/reset to play the re-tint sweep once. */
   sweepKey?: number;
 }
 
@@ -53,16 +53,16 @@ export function Board({
   interactive,
   lastMove,
   onMove,
-  theme,
+  pieceStyle,
   sweepKey = 0,
 }: BoardProps) {
   const game = useMemo(() => new Chess(fen), [fen]);
   const turn = game.turn();
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Re-tint sweep: a user reroll/reset bumps sweepKey → play the staggered colour sweep
-  // once. The initial mount is skipped, and a hydrate-from-storage never bumps the key.
-  const activeTheme = theme ?? CLASSIC_THEME;
+  // Re-tint sweep: a deal/reset bumps sweepKey → play the staggered colour sweep once.
+  const pieces = pieceStyle ? pieceRender(pieceStyle) : null;
+  const pieceSet = pieces ? PIECE_SETS[pieces.set] : null;
   const [sweeping, setSweeping] = useState(false);
   const sweepRef = useRef(sweepKey);
   useEffect(() => {
@@ -228,7 +228,17 @@ export function Board({
               aria-hidden="true"
               style={{ touchAction: "none" }}
             >
-              {GLYPH[piece.type]}
+              {pieceSet ? (
+                <svg
+                  viewBox={pieceSet.vb}
+                  aria-hidden="true"
+                  dangerouslySetInnerHTML={{
+                    __html: pieceSet.inner[piece.type.toUpperCase() as PieceType],
+                  }}
+                />
+              ) : (
+                GLYPH[piece.type]
+              )}
             </span>
           )}
           {isTarget && (
@@ -242,10 +252,7 @@ export function Board({
   const ariaLabel = describePosition(game, orientation, lastMove);
 
   return (
-    <div
-      className="board-wrap"
-      style={activeTheme.isClassic ? undefined : (activeTheme.vars as React.CSSProperties)}
-    >
+    <div className="board-wrap">
       <span className="brk tl" aria-hidden="true" />
       <span className="brk tr" aria-hidden="true" />
       <span className="brk bl" aria-hidden="true" />
