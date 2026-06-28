@@ -761,27 +761,35 @@ a {
    spec is applied to the .game wrapper only; classic = no spec.
    ============================================================ */
 .sq .piece svg {
-  width: calc(var(--c, 56px) * 0.84);
-  height: calc(var(--c, 56px) * 0.84);
+  width: calc(var(--c, 56px) * 0.86);
+  height: calc(var(--c, 56px) * 0.86);
   display: block;
   overflow: visible;
 }
+/* recolour: each set's fills/strokes reference these per-side custom props */
+.piece.w svg { --pc-fill: var(--piece-white); --pc-rim: var(--piece-white-rim); }
+.piece.b svg { --pc-fill: var(--piece-black); --pc-rim: var(--piece-black-rim); }
 .sq .piece svg :is(path, text) {
+  vector-effect: non-scaling-stroke; /* stroke weight in screen px, viewBox-independent */
   stroke-linejoin: round;
-  paint-order: stroke;
+  paint-order: stroke; /* rim sits behind the fill → clean outline */
   transition: fill 360ms ease-out, stroke 360ms ease-out;
 }
 .sq .piece svg text { font-family: var(--font-display), Georgia, serif; }
-.piece.w svg :is(path, text) { fill: var(--piece-white); stroke: var(--piece-white-rim); }
-.piece.b svg :is(path, text) { fill: var(--piece-black); stroke: var(--piece-black-rim); }
-[data-pieces="filled"] .piece svg :is(path, text) { stroke-width: 16px; }
-[data-pieces="flat"] .piece svg :is(path, text) { stroke-width: 5px; }
-[data-pieces="bold"] .piece svg :is(path, text) { stroke-width: 42px; }
-[data-pieces="neon"] .piece svg :is(path, text) { stroke-width: 18px; }
+/* chessnut = filled modern silhouette; the stroke is an outline rim */
+[data-pieceset="chessnut"] .piece svg path { stroke-width: 2px; }
+[data-pieceset="chessnut"][data-pieces="flat"] .piece svg path { stroke-width: 0.6px; }
+[data-pieceset="chessnut"][data-pieces="bold"] .piece svg path { stroke-width: 4.5px; }
+[data-pieceset="chessnut"][data-pieces="neon"] .piece svg path { stroke-width: 2.5px; }
+/* cburnett = classic Staunton line drawing; keep its fine native stroke */
+[data-pieceset="cburnett"] .piece svg path { stroke-width: 1.3px; }
+[data-pieceset="cburnett"][data-pieces="bold"] .piece svg path { stroke-width: 2px; }
+/* letter mark */
+[data-pieceset="letter"] .piece svg text { stroke-width: 2px; }
+/* neon glow (any set) */
 [data-pieces="neon"] .piece svg {
   filter: drop-shadow(0 0 4px var(--board-accent-glow)) drop-shadow(0 0 9px var(--board-accent-glow));
 }
-[data-pieces="letter"] .piece svg text { stroke-width: 12px; }
 
 /* a dealt table reskins the Play surface — frame it as its own world */
 .game[style] {

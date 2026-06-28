@@ -180,16 +180,18 @@ button { font-family: inherit; cursor: pointer; }
 .piece.b { color: var(--piece-black); text-shadow: 0 0 1px var(--piece-black-rim), .7px .7px 0 var(--piece-black-rim), -.7px -.7px 0 var(--piece-black-rim), .7px -.7px 0 var(--piece-black-rim), -.7px .7px 0 var(--piece-black-rim), 0 0 6px var(--board-accent-glow); }
 /* --- SVG pieces (real recolorable silhouettes; per-world treatment) --- */
 .piece svg { width: 88%; height: 88%; display: block; overflow: visible; }
-.piece svg :is(path,text) { stroke-linejoin: round; paint-order: stroke; transition: fill 400ms ease, stroke 400ms ease; }
+.piece.w svg { --pc-fill: var(--piece-white); --pc-rim: var(--piece-white-rim); }
+.piece.b svg { --pc-fill: var(--piece-black); --pc-rim: var(--piece-black-rim); }
+.piece svg :is(path,text) { vector-effect: non-scaling-stroke; stroke-linejoin: round; paint-order: stroke; transition: fill 400ms ease, stroke 400ms ease; }
 .piece svg text { font-family: var(--ff-display); }
-.piece.w svg :is(path,text) { fill: var(--piece-white); stroke: var(--piece-white-rim); }
-.piece.b svg :is(path,text) { fill: var(--piece-black); stroke: var(--piece-black-rim); }
-[data-pieces="filled"] .piece svg :is(path,text) { stroke-width: 16px; }
-[data-pieces="flat"]   .piece svg :is(path,text) { stroke-width: 5px; }
-[data-pieces="bold"]   .piece svg :is(path,text) { stroke-width: 42px; }
-[data-pieces="neon"]   .piece svg :is(path,text) { stroke-width: 18px; }
-[data-pieces="neon"]   .piece svg { filter: drop-shadow(0 0 4px var(--board-accent-glow)) drop-shadow(0 0 9px var(--board-accent-glow)); }
-[data-pieces="letter"] .piece svg text { stroke-width: 12px; }
+[data-pieceset="chessnut"] .piece svg path { stroke-width: 2px; }
+[data-pieceset="chessnut"][data-pieces="flat"] .piece svg path { stroke-width: 0.6px; }
+[data-pieceset="chessnut"][data-pieces="bold"] .piece svg path { stroke-width: 4.5px; }
+[data-pieceset="chessnut"][data-pieces="neon"] .piece svg path { stroke-width: 2.5px; }
+[data-pieceset="cburnett"] .piece svg path { stroke-width: 1.3px; }
+[data-pieceset="cburnett"][data-pieces="bold"] .piece svg path { stroke-width: 2px; }
+[data-pieceset="letter"] .piece svg text { stroke-width: 2px; }
+[data-pieces="neon"] .piece svg { filter: drop-shadow(0 0 4px var(--board-accent-glow)) drop-shadow(0 0 9px var(--board-accent-glow)); }
 .sq.last::after { content: ""; position: absolute; inset: 0; background: var(--board-last-fill); box-shadow: inset 0 0 0 2px var(--board-last); }
 .sq.sel::after { content: ""; position: absolute; inset: 0; background: var(--board-accent-fill); box-shadow: inset 0 0 0 2px var(--board-accent), inset 0 0 16px var(--board-accent-glow); }
 .sq .hint { position: absolute; width: 26%; height: 26%; border-radius: 50%; background: var(--board-accent); opacity: 0.6; box-shadow: 0 0 10px var(--board-accent-glow); z-index: 2; }
@@ -513,12 +515,12 @@ buildBoard();
 // (sandbox library = chessnut silhouettes [Apache] + authored letter set; more
 //  permissive families — kiwen-suwi CC-BY, maurimo MIT, cburnett-BSD — drop in here.)
 const PIECE_STYLE_MAP = {
-  "classic-staunton":     { set:"chessnut", treat:"filled" },
+  "classic-staunton":     { set:"cburnett", treat:"filled" },
+  "fantasy-illustrative": { set:"cburnett", treat:"bold" },
+  "woodcut-celtic":       { set:"cburnett", treat:"bold" },
   "flat-silhouette":      { set:"chessnut", treat:"flat" },
   "minimalist-line":      { set:"chessnut", treat:"flat" },
-  "fantasy-illustrative": { set:"chessnut", treat:"bold" },
   "geometric-spatial":    { set:"chessnut", treat:"bold" },
-  "woodcut-celtic":       { set:"chessnut", treat:"bold" },
   "neon-outline":         { set:"chessnut", treat:"neon" },
   "letter-mark":          { set:"letter",   treat:"letter" },
   "calligraphic":         { set:"letter",   treat:"letter" },
@@ -560,6 +562,7 @@ function applyWorld(w){
   root.setAttribute("data-corner", w.corner); root.setAttribute("data-frame", w.frame); root.setAttribute("data-motion", w.motion);
   // pieces: choose the silhouette set + treatment for this world
   const ps = PIECE_STYLE_MAP[w.pieceStyle] || { set:"chessnut", treat:"filled" };
+  root.setAttribute("data-pieceset", ps.set);
   root.setAttribute("data-pieces", ps.treat);
   renderPieces(ps.set);
   // header text
