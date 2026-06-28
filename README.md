@@ -114,7 +114,9 @@ direction is **D — "Deep-Space Analysis Deck"** (obsidian + holographic cyan/a
 
 ## Credits
 
-Generative-table chess piece silhouettes use the **chessnut** set by Lex Luengas
-([github.com/LexLuengas/chessnut-pieces](https://github.com/LexLuengas/chessnut-pieces)), Apache-2.0,
-recolored at runtime. Per the licensing guardrail, only permissive piece sets are used (no GPL or
-non-commercial assets).
+Generative-table chess piece silhouettes, recolored at runtime:
+- **chessnut** (modern flat) by Lex Luengas — [github.com/LexLuengas/chessnut-pieces](https://github.com/LexLuengas/chessnut-pieces), Apache-2.0.
+- **cburnett** (classic Staunton) by Colin M.L. Burnett via [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces), used under its BSD-3-Clause grant.
+
+Per the licensing guardrail, only permissive piece sets are used (no GPL or non-commercial assets).
+Backlog families: maurimo (MIT), RhosGFX (CC0), kiwen-suwi (CC-BY).

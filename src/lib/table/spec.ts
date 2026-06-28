@@ -96,13 +96,15 @@ export function specToVars(s: TableSpec): Record<string, string> {
   };
 }
 
-/** Variant flags CSS keys off (corner/frame/motion + the piece treatment). */
+/** Variant flags CSS keys off (corner/frame/motion + the piece set + treatment). */
 export function specToAttrs(s: TableSpec): Record<string, string> {
+  const p = pieceRender(s.pieceStyle);
   return {
     "data-corner": s.corner,
     "data-frame": s.frame,
     "data-motion": s.motion,
-    "data-pieces": pieceRender(s.pieceStyle).treat,
+    "data-pieceset": p.set,
+    "data-pieces": p.treat,
   };
 }
 
@@ -111,22 +113,28 @@ export function fontsOf(s: TableSpec): string[] {
   return [s.fontDisplay, s.fontBody, s.fontMono].filter(Boolean);
 }
 
-/** Map the LLM's piece style → a real silhouette set + a CSS treatment. */
-export function pieceRender(style: PieceStyle): { set: "chessnut" | "letter"; treat: string } {
+/**
+ * Map the LLM's piece style → a real silhouette set + a CSS treatment. Worlds now differ in
+ * piece *shape*: cburnett = classic Staunton (line drawing), chessnut = modern flat silhouette,
+ * letter = typographic. (More permissive families — maurimo MIT / kiwen-suwi CC-BY — drop in here.)
+ */
+export function pieceRender(style: PieceStyle): { set: "chessnut" | "cburnett" | "letter"; treat: string } {
   switch (style) {
     case "letter-mark":
     case "calligraphic":
       return { set: "letter", treat: "letter" };
-    case "minimalist-line":
-    case "flat-silhouette":
-      return { set: "chessnut", treat: "flat" };
+    case "classic-staunton":
+      return { set: "cburnett", treat: "filled" };
     case "fantasy-illustrative":
-    case "geometric-spatial":
     case "woodcut-celtic":
+      return { set: "cburnett", treat: "bold" };
+    case "flat-silhouette":
+    case "minimalist-line":
+      return { set: "chessnut", treat: "flat" };
+    case "geometric-spatial":
       return { set: "chessnut", treat: "bold" };
     case "neon-outline":
       return { set: "chessnut", treat: "neon" };
-    case "classic-staunton":
     default:
       return { set: "chessnut", treat: "filled" };
   }

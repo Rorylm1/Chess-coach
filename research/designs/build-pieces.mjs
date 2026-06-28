@@ -1,54 +1,100 @@
-/* Throwaway: fetch the permissive chessnut piece silhouettes (Apache-2.0,
-   github.com/LexLuengas/chessnut-pieces — black set = clean single-fill paths),
-   strip hardcoded fills so CSS controls color, and emit piece-sets.js for the
-   generative-table sandbox. Also authors a typographic "letter" set. */
+/* Throwaway: fetch permissive chess piece sets, normalize them into RECOLORABLE symbols
+   (fills/strokes rewritten to CSS custom props --pc-fill / --pc-rim), and emit the piece
+   library for both the sandbox (piece-sets.js) and the app (src/lib/table/pieceSets.ts).
+
+   Sets:
+   - chessnut   — Apache-2.0  (github.com/LexLuengas/chessnut-pieces) — modern flat silhouettes
+   - cburnett   — BSD-3 grant (Wikimedia Commons)                     — classic Staunton (outline drawing)
+   - letter     — authored here (permissive)                          — typographic marks
+*/
 import { writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const TYPES = { K: "bK", Q: "bQ", R: "bR", B: "bB", N: "bN", P: "bP" };
-const BASE = "https://raw.githubusercontent.com/LexLuengas/chessnut-pieces/HEAD/";
+// ---- chessnut (black set = clean single-fill silhouette paths) ----
+const CHESSNUT_FILES = { K: "bK", Q: "bQ", R: "bR", B: "bB", N: "bN", P: "bP" };
+const CHESSNUT_BASE = "https://raw.githubusercontent.com/LexLuengas/chessnut-pieces/HEAD/";
 
-function extractPaths(svg) {
-  // grab every <path d="..."> and keep ONLY the geometry (drop fill/style/id)
+// ---- cburnett (white set; classic Staunton outline drawing) ----
+const CBURNETT_URLS = {
+  K: "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg",
+  Q: "https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg",
+  R: "https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg",
+  B: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg",
+  N: "https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg",
+  P: "https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg",
+};
+
+// rewrite concrete colours → CSS custom props so a piece recolours per world.
+// body whites → fill, black fills + strokes → rim; fill:none (outline-only paths) is preserved.
+function recolor(svg) {
+  return svg
+    .replace(/fill="#?(?:fff(?:fff)?|white)"/gi, 'fill="var(--pc-fill)"')
+    .replace(/fill:\s*#?(?:fff(?:fff)?|white)/gi, "fill:var(--pc-fill)")
+    .replace(/fill="#?(?:000(?:000)?|black)"/gi, 'fill="var(--pc-rim)"')
+    .replace(/fill:\s*#?(?:000(?:000)?|black)/gi, "fill:var(--pc-rim)")
+    .replace(/stroke="#?(?:000(?:000)?|black)"/gi, 'stroke="var(--pc-rim)"')
+    .replace(/stroke:\s*#?(?:000(?:000)?|black)/gi, "stroke:var(--pc-rim)");
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+async function fetchText(u) {
+  for (let i = 0; i < 4; i++) {
+    try {
+      const t = await fetch(u).then((r) => r.text());
+      if (t.includes("<svg") && t.length > 80) return t;
+    } catch {}
+    await sleep(500 * (i + 1)); // back off (Wikimedia rate-limits rapid requests)
+  }
+  throw new Error("fetch failed/short: " + u);
+}
+
+// chessnut: extract path geometry, attach recolour props
+async function chessnutInner(file) {
+  const svg = await fetchText(CHESSNUT_BASE + file + ".svg");
   const ds = [...svg.matchAll(/<path[^>]*\sd="([^"]+)"[^>]*\/?>/g)].map((m) => m[1]);
-  return ds.map((d) => `<path d="${d}"/>`).join("");
+  if (!ds.length) throw new Error("no paths in chessnut " + file);
+  return ds.map((d) => `<path d="${d}" fill="var(--pc-fill)" stroke="var(--pc-rim)"/>`).join("");
+}
+// cburnett: keep everything inside <svg>…</svg> (a <g> drawing for most pieces, a bare
+// <path> for the pawn), recoloured. General inner-extraction handles both shapes.
+async function cburnettInner(url) {
+  const svg = await fetchText(url);
+  const inner = svg.replace(/^[\s\S]*?<svg[^>]*>/i, "").replace(/<\/svg>[\s\S]*$/i, "").trim();
+  if (!inner.includes("<path")) throw new Error("no <path> in cburnett " + url);
+  return recolor(inner);
 }
 
 const chessnut = { vb: "0 0 800 800", inner: {} };
-for (const [type, file] of Object.entries(TYPES)) {
-  const svg = await fetch(BASE + file + ".svg").then((r) => r.text());
-  const inner = extractPaths(svg);
-  if (!inner) throw new Error("no paths in " + file);
-  chessnut.inner[type] = inner;
-  console.log(file, "->", inner.length, "chars");
-}
-
-// authored typographic set — renders in the world's display font, recolorable
+const cburnett = { vb: "0 0 45 45", inner: {} };
 const letter = { vb: "0 0 800 800", inner: {} };
+
+for (const [type, file] of Object.entries(CHESSNUT_FILES)) {
+  chessnut.inner[type] = await chessnutInner(file);
+  console.log("chessnut", file, chessnut.inner[type].length);
+}
+for (const [type, url] of Object.entries(CBURNETT_URLS)) {
+  cburnett.inner[type] = await cburnettInner(url);
+  console.log("cburnett", type, cburnett.inner[type].length);
+  await sleep(250); // be gentle with Wikimedia
+}
 for (const t of ["K", "Q", "R", "B", "N", "P"]) {
-  letter.inner[t] = `<text x="400" y="404" text-anchor="middle" dominant-baseline="central" font-family="inherit" font-weight="700" font-size="600" letter-spacing="0">${t}</text>`;
+  letter.inner[t] = `<text x="400" y="404" text-anchor="middle" dominant-baseline="central" font-family="inherit" font-weight="700" font-size="600" fill="var(--pc-fill)" stroke="var(--pc-rim)">${t}</text>`;
 }
 
-const data = { chessnut, letter };
-const banner = `chessnut silhouettes: Apache-2.0 (github.com/LexLuengas/chessnut-pieces).
-   'letter' set: authored here (permissive). Fills/strokes are CSS-driven.`;
+const data = { chessnut, cburnett, letter };
+const banner = `chessnut: Apache-2.0 (github.com/LexLuengas/chessnut-pieces).
+   cburnett: BSD-3 grant via Wikimedia Commons (classic Staunton).
+   letter: authored here (permissive). Fills/strokes are CSS custom props (--pc-fill/--pc-rim).`;
 
-// 1) sandbox global (for generative-table.html)
-const js = `/* AUTO-GENERATED by build-pieces.mjs — throwaway sandbox asset.
-   ${banner} */
-window.PIECE_SETS = ${JSON.stringify(data)};
-`;
+const js = `/* AUTO-GENERATED by build-pieces.mjs — throwaway sandbox asset.\n   ${banner} */\nwindow.PIECE_SETS = ${JSON.stringify(data)};\n`;
 writeFileSync(join(__dirname, "piece-sets.js"), js);
 
-// 2) typed module for the real app (src/lib/table/pieceSets.ts)
-const ts = `/* AUTO-GENERATED by research/designs/build-pieces.mjs — do not edit by hand.
-   ${banner} */
+const ts = `/* AUTO-GENERATED by research/designs/build-pieces.mjs — do not edit by hand.\n   ${banner} */
 export type PieceType = "K" | "Q" | "R" | "B" | "N" | "P";
 export interface PieceSet { vb: string; inner: Record<PieceType, string>; }
 export const PIECE_SETS: Record<string, PieceSet> = ${JSON.stringify(data)};
 `;
-const tsPath = join(__dirname, "..", "..", "src", "lib", "table", "pieceSets.ts");
-writeFileSync(tsPath, ts);
-console.log("\nwrote piece-sets.js (" + js.length + " bytes) + src/lib/table/pieceSets.ts");
+writeFileSync(join(__dirname, "..", "..", "src", "lib", "table", "pieceSets.ts"), ts);
+console.log("\nwrote piece-sets.js + src/lib/table/pieceSets.ts (sets: chessnut, cburnett, letter)");
