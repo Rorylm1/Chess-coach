@@ -755,6 +755,123 @@ a {
   z-index: 1;
 }
 
+/* ============================================================
+   Generative table (Play tab) — recolorable SVG pieces, deal
+   control, and the "inventing your table" overlay. The dealt
+   spec is applied to the .game wrapper only; classic = no spec.
+   ============================================================ */
+.sq .piece svg {
+  width: calc(var(--c, 56px) * 0.84);
+  height: calc(var(--c, 56px) * 0.84);
+  display: block;
+  overflow: visible;
+}
+.sq .piece svg :is(path, text) {
+  stroke-linejoin: round;
+  paint-order: stroke;
+  transition: fill 360ms ease-out, stroke 360ms ease-out;
+}
+.sq .piece svg text { font-family: var(--font-display), Georgia, serif; }
+.piece.w svg :is(path, text) { fill: var(--piece-white); stroke: var(--piece-white-rim); }
+.piece.b svg :is(path, text) { fill: var(--piece-black); stroke: var(--piece-black-rim); }
+[data-pieces="filled"] .piece svg :is(path, text) { stroke-width: 16px; }
+[data-pieces="flat"] .piece svg :is(path, text) { stroke-width: 5px; }
+[data-pieces="bold"] .piece svg :is(path, text) { stroke-width: 42px; }
+[data-pieces="neon"] .piece svg :is(path, text) { stroke-width: 18px; }
+[data-pieces="neon"] .piece svg {
+  filter: drop-shadow(0 0 4px var(--board-accent-glow)) drop-shadow(0 0 9px var(--board-accent-glow));
+}
+[data-pieces="letter"] .piece svg text { stroke-width: 12px; }
+
+/* a dealt table reskins the Play surface — frame it as its own world */
+.game[style] {
+  border-radius: 14px;
+  padding: 18px;
+  transition: background-color 600ms ease;
+}
+
+/* deal control (subsumes the old board roller) */
+.table-dealer .dealer-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.table-dealer .dealer-flavor {
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.45;
+  margin: 0;
+}
+.table-dealer .dealer-flavor em { color: var(--amber); font-style: italic; }
+.table-dealer .dealer-actions { display: flex; gap: 8px; }
+.table-dealer .deal-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--cyan);
+  background: rgba(70, 224, 208, 0.08);
+  border: 1px solid var(--cyan);
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: box-shadow 200ms ease, transform 200ms ease, background 200ms ease;
+}
+.table-dealer .deal-btn:hover:not(:disabled) {
+  box-shadow: 0 0 18px var(--cyan-glow);
+  transform: translateY(-1px);
+}
+.table-dealer .deal-btn:disabled { opacity: 0.6; cursor: progress; }
+.table-dealer .dealer-actions > button:last-child {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid var(--hairline-2);
+  padding: 10px 12px;
+  cursor: pointer;
+}
+.table-dealer .dealer-actions > button:last-child:disabled { opacity: 0.4; cursor: default; }
+.table-dealer .dealer-note { font-size: 10.5px; color: var(--ink-faint); letter-spacing: 0.04em; margin: 0; }
+
+/* "inventing your table" overlay over the board column */
+.board-col { position: relative; }
+.table-dealing {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: color-mix(in oklab, var(--bg) 78%, transparent);
+  backdrop-filter: blur(1.5px);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--cyan);
+}
+.table-dealing .td-spin {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--cyan);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: td-spin 0.8s linear infinite;
+}
+@keyframes td-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .sq .piece svg :is(path, text) { transition: none; }
+  .table-dealing .td-spin { animation: none; }
+}
+
 /* Signature re-tint sweep on reroll: each square eases its colour with a diagonal
    delay (--sweep-d), the frame + pieces cross-fade. Only active while .sweeping is set. */
 .board.sweeping {

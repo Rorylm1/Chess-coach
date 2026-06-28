@@ -33,8 +33,12 @@ language, grounded in the engine, delivered by a warm playful-mentor coach.
 - **Now — Play, reframed (M6).** A post-M5 pivot toward a **three-tab** app (Play · Openings · Coach)
   with Play made fun and social. **M6** ships the Play + Openings tabs, a per-game **randomized board**
   (built first — a seeded, OKLCH-based theme generator that's unique every game yet always legible; spec
-  in `research/randomizer-color-system.md`), and **local hot-seat** 2-player. Then **M7** = a **shareable
-  live link** for online play, **M8** = the **Coach** tab (post-game review), **M9** = release. _In progress._
+  in `research/randomizer-color-system.md`), and **local hot-seat** 2-player. The randomizer has since grown
+  into the **Generative Table** — on Play, *Deal a table* makes a live Claude call that **invents a whole
+  fresh UI for that game** (surfaces, type, accents, board palette _and_ recolorable SVG pieces), rendered
+  safely from a validated spec and guaranteed legible by a backstop; Play-tab only and ephemeral (classic
+  Deep-Space is always the default). Then **M7** = a **shareable live link** for online play, **M8** = the
+  **Coach** tab (post-game review), **M9** = release. _In progress._
 
 See `spec.md` for the full milestone plan (M0–M9) and `DESIGN.md` for the design system.
 
@@ -78,7 +82,7 @@ Copy `.env.example` to `.env.local` and fill in `ANTHROPIC_API_KEY` (used from M
 ## Project layout
 
 ```
-src/app/              App Router routes — landing, /play, /openings + /openings/[slug], api/coach, layout, globals.css
+src/app/              App Router routes — landing, /play, /openings + /openings/[slug], api/coach, api/table, layout, globals.css
 src/components/Board/  Custom interactive chessboard (chess.js-driven; click-to-move + drag)
 src/components/Play/   Play screen (PlayClient) + hooks: game loop (useChessGame), analysis (useAnalysis)
 src/components/EvalBar/ EvalGraph/ MoveList/   M2 analysis UI (eval bar, swing graph, coded move list)
@@ -89,6 +93,7 @@ src/lib/engine/        Stockfish UCI wrapper (engine.ts: play + analyse) + analy
 src/lib/classify.ts    Win-probability move classification (blunder/mistake/inaccuracy) — pure, tested
 src/lib/grounding/     The chess-fact payload (payload.ts) + move validator (validate-move.ts) — tested
 src/lib/coach/         M3 coach: payload, prompt, provider (Anthropic + fallback), guard — tested
+src/lib/table/         M6.5 generative table: spec + :root-token mapping, legibility backstop, server Claude generator + entropy brief, recolorable piece SVG sets
 src/lib/openings/      M5 book-tree model + read-through / drill logic (tree.ts)
 src/lib/chess/         Chess helpers (piece glyphs + names)
 content/openings/      Curated opening data (one file per opening) + engine-sourced evals.generated.json
@@ -106,3 +111,10 @@ research/randomizer-color-system.md   Build-reference spec for the M6 randomized
 Distinctive, hand-crafted UI — not generic AI aesthetics. The system is documented in `DESIGN.md`,
 including the banned-defaults list. Design exploration lives in `research/designs/`; the locked
 direction is **D — "Deep-Space Analysis Deck"** (obsidian + holographic cyan/amber HUD).
+
+## Credits
+
+Generative-table chess piece silhouettes use the **chessnut** set by Lex Luengas
+([github.com/LexLuengas/chessnut-pieces](https://github.com/LexLuengas/chessnut-pieces)), Apache-2.0,
+recolored at runtime. Per the licensing guardrail, only permissive piece sets are used (no GPL or
+non-commercial assets).
