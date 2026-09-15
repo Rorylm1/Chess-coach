@@ -1,0 +1,27 @@
+[Unit]
+Description=Chess Coach multiplayer relay
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=chess-coach
+Group=chess-coach
+WorkingDirectory=/opt/chess-coach
+EnvironmentFile=/etc/chess-coach/relay.env
+ExecStart=/opt/chess-coach/runtime/node /opt/chess-coach/current/chess-relay.cjs
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=15
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=256M
+CPUQuota=25%
+TasksMax=64
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

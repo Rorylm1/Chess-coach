@@ -29,8 +29,8 @@ import {
   DEFAULT_DIFFICULTY,
   getDifficulty,
 } from "@/lib/engine/difficulty";
-import { GLYPH } from "@/lib/chess/pieces";
-import type { PieceSymbol } from "chess.js";
+import { HumanMoves, PlayerStrip } from "./HumanGame";
+import { InviteFriend } from "@/components/OnlinePlay/InviteFriend";
 
 export function PlayClient() {
   const game = useChessGame("w", DEFAULT_DIFFICULTY);
@@ -132,6 +132,8 @@ export function PlayClient() {
           </div>
         </div>
 
+        {!isBot && <InviteFriend table={table.spec} disabled={table.dealing} />}
+
         <TableDealer table={table} />
 
         {isBot ? (
@@ -216,7 +218,7 @@ export function PlayClient() {
             </section>
           </>
         ) : (
-          <HotseatMoves history={game.history} />
+          <HumanMoves history={game.history} />
         )}
 
         <section className="actions" aria-label="Game actions">
@@ -324,79 +326,5 @@ function SideStrip({ game, color }: { game: ReturnType<typeof useChessGame>; col
       status={toMove ? "To move" : ""}
       live={toMove}
     />
-  );
-}
-
-/** A plain SAN move log for hot-seat — no classification colours, no engine. */
-function HotseatMoves({ history }: { history: string[] }) {
-  const rows: Array<{ n: number; w: string; b: string }> = [];
-  for (let i = 0; i < history.length; i += 2) {
-    rows.push({ n: i / 2 + 1, w: history[i], b: history[i + 1] ?? "" });
-  }
-  return (
-    <section className="card" aria-label="Moves">
-      <div className="card-head">
-        <h2>Moves</h2>
-        <span className="tag">{rows.length ? `${rows.length} full` : "—"}</span>
-      </div>
-      <div className="moves">
-        {rows.length === 0 ? (
-          <p className="moves-empty">No moves yet — White to start.</p>
-        ) : (
-          rows.map((r) => (
-            <div className="moverow" key={r.n}>
-              <span className="n">{r.n}</span>
-              <span className="m plain">{r.w}</span>
-              <span className="m plain">{r.b}</span>
-            </div>
-          ))
-        )}
-      </div>
-    </section>
-  );
-}
-
-function PlayerStrip({
-  avatar,
-  name,
-  role,
-  captured,
-  capturedColor,
-  status,
-  live,
-  variant = "",
-}: {
-  avatar: string;
-  name: string;
-  role: string;
-  captured: string[];
-  capturedColor: Color;
-  status: string;
-  live: boolean;
-  variant?: string;
-}) {
-  return (
-    <div className={`pstrip${variant ? ` ${variant}` : ""}${live ? " active" : ""}`}>
-      <span className="avatar" aria-hidden="true">
-        {avatar}
-      </span>
-      <div className="who">
-        <div className="name">{name}</div>
-        <div className="role">{role}</div>
-      </div>
-      <div className="captured" aria-label={`Pieces ${name} captured`}>
-        {captured.map((p, i) => (
-          <span key={i} className={`cap-piece ${capturedColor}`}>
-            {GLYPH[p as PieceSymbol]}
-          </span>
-        ))}
-      </div>
-      {status && (
-        <span className={`pstatus${live ? " live" : ""}`}>
-          {live && <span className="dot" aria-hidden="true" />}
-          {status}
-        </span>
-      )}
-    </div>
   );
 }

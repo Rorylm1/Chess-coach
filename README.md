@@ -56,8 +56,7 @@ See `spec.md` for the full milestone plan (M0–M9) and `DESIGN.md` for the desi
   analysis
 - **Claude (Anthropic)** via a server-side coaching route (`/api/coach`) — engine-grounded, validated, streamed
 - **Vitest** for the pure grounding logic (classification + move validation + coach guard) — `npm test`
-- Coming next (M6–M7): a tabbed shell · a seeded **randomized-board** theming layer over the custom board ·
-  local hot-seat 2-player · then a realtime relay for **online shareable-link play** (the one step beyond local-first)
+- **Online play (M7):** private invite links, shared board designs, server-validated moves, refresh recovery, presence, resign and agreed draws. A small Node/WebSocket relay runs on Hetzner; the website stays on Vercel.
 
 **Licensing guardrail:** our code stays permissive. Stockfish WASM (GPLv3) is an isolated static
 asset behind the UCI message boundary (single-threaded, so no COOP/COEP headers needed); never add
@@ -131,3 +130,9 @@ Rebuild imported SVG data offline with `node research/designs/import-extra-piece
 ## Board randomizer prompt
 
 The exact system prompt and an example per-roll brief are documented in [research/board-randomizer-prompt.md](research/board-randomizer-prompt.md). It follows Background → Behaviour → Output. The runtime source is `src/lib/table/brief.ts`. Recent silhouettes are excluded for five rolls; the generated world also changes palette, fonts, frame and atmosphere. If AI is unavailable, a labeled procedural shuffle supplies a new look.
+
+## Play a friend online
+
+Open **Play → Multiplayer → Create invite link**, then send the link to a friend. You play White; your friend joins as Black. Both see the same board design. Games are untimed and require no accounts. Refreshing in the same browser restores your seat and position.
+
+For development, run `npm run relay:dev` alongside `npm run dev`. Production setup, the Hetzner service, checks and rollback details are in [deploy/README.md](deploy/README.md). Waiting invites expire after one hour; joined games after 24 hours of inactivity. Rooms are held in memory, so relay restarts end them.

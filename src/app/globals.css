@@ -2315,3 +2315,16 @@ button.ribbon-chip:hover {
   line-height: 1.45;
   margin: 0;
 }
+
+/* Invite-link multiplayer: keep the shared board the hero. */
+.online-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.online-body p { margin: 0; color: var(--ink-soft); line-height: 1.7; }
+.online-body .online-status { color: var(--ink); font-size: 16px; }
+.online-body .online-note { font-size: 12px; }
+.online-body .dealer-error { color: var(--amber); }
+.online-link-label { display: flex; flex-direction: column; gap: 8px; color: var(--ink-soft); font-size: 12px; }
+.online-link-label input { width: 100%; min-width: 0; min-height: 44px; padding: 10px; border: 1px solid var(--hairline); border-radius: 4px; background: var(--panel-2); color: var(--ink); font-family: var(--font-mono); font-size: 12px; }
+.online-controls { display: flex; flex-wrap: wrap; gap: 10px; }
+.online-controls button { min-height: 44px; padding: 10px 14px; border: 1px solid var(--hairline); }
+.online-back { display: inline-block; min-height: 44px; padding: 12px 0; font-size: 13px; color: var(--ink-soft); }
+.online-invite .btn { width: 100%; min-height: 44px; }
