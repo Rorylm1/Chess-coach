@@ -1,0 +1,5 @@
+Source: https://raw.githubusercontent.com/lichess-org/lila/d9f9744af7667f93d2640484f43f2ec163364c66/COPYING.md
+
+public/piece/rhosgfx | [RhosGFX](https://rhosgfx.itch.io/) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+
+Author's CC0 grant: https://rhosgfx.itch.io/vector-chess-pieces

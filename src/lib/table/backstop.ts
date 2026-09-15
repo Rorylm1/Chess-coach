@@ -3,7 +3,7 @@
  *
  * Whatever Claude invents, this guarantees the board is readable: light vs dark squares
  * stay distinct, each two-tone piece (fill + opposite-lightness rim) clears 3:1 against
- * BOTH square tones, and body text clears its surfaces. The board is the hero; it can
+ * BOTH square tones, and body text clears its surfaces where a shared ink is possible. The board is the hero; it can
  * never come back broken. (sRGB WCAG math on hex — mirrors the sandbox generator.)
  */
 
@@ -38,6 +38,53 @@ function pushL(hex: string, dir: number, step = 0.06): string {
   return toHex({ r: c.r + (t - c.r) * k, g: c.g + (t - c.g) * k, b: c.b + (t - c.b) * k });
 }
 
+/**
+ * Find the closest tint/shade that reads across all the supplied backgrounds. Sampling
+ * at channel precision is bounded, keeps the original hue, and can move in either
+ * direction (the page background and the panel need not have the same value).
+ *
+ * Some combinations of surfaces have no common accessible ink. In that case preserve
+ * their palette, guarantee the primary surface, and maximize the worst remaining ratio.
+ */
+function repairInk(hex: string, backgrounds: string[], primary = backgrounds[0]): string {
+  const floor = 4.5;
+  const original = hexToRgb(hex);
+  const luminances = backgrounds.map((background) => relLum(hexToRgb(background)));
+  const primaryLum = relLum(hexToRgb(primary));
+  const ratio = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  const worst = (lum: number) => Math.min(...luminances.map((background) => ratio(lum, background)));
+  if (worst(relLum(original)) >= floor) return hex;
+
+  let closest: string | undefined;
+  let closestDistance = Infinity;
+  let fallback = hex;
+  let fallbackScore = -Infinity;
+  // Include pure black and white: at least one always clears 4.5 on a single surface.
+  for (const target of [0, 1]) {
+    for (let step = 0; step <= 255; step++) {
+      const amount = step / 255;
+      const candidate = toHex({
+        r: original.r + (target - original.r) * amount,
+        g: original.g + (target - original.g) * amount,
+        b: original.b + (target - original.b) * amount,
+      });
+      const rgb = hexToRgb(candidate);
+      const lum = relLum(rgb);
+      const score = worst(lum);
+      const distance = (rgb.r - original.r) ** 2 + (rgb.g - original.g) ** 2 + (rgb.b - original.b) ** 2;
+      if (score >= floor && distance < closestDistance) {
+        closest = candidate;
+        closestDistance = distance;
+      }
+      if (ratio(lum, primaryLum) >= floor && score > fallbackScore) {
+        fallback = candidate;
+        fallbackScore = score;
+      }
+    }
+  }
+  return closest ?? fallback;
+}
+
 /** Repair the board palette in place-ish (returns a corrected copy of the relevant fields). */
 export function backstopBoard(s: TableSpec): TableSpec {
   const out = { ...s };
@@ -50,7 +97,15 @@ export function backstopBoard(s: TableSpec): TableSpec {
       out.boardLight = pushL(out.boardLight, -1); out.boardDark = pushL(out.boardDark, +1);
     }
   }
-  // 2. two-tone pieces: drive the rim to the fill's opposite extreme until both squares pass 3:1
+  // 2. Keep the two armies recognizable even when the model gives both the same fill.
+  // Preserve their hues while establishing the familiar lighter-white/darker-black order.
+  g = 0;
+  while ((ct(out.pieceWhite, out.pieceBlack) < 2 ||
+    relLum(hexToRgb(out.pieceWhite)) <= relLum(hexToRgb(out.pieceBlack))) && g++ < 40) {
+    out.pieceWhite = pushL(out.pieceWhite, +1, 0.03);
+    out.pieceBlack = pushL(out.pieceBlack, -1, 0.03);
+  }
+  // 3. two-tone pieces: drive the rim to the fill's opposite extreme until both squares pass 3:1
   const fix = (fill: string, rim: string, fillDir: number) => {
     let f = fill, r = rim, n = 0;
     while ((legSq(f, r, out.boardLight) < 3 || legSq(f, r, out.boardDark) < 3) && n++ < 40) {
@@ -63,16 +118,24 @@ export function backstopBoard(s: TableSpec): TableSpec {
   out.pieceWhite = w.f; out.pieceWhiteRim = w.r;
   const k = fix(out.pieceBlack, out.pieceBlackRim, -1);
   out.pieceBlack = k.f; out.pieceBlackRim = k.r;
+  // Coordinates are tiny body text, and must be checked against the repaired squares.
+  out.coordOnLight = repairInk(out.coordOnLight, [out.boardLight]);
+  out.coordOnDark = repairInk(out.coordOnDark, [out.boardDark]);
   return out;
 }
 
-/** Body text must be readable on the surfaces. */
+/** Body text and accent-colored labels must be readable on the surfaces. */
 export function backstopInk(s: TableSpec): TableSpec {
   const out = { ...s };
-  const bgLight = relLum(hexToRgb(out.bg)) > 0.4;
-  let g = 0;
-  while (ct(out.ink, out.panel) < 4.5 && g++ < 30) out.ink = pushL(out.ink, bgLight ? -1 : +1);
-  if (ct(out.inkSoft, out.panel) < 2.8) out.inkSoft = pushL(out.inkSoft, bgLight ? -1 : +1);
+  const surfaces = [out.panel, out.panel2, out.surface, out.bg];
+  out.ink = repairInk(out.ink, surfaces);
+  out.inkSoft = repairInk(out.inkSoft, surfaces);
+  out.inkFaint = repairInk(out.inkFaint, surfaces);
+  // Both accent tiers also color small labels and controls, not only decoration.
+  out.accentInteractive = repairInk(out.accentInteractive, surfaces);
+  out.accentInteractiveDim = repairInk(out.accentInteractiveDim, surfaces);
+  out.accentEval = repairInk(out.accentEval, surfaces);
+  out.accentEvalDim = repairInk(out.accentEvalDim, surfaces);
   return out;
 }
 
@@ -90,5 +153,5 @@ export function legibilityOf(s: TableSpec): { minPiece: number; squares: number;
     legSq(s.pieceBlack, s.pieceBlackRim, s.boardDark),
   );
   const squares = ct(s.boardLight, s.boardDark);
-  return { minPiece, squares, pass: minPiece >= 3 && squares >= 1.45 };
+  return { minPiece, squares, pass: minPiece >= 3 && squares >= 1.7 };
 }

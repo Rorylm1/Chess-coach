@@ -760,7 +760,7 @@ a {
    control, and the "inventing your table" overlay. The dealt
    spec is applied to the .game wrapper only; classic = no spec.
    ============================================================ */
-.sq .piece svg {
+.piece svg {
   width: calc(var(--c, 56px) * 0.86);
   height: calc(var(--c, 56px) * 0.86);
   display: block;
@@ -769,13 +769,13 @@ a {
 /* recolour: each set's fills/strokes reference these per-side custom props */
 .piece.w svg { --pc-fill: var(--piece-white); --pc-rim: var(--piece-white-rim); }
 .piece.b svg { --pc-fill: var(--piece-black); --pc-rim: var(--piece-black-rim); }
-.sq .piece svg :is(path, text) {
+.piece svg :is(path, text) {
   vector-effect: non-scaling-stroke; /* stroke weight in screen px, viewBox-independent */
   stroke-linejoin: round;
   paint-order: stroke; /* rim sits behind the fill → clean outline */
   transition: fill 360ms ease-out, stroke 360ms ease-out;
 }
-.sq .piece svg text { font-family: var(--font-display), Georgia, serif; }
+.piece svg text { font-family: var(--font-display), Georgia, serif; }
 /* chessnut = filled modern silhouette; the stroke is an outline rim */
 [data-pieceset="chessnut"] .piece svg path { stroke-width: 2px; }
 [data-pieceset="chessnut"][data-pieces="flat"] .piece svg path { stroke-width: 0.6px; }
@@ -796,6 +796,54 @@ a {
   border-radius: 14px;
   padding: 18px;
   transition: background-color 600ms ease;
+}
+
+/* Each world has a frame and shape language as well as a palette. */
+.game[data-pieceset] { color: var(--ink); font-family: var(--font-body), sans-serif; }
+.game[data-pieceset] .seg-btn.on { color: var(--on-interactive); }
+.game[data-pieceset] .card { border-radius: var(--table-radius); }
+.game[data-pieceset] .card-head h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 13px;
+  font-weight: var(--table-display-weight);
+  letter-spacing: var(--table-display-spacing);
+  text-transform: var(--table-display-transform);
+  color: var(--ink-soft);
+}
+.game[data-pieceset] .deal-btn {
+  background: color-mix(in srgb, var(--cyan) 10%, var(--panel));
+  border-radius: var(--table-radius);
+}
+.game[data-corner="square"] .card,
+.game[data-corner="notch"] .card { border-radius: 0; }
+.game[data-corner="round"] .card { border-radius: max(14px, var(--table-radius)); }
+.game[data-corner="deco"] .card { border: 3px double var(--hairline); }
+.game[data-corner="bracket"] .card { border-top: 3px solid var(--cyan); }
+.game[data-corner="notch"] .card-head { border-left: 5px solid var(--cyan); }
+.game[data-corner]:not([data-corner="bracket"]) .board-wrap > .brk { display: none; }
+.game[data-frame] .board { position: relative; isolation: isolate; }
+.game[data-frame="plain"] .board { box-shadow: none; }
+.game[data-frame="rule"] .board { box-shadow: 0 0 0 4px var(--panel), 0 0 0 5px var(--board-frame); }
+.game[data-frame="shadow"] .board { box-shadow: 8px 8px 0 color-mix(in srgb, var(--board-frame) 45%, var(--bg)); }
+.game[data-frame="deco"] .board { box-shadow: 0 0 0 3px var(--panel), 0 0 0 5px var(--board-frame), 0 0 0 8px var(--panel), 0 0 0 9px var(--hairline); }
+.game[data-frame="rotate"] .board { box-shadow: none; }
+.game[data-frame="rotate"] .board::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  z-index: -1;
+  border: 2px solid var(--board-frame);
+  transform: rotate(-1.1deg);
+  pointer-events: none;
+}
+.game[data-frame="glow"] .board { box-shadow: 0 0 40px -5px var(--board-accent-glow), 0 0 0 3px var(--panel); }
+.game[data-motion="rise"] .board.sweeping .piece { animation: world-piece-rise 550ms ease-out both; animation-delay: var(--sweep-d, 0ms); }
+.game[data-motion="draw"] .board.sweeping .piece { animation: world-piece-draw 600ms ease-out both; animation-delay: var(--sweep-d, 0ms); }
+@keyframes world-piece-rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes world-piece-draw { from { opacity: 0.15; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .game[data-pieceset] { transition: none; }
+  .game[data-motion] .board.sweeping .piece { animation: none; }
 }
 
 /* deal control (subsumes the old board roller) */
@@ -876,7 +924,7 @@ a {
 }
 @keyframes td-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
-  .sq .piece svg :is(path, text) { transition: none; }
+  .piece svg :is(path, text) { transition: none; }
   .table-dealing .td-spin { animation: none; }
 }
 
@@ -2258,4 +2306,12 @@ button.ribbon-chip:hover {
   .coach-caret {
     display: none;
   }
+}
+
+.table-dealer .card-head { flex-wrap: wrap; gap: 8px; }
+.table-dealer .dealer-error {
+  color: var(--amber);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0;
 }

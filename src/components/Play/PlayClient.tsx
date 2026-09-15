@@ -105,7 +105,7 @@ export function PlayClient() {
         {table.dealing && (
           <div className="table-dealing" role="status" aria-live="polite">
             <span className="td-spin" aria-hidden="true" />
-            <span className="td-label">Inventing your table…</span>
+            <span className="td-label">Dreaming up your board…</span>
           </div>
         )}
       </div>
