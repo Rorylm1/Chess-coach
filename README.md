@@ -34,7 +34,7 @@ language, grounded in the engine, delivered by a warm playful-mentor coach.
   with Play made fun and social. **M6** ships the Play + Openings tabs, a per-game **randomized board**
   (built first — a seeded, OKLCH-based theme generator that's unique every game yet always legible; spec
   in `research/randomizer-color-system.md`), and **local hot-seat** 2-player. The randomizer has since grown
-  into the **Generative Table** — on Play, *Deal a table* makes a live Claude call that **invents a whole
+  into the **Board randomizer** — on Play, *Randomize board* makes a live Claude call that **invents a whole
   fresh UI for that game** (surfaces, type, accents, board palette _and_ recolorable SVG pieces), rendered
   safely from a validated spec and guaranteed legible by a backstop; Play-tab only and ephemeral (classic
   Deep-Space is always the default). Then **M7** = a **shareable live link** for online play, **M8** = the
@@ -117,6 +117,17 @@ direction is **D — "Deep-Space Analysis Deck"** (obsidian + holographic cyan/a
 Generative-table chess piece silhouettes, recolored at runtime:
 - **chessnut** (modern flat) by Lex Luengas — [github.com/LexLuengas/chessnut-pieces](https://github.com/LexLuengas/chessnut-pieces), Apache-2.0.
 - **cburnett** (classic Staunton) by Colin M.L. Burnett via [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces), used under its BSD-3-Clause grant.
+- **Fantasy** by [Maurizio Monge](https://github.com/maurimo/chess-art), MIT — ornate illustrated silhouettes.
+- **Kiwen-suwi** by [neverRare](https://github.com/neverRare/kiwen-suwi), CC BY 4.0 — bold toy-like shapes.
+- **RhosGFX / Vector Ranks** by [RhosGFX](https://rhosgfx.itch.io/vector-chess-pieces), CC0 — chunky illustrated pieces.
 
 Per the licensing guardrail, only permissive piece sets are used (no GPL or non-commercial assets).
-Backlog families: maurimo (MIT), RhosGFX (CC0), kiwen-suwi (CC-BY).
+Original authored families: orbital, botanical, origami, pixel, **clockwork** (wind-up toys) and **tidal** (sea creatures), in `src/lib/table/imaginativePieceSets.ts`.
+
+There are now **12 distinct silhouette families** including the letter set. The previous `fantasy-illustrative` style now uses Monge's actual Fantasy artwork. Imported originals, pinned source hashes, license texts and modification notes live in `public/licenses/chess-pieces/`; the app footer links to the [artist credits](public/licenses/chess-pieces/NOTICE.txt).
+
+Rebuild imported SVG data offline with `node research/designs/import-extra-pieces.mjs`. Build the interactive review gallery with `node research/designs/preview-piece-families.mjs`, then open `research/designs/piece-families.html`. It offers three palettes, phone-sized pieces and a square-color swap to inspect legibility.
+
+## Board randomizer prompt
+
+The exact system prompt and an example per-roll brief are documented in [research/board-randomizer-prompt.md](research/board-randomizer-prompt.md). It follows Background → Behaviour → Output. The runtime source is `src/lib/table/brief.ts`. Recent silhouettes are excluded for five rolls; the generated world also changes palette, fonts, frame and atmosphere. If AI is unavailable, a labeled procedural shuffle supplies a new look.

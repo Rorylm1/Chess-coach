@@ -1,0 +1,64 @@
+CHESS COACH — IMPORTED PIECE ARTWORK
+
+These three piece families are adapted from the artists below. Their geometry,
+outline and facial/detail layers remain the artists' work. Chess Coach supplies
+dynamic material colors, removes editor metadata, shadows and shared SVG IDs,
+and normalizes the artwork for an inline chessboard. No endorsement is implied.
+
+1. MAURIZIO MONGE — FANTASY
+
+Copyright (c) Maurizio Monge. Used under the MIT License.
+Artist and source: https://github.com/maurimo/chess-art
+Selected source: fantasy/{k,q,r,b,n,p}.svg
+Revision: d8705d8bc9879fef44208de19e2a20c937409e1f
+Author's license:
+https://github.com/maurimo/chess-art/blob/d8705d8bc9879fef44208de19e2a20c937409e1f/LICENSE
+Full local license, including warranty disclaimer:
+/licenses/chess-pieces/maurimo-fantasy/LICENSE-MIT.txt
+
+Changes: material gradients replaced with recolorable flat fills; original
+outline-only detail paths and silhouette layers retained; original stroke widths
+scale with the viewBox; optional shadows, gradient definitions and editor data
+removed. The original SVG metadata includes an older GPL notice. This adaptation
+uses the artist's explicit current MIT grant for these artworks in the pinned
+repository README and LICENSE, both preserved alongside the source SVGs.
+
+2. NEVERRARE — KIWEN SUWI
+
+Kiwen Suwi by neverRare. Licensed under Creative Commons Attribution 4.0
+International (CC BY 4.0).
+Artist and source: https://github.com/neverRare/kiwen-suwi
+Selected source: version/2.100/kiwen-suwi/white-{king,queen,rook,bishop,knight,pawn}.svg
+Revision: 7e8f3e473f43474baeebed01e76f054cb06c0100
+License: https://creativecommons.org/licenses/by/4.0/
+Author's license:
+https://github.com/neverRare/kiwen-suwi/blob/7e8f3e473f43474baeebed01e76f054cb06c0100/LICENSE-CC-BY-4.0
+Full local license, including warranty disclaimer:
+/licenses/chess-pieces/kiwen-suwi/LICENSE-CC-BY-4.0.txt
+
+Changes: white bodies and dark outline/eye layers remapped to per-army colors;
+original geometry and coordinate transforms retained; editor IDs and an
+unnecessary rectangular clipping definition removed. No font files are used.
+
+3. RHOSGFX — VECTOR RANKS
+
+Artwork by RhosGFX. Dedicated to the public domain under CC0 1.0 Universal.
+Artist and original release: https://rhosgfx.itch.io/vector-chess-pieces
+SVG distribution: https://github.com/lichess-org/lila/tree/d9f9744af7667f93d2640484f43f2ec163364c66/public/piece/rhosgfx
+Selected source: public/piece/rhosgfx/w{K,Q,R,B,N,P}.svg
+Revision: d9f9744af7667f93d2640484f43f2ec163364c66
+Per-set license record:
+https://github.com/lichess-org/lila/blob/d9f9744af7667f93d2640484f43f2ec163364c66/COPYING.md
+License: https://creativecommons.org/publicdomain/zero/1.0/
+Full local license, including warranty disclaimer:
+/licenses/chess-pieces/rhosgfx/LICENSE-CC0-1.0.txt
+
+Changes: cream bodies, dark outlines and eye details remapped to per-army colors;
+original shading shapes retained with relative color mixtures; geometry and
+coordinate transforms retained; source CSS classes inlined and editor IDs removed.
+
+REPRODUCIBILITY
+
+Original SVGs and complete license texts accompany this notice in each family's
+directory. SOURCE-MANIFEST.json records every pinned source URL and SHA-256 digest.
+The local importer is research/designs/import-extra-pieces.mjs.

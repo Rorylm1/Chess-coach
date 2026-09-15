@@ -12,9 +12,15 @@
  * This module is framework-agnostic and safe on client and server (no Anthropic import).
  */
 
-export type PieceStyle =
-  | "classic-staunton" | "minimalist-line" | "flat-silhouette" | "fantasy-illustrative"
-  | "geometric-spatial" | "woodcut-celtic" | "letter-mark" | "neon-outline" | "calligraphic";
+import type { PieceSetName } from "./pieceSets";
+
+export const PIECE_STYLES = [
+  "classic-staunton", "minimalist-line", "flat-silhouette", "fantasy-illustrative",
+  "geometric-spatial", "woodcut-celtic", "letter-mark", "neon-outline", "calligraphic",
+  "orbital", "botanical", "origami", "pixel",
+  "clockwork", "tidal", "maurimo-fantasy", "kiwen-suwi", "rhosgfx",
+] as const;
+export type PieceStyle = (typeof PIECE_STYLES)[number];
 export type CornerStyle = "bracket" | "deco" | "round" | "square" | "notch";
 export type FrameStyle = "glow" | "deco" | "rule" | "shadow" | "rotate" | "plain";
 export type MotionStyle = "boot" | "rise" | "draw";
@@ -52,6 +58,17 @@ export function hexA(hex: string, a: number): string {
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
 }
 
+/** Pick readable text for controls filled with an arbitrary generated accent. */
+function inkOnAccent(hex: string): string {
+  const value = parseInt(hex.slice(1), 16);
+  const channels = [(value >> 16) & 255, (value >> 8) & 255, value & 255].map((c) => {
+    const s = c / 255;
+    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  });
+  const luminance = channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+  return luminance > 0.179 ? "#000000" : "#ffffff";
+}
+
 /**
  * Map a spec onto the app's existing CSS custom properties (globals.css `:root`). Set the
  * result on the Play `.game` wrapper and the whole screen reskins — the cyan/amber accent
@@ -67,6 +84,7 @@ export function specToVars(s: TableSpec): Record<string, string> {
     "--slate": s.surface,
     "--cyan": s.accentInteractive,
     "--cyan-dim": s.accentInteractiveDim,
+    "--on-interactive": inkOnAccent(s.accentInteractive),
     "--cyan-glow": hexA(s.accentInteractive, 0.45),
     "--amber": s.accentEval,
     "--amber-dim": s.accentEvalDim,
@@ -87,12 +105,15 @@ export function specToVars(s: TableSpec): Record<string, string> {
     "--board-last": s.boardLast,
     "--board-last-fill": hexA(s.boardLast, 0.24),
     "--board-frame": s.boardAccent,
-    "--coord-on-light": hexA(s.coordOnLight, 0.85),
-    "--coord-on-dark": hexA(s.coordOnDark, 0.85),
+    "--coord-on-light": s.coordOnLight,
+    "--coord-on-dark": s.coordOnDark,
     "--font-display": `"${s.fontDisplay}", Georgia, serif`,
     "--font-body": `"${s.fontBody}", system-ui, sans-serif`,
     "--font-mono": `"${s.fontMono}", ui-monospace, monospace`,
     "--table-radius": `${s.radius}px`,
+    "--table-display-weight": String(s.displayWeight),
+    "--table-display-spacing": s.displaySpacing,
+    "--table-display-transform": s.displayTransform,
   };
 }
 
@@ -114,18 +135,28 @@ export function fontsOf(s: TableSpec): string[] {
 }
 
 /**
- * Map the LLM's piece style → a real silhouette set + a CSS treatment. Worlds now differ in
- * piece *shape*: cburnett = classic Staunton (line drawing), chessnut = modern flat silhouette,
- * letter = typographic. (More permissive families — maurimo MIT / kiwen-suwi CC-BY — drop in here.)
+ * Map a piece style to an actual silhouette family and a CSS treatment.
+ * The family type comes from the asset registry so additions cannot silently drift.
  */
-export function pieceRender(style: PieceStyle): { set: "chessnut" | "cburnett" | "letter"; treat: string } {
+export function pieceRender(style: PieceStyle): { set: PieceSetName; treat: string } {
   switch (style) {
+    case "orbital":
+    case "botanical":
+    case "origami":
+    case "pixel":
+    case "clockwork":
+    case "tidal":
+    case "maurimo-fantasy":
+    case "kiwen-suwi":
+    case "rhosgfx":
+      return { set: style, treat: "filled" };
     case "letter-mark":
     case "calligraphic":
       return { set: "letter", treat: "letter" };
     case "classic-staunton":
       return { set: "cburnett", treat: "filled" };
     case "fantasy-illustrative":
+      return { set: "maurimo-fantasy", treat: "filled" };
     case "woodcut-celtic":
       return { set: "cburnett", treat: "bold" };
     case "flat-silhouette":

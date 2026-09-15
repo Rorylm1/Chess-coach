@@ -8,19 +8,29 @@
  */
 
 import { generateTable, fallbackTable, isTableConfigured } from "@/lib/table/generate";
+import { createRecipe, parseRecent } from "@/lib/table/brief";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-export async function POST() {
+export async function POST(request: Request) {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    // Older clients sent an empty POST; keep those usable.
+    body = null;
+  }
+  const recent = parseRecent(body && typeof body === "object" && "recent" in body ? body.recent : []);
+  const recipe = createRecipe(recent);
   if (!isTableConfigured()) {
-    return Response.json({ ...fallbackTable(), fallback: true });
+    return Response.json({ ...fallbackTable(recent, recipe), fallback: true });
   }
   try {
-    const spec = await generateTable();
+    const spec = await generateTable(recent, recipe);
     return Response.json(spec);
   } catch (err) {
-    console.error("[/api/table] generation failed:", err);
-    return Response.json({ ...fallbackTable(), fallback: true });
+    console.error("[/api/table] generation failed:", err instanceof Error ? err.message : "unknown error");
+    return Response.json({ ...fallbackTable(recent, recipe), fallback: true });
   }
 }

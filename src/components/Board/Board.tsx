@@ -11,10 +11,10 @@
  */
 
 import { useMemo, useRef, useState, useCallback, useEffect } from "react";
-import { Chess, type Color, type Square } from "chess.js";
+import { Chess, type Color, type Square, type PieceSymbol } from "chess.js";
 import { GLYPH, FILES, pieceName } from "@/lib/chess/pieces";
 import { pieceRender, type PieceStyle } from "@/lib/table/spec";
-import { PIECE_SETS, type PieceType } from "@/lib/table/pieceSets";
+import { PIECE_SETS, type PieceSet, type PieceType } from "@/lib/table/pieceSets";
 
 export interface AttemptedMove {
   from: Square;
@@ -38,7 +38,8 @@ interface BoardProps {
 
 interface DragState {
   from: Square;
-  glyph: string;
+  type: PieceSymbol;
+  svgSize?: number;
   colorClass: "w" | "b";
   x: number;
   y: number;
@@ -46,6 +47,21 @@ interface DragState {
 }
 
 const PROMO_PIECES: Array<"q" | "r" | "b" | "n"> = ["q", "r", "b", "n"];
+
+/** Keep a world's silhouettes consistent on the board, under the pointer, and
+ * in the promotion picker. SVG content is trusted, checked-in artwork. */
+function PieceGraphic({ type, set, size }: { type: PieceSymbol; set: PieceSet | null; size?: number }) {
+  return set ? (
+    <svg
+      viewBox={set.vb}
+      aria-hidden="true"
+      style={size ? { width: size, height: size } : undefined}
+      dangerouslySetInnerHTML={{ __html: set.inner[type.toUpperCase() as PieceType] }}
+    />
+  ) : (
+    GLYPH[type]
+  );
+}
 
 export function Board({
   fen,
@@ -157,7 +173,9 @@ export function Board({
         gridRef.current?.setPointerCapture(e.pointerId);
         setDrag({
           from: sq,
-          glyph: GLYPH[piece.type],
+          type: piece.type,
+          // The floating piece is outside .board and does not inherit its --c.
+          svgSize: gridRef.current?.querySelector(`[data-square="${sq}"] svg`)?.getBoundingClientRect().width,
           colorClass: piece.color,
           x: e.clientX,
           y: e.clientY,
@@ -228,17 +246,7 @@ export function Board({
               aria-hidden="true"
               style={{ touchAction: "none" }}
             >
-              {pieceSet ? (
-                <svg
-                  viewBox={pieceSet.vb}
-                  aria-hidden="true"
-                  dangerouslySetInnerHTML={{
-                    __html: pieceSet.inner[piece.type.toUpperCase() as PieceType],
-                  }}
-                />
-              ) : (
-                GLYPH[piece.type]
-              )}
+              <PieceGraphic type={piece.type} set={pieceSet} />
             </span>
           )}
           {isTarget && (
@@ -274,11 +282,11 @@ export function Board({
 
       {drag?.moved && (
         <span
-          className={`drag-piece ${drag.colorClass}`}
+          className={`drag-piece piece ${drag.colorClass}`}
           aria-hidden="true"
           style={{ left: drag.x, top: drag.y }}
         >
-          {drag.glyph}
+          <PieceGraphic type={drag.type} set={pieceSet} size={drag.svgSize} />
         </span>
       )}
 
@@ -295,7 +303,9 @@ export function Board({
                   setPromotion(null);
                 }}
               >
-                <span className={`piece ${promotion.color}`}>{GLYPH[p]}</span>
+                <span className={`piece ${promotion.color}`} aria-hidden="true">
+                  <PieceGraphic type={p} set={pieceSet} />
+                </span>
               </button>
             ))}
             <button

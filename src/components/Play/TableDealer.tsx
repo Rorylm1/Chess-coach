@@ -1,39 +1,51 @@
 "use client";
 
 /**
- * "Deal a table" — the generative-table control (Play tab). Subsumes the old board
- * randomizer into one verb: deal a complete, one-of-a-kind world (board + chrome + pieces),
- * invented live by Claude. Reset returns the classic Deep-Space deck. Ephemeral — nothing
+ * The board randomizer (Play tab) invents a complete world: board, interface and pieces.
+ * Reset returns the classic Deep-Space deck. Ephemeral — nothing
  * is saved; the classic look is always the default.
  */
 
 import type { GameTable } from "./useGameTable";
 
 export function TableDealer({ table }: { table: GameTable }) {
-  const { spec, dealing, deal, reset } = table;
+  const { spec, dealing, fallback, error, deal, reset } = table;
   return (
-    <section className="card table-dealer" aria-label="Table appearance">
+    <section className="card table-dealer" aria-label="Board randomizer">
       <div className="card-head">
-        <h2>Table</h2>
+        <h2>Board randomizer</h2>
         <span className="tag mono">{spec ? spec.name : "Deep-Space · classic"}</span>
       </div>
 
       <div className="dealer-body">
         {spec && (
-          <p className="dealer-flavor" dangerouslySetInnerHTML={{ __html: spec.flavor }} />
+          <p className="dealer-flavor">
+            {spec.flavor.split(/(<em>.*?<\/em>)/g).map((part, index) =>
+              part.startsWith("<em>") && part.endsWith("</em>")
+                ? <em key={index}>{part.slice(4, -5)}</em>
+                : part,
+            )}
+          </p>
         )}
         <div className="dealer-actions">
           <button type="button" className="deal-btn" onClick={deal} disabled={dealing}>
             <span className="ic" aria-hidden="true">
               {dealing ? "✦" : "↻"}
             </span>{" "}
-            {dealing ? "Inventing…" : "Deal a table"}
+            {dealing ? "Dreaming…" : error ? "Try again" : "Randomize board"}
           </button>
           <button type="button" onClick={reset} disabled={dealing || !spec}>
             Reset
           </button>
         </div>
-        <p className="dealer-note mono">A fresh world invented for this game · ~15–30s</p>
+        {error ? <p className="dealer-error" role="alert">{error}</p> : null}
+        <p className="dealer-note mono" role="status" aria-live="polite">
+          {dealing
+            ? "New pieces, colours & atmosphere on the way…"
+            : fallback
+              ? "Shuffled from the built-in worlds · AI is unavailable"
+              : "A little chess magic · new pieces, colours & atmosphere · ~15–30s"}
+        </p>
       </div>
     </section>
   );

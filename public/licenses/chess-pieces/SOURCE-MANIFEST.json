@@ -1,0 +1,92 @@
+{
+  "maurimo-fantasy": {
+    "repository": "https://github.com/maurimo/chess-art",
+    "revision": "d8705d8bc9879fef44208de19e2a20c937409e1f",
+    "files": {
+      "K": {
+        "url": "https://raw.githubusercontent.com/maurimo/chess-art/d8705d8bc9879fef44208de19e2a20c937409e1f/fantasy/k.svg",
+        "sha256": "554a1cabec97f5ce128b326fa8e6ad42f4daa0ffd3f338e832452c0981c745c3"
+      },
+      "Q": {
+        "url": "https://raw.githubusercontent.com/maurimo/chess-art/d8705d8bc9879fef44208de19e2a20c937409e1f/fantasy/q.svg",
+        "sha256": "027309bb40bb0d6de18dc83d131da5019e5e859f7e10291e2b7f8a98a6cc445e"
+      },
+      "R": {
+        "url": "https://raw.githubusercontent.com/maurimo/chess-art/d8705d8bc9879fef44208de19e2a20c937409e1f/fantasy/r.svg",
+        "sha256": "f6441c48f3f1e5584f4164f75ccf111c3048e1aa5254ea223d59f7f4e396f0b3"
+      },
+      "B": {
+        "url": "https://raw.githubusercontent.com/maurimo/chess-art/d8705d8bc9879fef44208de19e2a20c937409e1f/fantasy/b.svg",
+        "sha256": "acbd2ebaa0ed85d8a2383887d615f766cf30d649c4ae05a95f36e9d84217bffa"
+      },
+      "N": {
+        "url": "https://raw.githubusercontent.com/maurimo/chess-art/d8705d8bc9879fef44208de19e2a20c937409e1f/fantasy/n.svg",
+        "sha256": "fc561d191c3b8e7f76a243c6fe58bd7e9ff000bc2adaefd73ffd49debe49fe2a"
+      },
+      "P": {
+        "url": "https://raw.githubusercontent.com/maurimo/chess-art/d8705d8bc9879fef44208de19e2a20c937409e1f/fantasy/p.svg",
+        "sha256": "146b699115340f0e49e753050c0d0e0c9fecf358377e55ffc21c310a52ec6882"
+      }
+    }
+  },
+  "kiwen-suwi": {
+    "repository": "https://github.com/neverRare/kiwen-suwi",
+    "revision": "7e8f3e473f43474baeebed01e76f054cb06c0100",
+    "files": {
+      "K": {
+        "url": "https://raw.githubusercontent.com/neverRare/kiwen-suwi/7e8f3e473f43474baeebed01e76f054cb06c0100/version/2.100/kiwen-suwi/white-king.svg",
+        "sha256": "c1408fd61028dbc9917b0171d1523ddc32b0c6b9beb28f0d3f520334999388bf"
+      },
+      "Q": {
+        "url": "https://raw.githubusercontent.com/neverRare/kiwen-suwi/7e8f3e473f43474baeebed01e76f054cb06c0100/version/2.100/kiwen-suwi/white-queen.svg",
+        "sha256": "86db202afb8d444623196c3bd77d8196550ca92275a3387d0ca89cb7e93c13b9"
+      },
+      "R": {
+        "url": "https://raw.githubusercontent.com/neverRare/kiwen-suwi/7e8f3e473f43474baeebed01e76f054cb06c0100/version/2.100/kiwen-suwi/white-rook.svg",
+        "sha256": "389a028fbb2403f329bdb349f82e790031e806083f48cc30f74bd9ee091af02e"
+      },
+      "B": {
+        "url": "https://raw.githubusercontent.com/neverRare/kiwen-suwi/7e8f3e473f43474baeebed01e76f054cb06c0100/version/2.100/kiwen-suwi/white-bishop.svg",
+        "sha256": "734db828fcd2a6966dbe0c0be234135d9c2e8a37f1f062d797006748f3203dd4"
+      },
+      "N": {
+        "url": "https://raw.githubusercontent.com/neverRare/kiwen-suwi/7e8f3e473f43474baeebed01e76f054cb06c0100/version/2.100/kiwen-suwi/white-knight.svg",
+        "sha256": "2842f36b1b969d4fc1b7388f0c2b09068b6c39b354f2edc6e674bcebe9f927c7"
+      },
+      "P": {
+        "url": "https://raw.githubusercontent.com/neverRare/kiwen-suwi/7e8f3e473f43474baeebed01e76f054cb06c0100/version/2.100/kiwen-suwi/white-pawn.svg",
+        "sha256": "6f3c7a2217ac878ddd4bde4f867b7922899d8d0cdef37f997d1bcd0dfee8c723"
+      }
+    }
+  },
+  "rhosgfx": {
+    "repository": "https://github.com/lichess-org/lila",
+    "revision": "d9f9744af7667f93d2640484f43f2ec163364c66",
+    "files": {
+      "K": {
+        "url": "https://raw.githubusercontent.com/lichess-org/lila/d9f9744af7667f93d2640484f43f2ec163364c66/public/piece/rhosgfx/wK.svg",
+        "sha256": "5a5bb397e8f8b08fee64a98a83a07dd287eb1557ffef31b22453ea80ed03d500"
+      },
+      "Q": {
+        "url": "https://raw.githubusercontent.com/lichess-org/lila/d9f9744af7667f93d2640484f43f2ec163364c66/public/piece/rhosgfx/wQ.svg",
+        "sha256": "e937921417c5a5d3fd4881183821594ed5afe0892cb492fe74f4f33bc81bb37f"
+      },
+      "R": {
+        "url": "https://raw.githubusercontent.com/lichess-org/lila/d9f9744af7667f93d2640484f43f2ec163364c66/public/piece/rhosgfx/wR.svg",
+        "sha256": "26963e5f4fc8d324be998c654d9822644100702e48e49ddac74596d7bc0fffa2"
+      },
+      "B": {
+        "url": "https://raw.githubusercontent.com/lichess-org/lila/d9f9744af7667f93d2640484f43f2ec163364c66/public/piece/rhosgfx/wB.svg",
+        "sha256": "e9c00b057672ec693e2da7808873085aee2f6f7c61cc8f68386d01a7e94d6859"
+      },
+      "N": {
+        "url": "https://raw.githubusercontent.com/lichess-org/lila/d9f9744af7667f93d2640484f43f2ec163364c66/public/piece/rhosgfx/wN.svg",
+        "sha256": "38adc3f8293e186386b1be2a7e489648027f68866c22e64fdaa39f2582047ab2"
+      },
+      "P": {
+        "url": "https://raw.githubusercontent.com/lichess-org/lila/d9f9744af7667f93d2640484f43f2ec163364c66/public/piece/rhosgfx/wP.svg",
+        "sha256": "ec9cc7778fe148cd740586964ee3f789ef22dcda77f3ce5ee3ddf47f76c210b8"
+      }
+    }
+  }
+}
