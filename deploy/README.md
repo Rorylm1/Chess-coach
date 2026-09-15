@@ -79,3 +79,9 @@ curl --fail https://chess.46-62-217-82.sslip.io/health
 `npm test` includes real WebSocket integration tests for two clients, checkmate, disconnect presence, refresh recovery, seat exclusion, origin rejection and malformed messages. Room tests cover legal turns, stale moves, draws, resignation, repetition, expiration, capacity and shared-design validation. Run `npm run lint`, `npx tsc --noEmit`, `npm run build`, and `npm run relay:build` before release.
 
 Browser smoke: create → copy invite → join another session → play both sides → refresh mid-game → complete checkmate; then offer/accept a draw and verify resignation in another game. Confirm mobile layout and that online play shows no coach or analysis.
+
+### Release verification — 2026-09-15
+
+The isolated multiplayer checkout passed **211 tests**, ESLint, TypeScript via the production build, and the standalone relay build. Two browser origins completed a full checkmate game with a mid-game refresh; the 390px view had no horizontal overflow. On the public Vercel URL, a generated “Rainsong Bathhouse” world (orbital pieces) reached the Hetzner room and second client, e4/e5 synchronized, refresh restored the position and design, a draw offer was delivered/declined, and resignation reached both players. A separate hosted TLS smoke accepted an agreed draw. The live browser reported no JavaScript errors and the Vercel error-log query returned no matching logs. The relay used approximately 16 MB after these checks; trad3r, calendar, and HTTPS services remained active.
+
+Code deployment: commit `231ab32`, Vercel deployment `dpl_BPojnoFyDMBwmLtndB1viFxNrWKE` (production, READY).
