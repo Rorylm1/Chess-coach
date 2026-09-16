@@ -28,9 +28,19 @@ function eachNode(opening: Opening, fn: (node: BookMove, depth: number) => void)
 }
 
 describe("opening content integrity", () => {
-  it("has at least the Italian authored", () => {
-    expect(authored.length).toBeGreaterThanOrEqual(1);
-    expect(OPENINGS["italian-game"]).toBeDefined();
+  it("includes the seven authored journeys", () => {
+    expect(authored.length).toBeGreaterThanOrEqual(7);
+    for (const slug of [
+      "italian-game",
+      "queens-gambit",
+      "sicilian-defense",
+      "french-defense",
+      "ruy-lopez",
+      "caro-kann-defense",
+      "kings-indian-defense",
+    ]) {
+      expect(OPENINGS[slug]).toBeDefined();
+    }
   });
 
   it("every catalog 'available' entry has authored content (and vice versa)", () => {

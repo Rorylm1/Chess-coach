@@ -12,6 +12,9 @@ import { italianGame } from "@/content/openings/italian-game";
 import { queensGambit } from "@/content/openings/queens-gambit";
 import { sicilianDefense } from "@/content/openings/sicilian-defense";
 import { frenchDefense } from "@/content/openings/french-defense";
+import { ruyLopez } from "@/content/openings/ruy-lopez";
+import { caroKannDefense } from "@/content/openings/caro-kann-defense";
+import { kingsIndianDefense } from "@/content/openings/kings-indian-defense";
 
 /** Index-card metadata for a curated opening (content may or may not exist yet). */
 export interface OpeningSummary {
@@ -30,6 +33,9 @@ export const OPENINGS: Record<string, Opening> = {
   [queensGambit.slug]: queensGambit,
   [sicilianDefense.slug]: sicilianDefense,
   [frenchDefense.slug]: frenchDefense,
+  [ruyLopez.slug]: ruyLopez,
+  [caroKannDefense.slug]: caroKannDefense,
+  [kingsIndianDefense.slug]: kingsIndianDefense,
 };
 
 /** The full curated set, in display order. */
@@ -38,6 +44,9 @@ export const CATALOG: OpeningSummary[] = [
   queensGambit,
   sicilianDefense,
   frenchDefense,
+  ruyLopez,
+  caroKannDefense,
+  kingsIndianDefense,
 ].map(summarize);
 
 /** Look up an authored opening by slug. */

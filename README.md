@@ -26,7 +26,8 @@ language, grounded in the engine, delivered by a warm playful-mentor coach.
   quote a closed move vocabulary) and **validated second** (every named move is checked against
   `chess.js` + the PV; a miss regenerates once, then falls back to a deterministic engine-only
   explanation) — so the UI can never show a move the engine didn't offer. On-demand hints + a coach panel.
-- **M5 — Opening learning ✅** — four guided journeys (Italian, Queen's Gambit, Sicilian, French) at
+- **M5 — Opening learning ✅** — seven guided journeys (Italian, Queen's Gambit, Sicilian, French,
+  Ruy Lopez, Caro–Kann, and King's Indian) at
   `/openings`: a board-illustrated read-through (one coach note per move, thematic panels) then a recall
   drill against a scripted book bot that varies only into taught lines. Evals are **100% engine-sourced**
   and baked in at build time; runtime is fully static (no network/LLM calls).
