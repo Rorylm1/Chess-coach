@@ -21,6 +21,9 @@ const MAIN_LINES = {
   "queens-gambit": ["d4", "d5", "c4", "e6", "Nc3", "Nf6", "Bg5", "Be7", "Nf3"],
   "sicilian-defense": ["e4", "c5", "Nf3", "d6", "d4", "cxd4", "Nxd4", "Nf6", "Nc3"],
   "french-defense": ["e4", "e6", "d4", "d5", "e5", "c5", "c3", "Nc6", "Nf3"],
+  "ruy-lopez": ["e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Ba4", "Nf6", "O-O", "Be7"],
+  "caro-kann-defense": ["e4", "c6", "d4", "d5", "e5", "Bf5", "Nf3", "e6", "Be2", "c5"],
+  "kings-indian-defense": ["d4", "Nf6", "c4", "g6", "Nc3", "Bg7", "e4", "d6", "Nf3", "O-O"],
 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
