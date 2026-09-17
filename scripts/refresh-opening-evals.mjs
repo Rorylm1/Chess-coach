@@ -24,6 +24,7 @@ const MAIN_LINES = {
   "ruy-lopez": ["e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Ba4", "Nf6", "O-O", "Be7"],
   "caro-kann-defense": ["e4", "c6", "d4", "d5", "e5", "Bf5", "Nf3", "e6", "Be2", "c5"],
   "kings-indian-defense": ["d4", "Nf6", "c4", "g6", "Nc3", "Bg7", "e4", "d6", "Nf3", "O-O"],
+  "english-opening": ["c4", "e5", "Nc3", "Nf6", "Nf3", "Nc6", "g3", "d5", "cxd5", "Nxd5"],
 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
