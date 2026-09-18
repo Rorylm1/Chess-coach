@@ -16,6 +16,7 @@ import { ruyLopez } from "@/content/openings/ruy-lopez";
 import { caroKannDefense } from "@/content/openings/caro-kann-defense";
 import { kingsIndianDefense } from "@/content/openings/kings-indian-defense";
 import { englishOpening } from "@/content/openings/english-opening";
+import { londonSystem } from "@/content/openings/london-system";
 
 /** Index-card metadata for a curated opening (content may or may not exist yet). */
 export interface OpeningSummary {
@@ -38,6 +39,7 @@ export const OPENINGS: Record<string, Opening> = {
   [caroKannDefense.slug]: caroKannDefense,
   [kingsIndianDefense.slug]: kingsIndianDefense,
   [englishOpening.slug]: englishOpening,
+  [londonSystem.slug]: londonSystem,
 };
 
 /** The full curated set, in display order. */
@@ -50,6 +52,7 @@ export const CATALOG: OpeningSummary[] = [
   caroKannDefense,
   kingsIndianDefense,
   englishOpening,
+  londonSystem,
 ].map(summarize);
 
 /** Look up an authored opening by slug. */
