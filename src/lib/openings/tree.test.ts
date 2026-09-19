@@ -3,8 +3,10 @@ import { Chess } from "chess.js";
 import {
   readSteps,
   allLines,
+  defaultOpeningLine,
   mainChild,
   matchLearnerMove,
+  pickOpeningLine,
   pickWeighted,
   moverAt,
   isLearnerTurn,
@@ -143,6 +145,41 @@ describe("Italian main line", () => {
     const steps = readSteps(OPENINGS["italian-game"]);
     const bc5 = steps.find((s) => s.move.san === "Bc5")!;
     expect(bc5.deviations.map((d) => d.san).sort()).toEqual(["Be7", "Nf6"]);
+  });
+});
+
+describe("Queen's Gambit named variations", () => {
+  const opening = OPENINGS["queens-gambit"];
+
+  it("offers four real named lines with the Orthodox Defense selected by default", () => {
+    expect(opening.lines).toHaveLength(4);
+    expect(opening.lines?.map((line) => line.name)).toEqual([
+      "Queen's Gambit Declined: Orthodox Defense",
+      "Queen's Gambit Accepted",
+      "Slav Defense: Main Line",
+      "Queen's Gambit Declined: Exchange Variation",
+    ]);
+    expect(defaultOpeningLine(opening)?.id).toBe("orthodox-defense");
+  });
+
+  it("resolves every named line to twelve legal, fully coached plies", () => {
+    for (const line of opening.lines ?? []) {
+      const steps = readSteps(opening, line.id);
+      expect(steps.map((step) => step.move.san), line.name).toEqual(line.moves);
+      expect(steps).toHaveLength(12);
+      expect(steps.every((step) => Boolean(step.move.note))).toBe(true);
+
+      const game = new Chess();
+      for (const move of line.moves) expect(() => game.move(move)).not.toThrow();
+    }
+  });
+
+  it("picks a random drill line without immediately repeating one", () => {
+    const lines = opening.lines!;
+    expect(pickOpeningLine(lines, () => 0, "orthodox-defense").id).toBe("accepted");
+    expect(pickOpeningLine(lines, () => 0.999, "orthodox-defense").id).toBe(
+      "exchange-variation",
+    );
   });
 });
 

@@ -2019,6 +2019,81 @@ a {
   max-width: 320px;
 }
 
+/* named variation selector — four compact routes, canonical selected by default */
+.journey-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.line-selector {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+.line-option {
+  appearance: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  min-height: 116px;
+  padding: 14px 15px 13px;
+  color: var(--ink-soft);
+  text-align: left;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--hairline-2);
+  cursor: pointer;
+  transition: border-color 160ms ease-out, box-shadow 160ms ease-out, transform 160ms ease-out;
+}
+.line-option:hover {
+  transform: translateY(-1px);
+  border-color: var(--cyan-dim);
+}
+.line-option.selected {
+  border-color: var(--cyan);
+  box-shadow: inset 0 -2px 0 var(--cyan), 0 0 22px rgba(70, 224, 208, 0.09);
+}
+.line-option:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.line-option-name {
+  color: var(--ink);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+.line-option.selected .line-option-name {
+  color: var(--cyan);
+}
+.line-option-description {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.42;
+}
+.line-option-canonical {
+  margin-top: auto;
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+@media (max-width: 860px) {
+  .line-selector {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 2px 2px 8px;
+  }
+  .line-option {
+    flex: 0 0 min(76vw, 280px);
+    scroll-snap-align: start;
+  }
+}
+
 /* ---------- Journey layout (board + coach) ---------- */
 .journey {
   display: grid;
@@ -2258,6 +2333,22 @@ button.ribbon-chip:hover {
   border-color: var(--amber-dim);
 }
 .jfeedback.tone-warn .jnote-label {
+  color: var(--amber);
+}
+.variation-blind-tag {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--hairline-2);
+  color: var(--ink-faint);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.variation-blind-tag span {
   color: var(--amber);
 }
 .jdone-actions {

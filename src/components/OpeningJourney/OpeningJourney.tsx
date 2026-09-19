@@ -3,8 +3,8 @@
 /**
  * The opening journey shell (M5) — two phases on one page: a guided read-through, then a
  * recall drill. The phase tabs let you move between them freely; finishing the read-through
- * hands you straight into the drill. Everything below is static, curated content — no engine
- * and no LLM at runtime.
+ * hands you straight into the drill. Walkthroughs stay curated; named-line drills can call
+ * the local engine to judge sensible alternatives without involving an LLM.
  *
  * M6 seam: a hidden "your mistakes in this opening" slot lives here, ready to light up once
  * weakness tracking exists. It renders nothing today.
@@ -14,7 +14,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ReadThrough } from "@/components/OpeningJourney/ReadThrough";
 import { Drill } from "@/components/OpeningJourney/Drill";
-import type { Opening } from "@/lib/openings/tree";
+import { defaultOpeningLine, type Opening } from "@/lib/openings/tree";
 
 type Phase = "read" | "drill";
 
@@ -23,6 +23,9 @@ const SIDE_LABEL = { w: "White", b: "Black" } as const;
 
 export function OpeningJourney({ opening }: { opening: Opening }) {
   const [phase, setPhase] = useState<Phase>("read");
+  const [selectedLineId, setSelectedLineId] = useState(
+    () => defaultOpeningLine(opening)?.id,
+  );
 
   return (
     <div className="journey-shell wrap">
@@ -63,7 +66,12 @@ export function OpeningJourney({ opening }: { opening: Opening }) {
       </header>
 
       {phase === "read" ? (
-        <ReadThrough opening={opening} onStartDrill={() => setPhase("drill")} />
+        <ReadThrough
+          opening={opening}
+          selectedLineId={selectedLineId}
+          onSelectLine={setSelectedLineId}
+          onStartDrill={() => setPhase("drill")}
+        />
       ) : (
         <Drill opening={opening} onReplayReadThrough={() => setPhase("read")} />
       )}

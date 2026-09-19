@@ -21,12 +21,16 @@ import { readSteps, START_FEN, type Opening } from "@/lib/openings/tree";
 
 export function ReadThrough({
   opening,
+  selectedLineId,
+  onSelectLine,
   onStartDrill,
 }: {
   opening: Opening;
+  selectedLineId?: string;
+  onSelectLine: (lineId: string) => void;
   onStartDrill: () => void;
 }) {
-  const steps = useMemo(() => readSteps(opening), [opening]);
+  const steps = useMemo(() => readSteps(opening, selectedLineId), [opening, selectedLineId]);
   const [index, setIndex] = useState(0); // 0 = intro; 1..N = after main move N
   const orientation = opening.learnerSide as Color;
   const botLabel = opening.learnerSide === "w" ? "Black" : "White";
@@ -39,8 +43,38 @@ export function ReadThrough({
 
   const moverName = step ? (step.learner ? "You play" : `${botLabel} plays`) : null;
 
+  function selectLine(lineId: string) {
+    setIndex(0);
+    onSelectLine(lineId);
+  }
+
   return (
-    <div className="journey">
+    <div className="journey-stage">
+      {opening.lines && opening.lines.length > 1 && (
+        <div className="line-selector" role="tablist" aria-label="Choose a variation">
+          {opening.lines.map((line) => {
+            const selected = line.id === selectedLineId;
+            return (
+              <button
+                key={line.id}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                className={`line-option${selected ? " selected" : ""}`}
+                onClick={() => selectLine(line.id)}
+              >
+                <span className="line-option-name">{line.name}</span>
+                <span className="line-option-description">{line.description}</span>
+                {line.id === opening.defaultLineId && (
+                  <span className="line-option-canonical">Canonical</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="journey">
       {/* ---------------- board column ---------------- */}
       <div className="journey-board-col">
         <div className="board-row">
@@ -134,6 +168,7 @@ export function ReadThrough({
           </Reveal>
         )}
       </aside>
+      </div>
     </div>
   );
 }

@@ -66,6 +66,19 @@ export interface ThematicPanels {
   middlegame: string;
 }
 
+/** A named route through an opening tree. The SAN sequence is resolved back to
+ *  {@link BookMove} nodes so the walkthrough keeps all of its authored coaching. */
+export interface OpeningLine {
+  /** Stable identifier used by the selector and drill. */
+  id: string;
+  /** Real variation name, e.g. "Queen's Gambit Accepted". */
+  name: string;
+  /** One-sentence explanation of how this variation differs. */
+  description: string;
+  /** Exact SAN route from the starting position. */
+  moves: string[];
+}
+
 /** A curated opening — ideas + the taught book tree. One per `content/openings/*.ts`. */
 export interface Opening {
   /** URL slug, e.g. "italian-game". */
@@ -82,6 +95,11 @@ export interface Opening {
   idea: string;
   /** First move(s) from the start position (the root ply of the tree). */
   root: BookMove[];
+  /** Optional named walkthrough/drill routes. Openings without this keep the original
+   *  single-main-line experience. */
+  lines?: OpeningLine[];
+  /** The canonical walkthrough route, selected when the journey first opens. */
+  defaultLineId?: string;
   /** The thematic teaching panels. */
   panels: ThematicPanels;
 }
@@ -100,6 +118,30 @@ export function isLearnerTurn(opening: Opening, ply: number): boolean {
 export function mainChild(children: BookMove[] | undefined): BookMove | null {
   if (!children || children.length === 0) return null;
   return children.find((c) => c.main) ?? children[0];
+}
+
+/** Match SAN while ignoring check/mate and authoring annotation suffixes. */
+export function sanMatches(left: string, right: string): boolean {
+  const normalize = (san: string) => san.replace(/[+#!?]/g, "");
+  return normalize(left) === normalize(right);
+}
+
+/** Resolve the canonical line for an opening with named variations. */
+export function defaultOpeningLine(opening: Opening): OpeningLine | null {
+  if (!opening.lines?.length) return null;
+  return opening.lines.find((line) => line.id === opening.defaultLineId) ?? opening.lines[0];
+}
+
+/** Uniform random variation, avoiding an immediate repeat when possible. */
+export function pickOpeningLine(
+  lines: OpeningLine[],
+  rng: () => number = Math.random,
+  previousId?: string,
+): OpeningLine {
+  if (lines.length === 0) throw new Error("Cannot pick from an empty opening-line set");
+  const choices = lines.length > 1 && previousId ? lines.filter((line) => line.id !== previousId) : lines;
+  const index = Math.min(choices.length - 1, Math.floor(rng() * choices.length));
+  return choices[index];
 }
 
 /** One resolved step of the read-through main line. */
@@ -132,14 +174,21 @@ export interface ReadStep {
  * move, the before/after FEN (derived by replaying SAN), and any sibling deviations so
  * the read-through can show them as asides at the branch point.
  */
-export function readSteps(opening: Opening): ReadStep[] {
+export function readSteps(opening: Opening, lineId?: string): ReadStep[] {
   const steps: ReadStep[] = [];
   const game = new Chess();
   let nodes: BookMove[] | undefined = opening.root;
   let ply = 0;
+  const namedLine = lineId
+    ? opening.lines?.find((line) => line.id === lineId) ?? defaultOpeningLine(opening)
+    : defaultOpeningLine(opening);
 
   while (nodes && nodes.length > 0) {
-    const move = mainChild(nodes);
+    const expectedSan = namedLine?.moves[ply];
+    if (namedLine && expectedSan == null) break;
+    const move: BookMove | null = expectedSan
+      ? nodes.find((candidate) => sanMatches(candidate.san, expectedSan)) ?? null
+      : mainChild(nodes);
     if (!move) break;
     const fenBefore = game.fen();
     let applied;
@@ -191,9 +240,7 @@ export function pickWeighted(moves: BookMove[], rng: () => number = Math.random)
  */
 export function matchLearnerMove(children: BookMove[] | undefined, san: string): BookMove | null {
   if (!children) return null;
-  const norm = (s: string) => s.replace(/[+#!?]/g, "");
-  const target = norm(san);
-  return children.find((c) => norm(c.san) === target) ?? null;
+  return children.find((c) => sanMatches(c.san, san)) ?? null;
 }
 
 /** Every root-to-leaf line in the tree as SAN sequences — for legality tests + the build step. */
