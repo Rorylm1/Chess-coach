@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "relay": "tsx server/relay.ts",
+    "relay:dev": "tsx watch server/relay.ts",
+    "relay:build": "esbuild server/relay.ts --bundle --platform=node --target=node24 --format=cjs --outfile=build/chess-relay.cjs --external:bufferutil --external:utf-8-validate"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
@@ -18,7 +21,9 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "server-only": "^0.0.1",
-    "stockfish": "^18.0.7"
+    "stockfish": "^18.0.7",
+    "tsx": "^4.23.13",
+    "ws": "^8.21.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,6 +31,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/ws": "^8.18.1",
+    "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
