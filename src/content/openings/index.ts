@@ -21,6 +21,7 @@ import { scotchGame } from "@/content/openings/scotch-game";
 import { viennaGame } from "@/content/openings/vienna-game";
 import { petrovDefense } from "@/content/openings/petrov-defense";
 import { scandinavianDefense } from "@/content/openings/scandinavian-defense";
+import { slavDefense } from "@/content/openings/slav-defense";
 
 /** Index-card metadata for a curated opening (content may or may not exist yet). */
 export interface OpeningSummary {
@@ -48,6 +49,7 @@ export const OPENINGS: Record<string, Opening> = {
   [viennaGame.slug]: viennaGame,
   [petrovDefense.slug]: petrovDefense,
   [scandinavianDefense.slug]: scandinavianDefense,
+  [slavDefense.slug]: slavDefense,
 };
 
 /** The full curated set, in display order. */
@@ -65,6 +67,7 @@ export const CATALOG: OpeningSummary[] = [
   viennaGame,
   petrovDefense,
   scandinavianDefense,
+  slavDefense,
 ].map(summarize);
 
 /** Look up an authored opening by slug. */
