@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRecipe, parseRecent, type RecentTable } from "@/lib/table/brief";
 import { fallbackTable } from "@/lib/table/fallback";
-import { pieceRender } from "@/lib/table/spec";
+import { PIECE_STYLES, pieceRender } from "@/lib/table/spec";
 
 const provider = vi.hoisted(() => ({ generate: vi.fn(), configured: vi.fn() }));
 vi.mock("@/lib/table/generate", async () => {
@@ -71,6 +71,6 @@ describe("POST /api/table", () => {
     const world = await result.json();
     expect(result.status).toBe(200);
     expect(world.fallback).toBe(true);
-    expect(["orbital", "botanical", "origami", "pixel"]).toContain(pieceRender(world.pieceStyle).set);
+    expect(PIECE_STYLES.map((style) => pieceRender(style).set)).toContain(pieceRender(world.pieceStyle).set);
   });
 });
