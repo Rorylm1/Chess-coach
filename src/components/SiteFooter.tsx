@@ -2,9 +2,9 @@ export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="wrap inner">
-        <span>CHESS COACH · personal build</span>
+        <span>CHESS PLAYGROUND</span>
         <a href="/licenses/chess-pieces/NOTICE.txt">Piece credits</a>
-        <span>engine truth, human teaching</span>
+        <span>fresh boards, endless possibilities</span>
       </div>
     </footer>
   );

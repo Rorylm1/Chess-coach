@@ -15,9 +15,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const opening = getOpening(slug);
-  if (!opening) return { title: "Opening not found — Chess Coach" };
+  if (!opening) return { title: "Opening not found — Chess Playground" };
   return {
-    title: `${opening.name} — Chess Coach`,
+    title: `${opening.name} — Chess Playground`,
     description: opening.blurb,
   };
 }

@@ -205,6 +205,7 @@ a {
   color: var(--ink);
 }
 .wordmark .glyph {
+  flex-shrink: 0;
   width: 30px;
   height: 30px;
   display: grid;
@@ -279,6 +280,17 @@ a {
   .nav-status {
     display: flex;
   }
+}
+@media (max-width: 600px) {
+  .nav {
+    height: auto;
+    min-height: 70px;
+    flex-wrap: wrap;
+    padding: 12px 0;
+    gap: 10px 16px;
+  }
+  .wordmark { font-size: 16px; letter-spacing: 0.1em; }
+  .nav-links { gap: 22px; }
 }
 
 /* ---------- Buttons ---------- */
@@ -393,6 +405,36 @@ a {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
+}
+
+.daily-opening {
+  position: relative;
+  margin-top: 40px;
+  padding: 26px 28px;
+  max-width: 760px;
+  border: 1px solid var(--hairline-2);
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+}
+.daily-opening-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cyan-dim);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.daily-opening h2 {
+  margin: 14px 0 10px;
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  line-height: 1.2;
+}
+.daily-opening p {
+  color: var(--ink-soft);
+  max-width: 58ch;
+  margin: 0 0 20px;
 }
 
 /* ---------- Decorative board ---------- */
@@ -2315,3 +2357,16 @@ button.ribbon-chip:hover {
   line-height: 1.45;
   margin: 0;
 }
+
+/* Invite-link multiplayer: keep the shared board the hero. */
+.online-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.online-body p { margin: 0; color: var(--ink-soft); line-height: 1.7; }
+.online-body .online-status { color: var(--ink); font-size: 16px; }
+.online-body .online-note { font-size: 12px; }
+.online-body .dealer-error { color: var(--amber); }
+.online-link-label { display: flex; flex-direction: column; gap: 8px; color: var(--ink-soft); font-size: 12px; }
+.online-link-label input { width: 100%; min-width: 0; min-height: 44px; padding: 10px; border: 1px solid var(--hairline); border-radius: 4px; background: var(--panel-2); color: var(--ink); font-family: var(--font-mono); font-size: 12px; }
+.online-controls { display: flex; flex-wrap: wrap; gap: 10px; }
+.online-controls button { min-height: 44px; padding: 10px 14px; border: 1px solid var(--hairline); }
+.online-back { display: inline-block; min-height: 44px; padding: 12px 0; font-size: 13px; color: var(--ink-soft); }
+.online-invite .btn { width: 100%; min-height: 44px; }

@@ -1,0 +1,15 @@
+# Add this vhost to the server's EXISTING HTTPS proxy. Keep its other vhosts.
+https://chess.example.com {
+    tls {
+        issuer acme https://acme-v02.api.letsencrypt.org/directory {
+            disable_http_challenge
+        }
+    }
+    @relay path /socket /health
+    handle @relay {
+        reverse_proxy 127.0.0.1:8787
+    }
+    handle {
+        respond 404
+    }
+}

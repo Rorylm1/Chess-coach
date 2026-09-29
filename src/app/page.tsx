@@ -5,18 +5,18 @@ import { Reveal } from "@/components/Reveal";
 const FEATURES = [
   {
     idx: "01",
-    title: "Play, don't lecture",
-    body: "Start from a real game against an adjustable bot. Learning begins on the board, not in a manual.",
+    title: "Shuffle your world",
+    body: "Give your game a fresh look with unexpected pieces, colours and atmosphere. One click, a whole new board.",
   },
   {
     idx: "02",
-    title: "Ask when you're stuck",
-    body: "On-demand hints, one tier at a time — a nudge before the answer. Help that waits to be asked.",
+    title: "Bring a friend",
+    body: "Create a private invite link and share your board across two devices. Or pass one screen back and forth. No accounts needed.",
   },
   {
     idx: "03",
-    title: "One useful lesson",
-    body: "After every game, the single idea worth keeping — grounded in the engine, said like a human.",
+    title: "Find your next opening",
+    body: "Explore the ideas behind the moves, discover a few traps, then try the opening yourself in a quick practice game.",
   },
 ];
 
@@ -26,27 +26,27 @@ export default function Home() {
       <section className="hero">
         <div>
           <Reveal delay={0}>
-            <span className="eyebrow">engine truth · human teaching</span>
+            <span className="eyebrow">fresh boards · friendly games · new openings</span>
           </Reveal>
           <Reveal delay={0.08}>
             <h1>
-              The <span className="accent">useful lesson</span> in every game.
+              Same chess. <span className="accent">A whole new world.</span>
             </h1>
           </Reveal>
           <Reveal delay={0.16}>
             <p className="lede">
-              Stockfish does the calculation. Your coach does the explaining — in
-              plain language, grounded in the engine. After every meaningful
-              moment, one question: <strong>what was the useful lesson here?</strong>
+              Shuffle the pieces, colours and atmosphere with our board randomizer.
+              Bring a friend, take on a bot, or discover your next favourite opening.
+              <strong> Make every game feel like yours.</strong>
             </p>
           </Reveal>
           <Reveal delay={0.24}>
             <div className="hero-actions">
               <Link href="/play" className="btn btn-primary">
-                Play a game
+                Try the board randomizer
               </Link>
-              <Link href="#" className="btn btn-ghost">
-                Review last game
+              <Link href="/openings" className="btn btn-ghost">
+                Explore openings
               </Link>
             </div>
           </Reveal>
@@ -58,27 +58,20 @@ export default function Home() {
       </section>
 
       <Reveal delay={0.32}>
-        <div className="coach-card bracket">
-          <div className="coach-head">
+        <section className="daily-opening bracket" aria-label="Daily openings">
+          <div className="daily-opening-label">
             <span className="avatar" aria-hidden="true">
               ◆
             </span>
-            Coach&apos;s note
+            A little chess, every day
           </div>
-          <p className="coach-quote">
-            &ldquo;The tactic was hiding in the <span className="pin">pin</span> —
-            once the knight froze, the rook had nowhere safe to go.&rdquo;
+          <h2>A new chess opening is added each day.</h2>
+          <p>
+            Follow the moves, get to know the plan, then give it a go on the board.
+            There&apos;s always another way to start a game.
           </p>
-          <p className="coach-sub">
-            Your instinct to attack was right. The move order was the lesson.
-          </p>
-          <span className="engine-chip">
-            <span className="label">engine</span>
-            <span className="eval">+1.4</span>
-            <span>best&nbsp;Nxe5</span>
-            <span>depth&nbsp;22</span>
-          </span>
-        </div>
+          <Link href="/openings" className="btn btn-ghost">Find an opening →</Link>
+        </section>
       </Reveal>
 
       <Reveal delay={0.4}>

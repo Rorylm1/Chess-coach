@@ -18,20 +18,20 @@ export function CoachPanel({ coach }: { coach: CoachState }) {
   const thinking = loading && text.length === 0;
 
   return (
-    <section className="card coach-card" aria-label="Coach">
+    <section className="card coach-card" aria-label="Hints & ideas">
       <div className="card-head">
         <h2>
           <span className="coach-avatar" aria-hidden="true">
             ◈
           </span>
-          Coach
+          Hints &amp; ideas
         </h2>
         {active && (
           <button
             type="button"
             className="coach-dismiss"
             onClick={dismiss}
-            aria-label="Dismiss coach message"
+            aria-label="Dismiss hint"
           >
             ✕
           </button>
@@ -45,7 +45,7 @@ export function CoachPanel({ coach }: { coach: CoachState }) {
             {thinking ? (
               <p className="coach-thinking">
                 <span className="coach-dot" aria-hidden="true" />
-                Coach is thinking…
+                Finding an idea…
               </p>
             ) : (
               <p className="coach-text">

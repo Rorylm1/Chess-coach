@@ -24,9 +24,9 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chess Coach — the useful lesson in every game",
+  title: "Chess Playground — shuffle, play, explore",
   description:
-    "A personal chess coach that turns engine truth into plain-language teaching. Play, ask for a hint, and learn the one idea that mattered.",
+    "A playful chess board randomizer and opening explorer. Create a fresh board, invite a friend, or learn an opening. A new chess opening is added each day.",
 };
 
 export const viewport: Viewport = {

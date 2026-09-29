@@ -1,8 +1,12 @@
-# Chess Coach
+# Chess Playground
 
-A personal web-based chess coach that turns engine truth into human teaching. After every
-meaningful chess moment it answers one question: **"What is the useful lesson here?"** — in plain
-language, grounded in the engine, delivered by a warm playful-mentor coach.
+A playful chess board randomizer, a place to invite friends for a game, and an opening
+learning tool. Shuffle pieces, colours and atmosphere, play a bot or a friend, and explore
+the plans behind the opening moves. The homepage announces a new chess opening each day.
+
+**Production source:** `main` in [Rorylm1/Chess-coach](https://github.com/Rorylm1/Chess-coach).
+All releases must contain multiplayer and the full opening catalog together. See
+[AGENTS.md](AGENTS.md) and [deployment instructions](deploy/README.md) before releasing.
 
 > **Separation of calculation from teaching.** Stockfish is the source of truth for chess facts;
 > Claude only *narrates* those facts. The LLM never computes chess and never invents moves, evals,
@@ -132,3 +136,9 @@ Rebuild imported SVG data offline with `node research/designs/import-extra-piece
 ## Board randomizer prompt
 
 The exact system prompt and an example per-roll brief are documented in [research/board-randomizer-prompt.md](research/board-randomizer-prompt.md). It follows Background → Behaviour → Output. The runtime source is `src/lib/table/brief.ts`. Recent silhouettes are excluded for five rolls; the generated world also changes palette, fonts, frame and atmosphere. If AI is unavailable, a labeled procedural shuffle supplies a new look.
+
+## Play a friend online
+
+Open **Play → Create invite link**, then send the link to a friend. The invite control stays visible in both Bot and Multiplayer modes. You play White; your friend joins as Black. Both see the same board design. Games are untimed and require no accounts. Refreshing in the same browser restores your seat and position.
+
+For development, run `npm run relay:dev` alongside `npm run dev`. Production setup, the Hetzner service, checks and rollback details are in [deploy/README.md](deploy/README.md). Waiting invites expire after one hour; joined games after 24 hours of inactivity. Rooms are held in memory, so relay restarts end them.

@@ -78,7 +78,7 @@ export function ReadThrough({
       </div>
 
       {/* ---------------- coach column ---------------- */}
-      <aside className="journey-panel" aria-label="Coaching">
+      <aside className="journey-panel" aria-label="Opening guide">
         {!atEnd ? (
           <Reveal key={index} delay={0}>
             <div className="jnote bracket">

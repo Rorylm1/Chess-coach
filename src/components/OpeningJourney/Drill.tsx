@@ -224,7 +224,7 @@ export function Drill({
         </div>
       </div>
 
-      <aside className="journey-panel" aria-label="Coach">
+      <aside className="journey-panel" aria-label="Practice tips">
         <div className={`jfeedback bracket tone-${feedback.tone}`} aria-live="polite">
           <span className="jnote-label">
             {status === "done"
@@ -233,7 +233,7 @@ export function Drill({
                 ? "Not quite"
                 : feedback.tone === "good"
                   ? "Good"
-                  : "Coach"}
+                  : "Your next move"}
           </span>
           <p className="jnote-text">{feedback.text}</p>
         </div>

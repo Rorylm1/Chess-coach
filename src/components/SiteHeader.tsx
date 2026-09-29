@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Two live destinations in M6 — Play and Openings. The Coach tab lands in M8.
+// Play and opening practice are the two main destinations.
 const NAV = [
   { label: "Play", href: "/play" },
   { label: "Openings", href: "/openings" },
@@ -19,13 +19,13 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="wrap">
         <nav className="nav" aria-label="Primary">
-          <Link href="/" className="wordmark" aria-label="Chess Coach — home">
+          <Link href="/" className="wordmark" aria-label="Chess Playground — home">
             <span className="glyph" aria-hidden="true">
               ♞
             </span>
             <span>
-              Chess Coach
-              <span className="name-sub">analysis deck</span>
+              Chess Playground
+              <span className="name-sub">shuffle · play · explore</span>
             </span>
           </Link>
 
@@ -41,7 +41,7 @@ export function SiteHeader() {
 
           <span className="nav-status" aria-hidden="true">
             <span className="dot" />
-            engine online
+            your next move awaits
           </span>
         </nav>
       </div>

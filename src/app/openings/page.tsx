@@ -4,7 +4,7 @@ import { Reveal } from "@/components/Reveal";
 import { CATALOG, type OpeningSummary } from "@/content/openings";
 
 export const metadata: Metadata = {
-  title: "Openings — Chess Coach",
+  title: "Learn openings — Chess Playground",
   description:
     "Guided, board-illustrated journeys through the famous openings — the ideas behind the moves, then a recall drill to make them yours.",
 };
@@ -20,7 +20,7 @@ export default function OpeningsPage() {
     <div className="openings wrap">
       <header className="openings-head">
         <Reveal delay={0}>
-          <span className="eyebrow">openings as ideas, not memorization</span>
+          <span className="eyebrow">a new opening, every day</span>
         </Reveal>
         <Reveal delay={0.08}>
           <h1>
@@ -29,9 +29,9 @@ export default function OpeningsPage() {
         </Reveal>
         <Reveal delay={0.16}>
           <p className="lede">
-            Each journey walks you through an opening&apos;s real ideas — what the moves are{" "}
-            <em>for</em>, where the pieces belong, the traps to know — then hands you the board to
-            play it yourself against a bot that tries to throw you off.
+            Find a favourite first move. Explore the plans, piece placement and sneaky traps
+            behind each opening, then try it yourself in a quick practice game.
+            A new chess opening is added each day.
           </p>
         </Reveal>
       </header>

@@ -30,7 +30,7 @@ function summarize(spec: TableSpec): RecentTable {
 }
 
 const loaded = new Set<string>();
-function loadFonts(spec: TableSpec) {
+export function loadFonts(spec: TableSpec) {
   for (const name of fontsOf(spec)) {
     if (loaded.has(name)) continue;
     loaded.add(name);

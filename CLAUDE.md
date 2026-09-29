@@ -1,4 +1,10 @@
-# Chess Coach
+# Chess Playground
+
+Current product direction and release rules live in `AGENTS.md`. Public messaging is about
+the fun board randomizer, friendly multiplayer, and learning openings. Keep **Create invite
+link** visible on `/play`, and ship all production work through the Git-connected `main`
+branch. Do not promote an isolated feature deployment over production; that previously
+removed multiplayer when a later openings release shipped from `main`.
 
 A personal web-based chess coach that turns engine truth into human teaching. After every meaningful chess moment it answers one question: **"What is the useful lesson here?"** — in plain language, grounded in the engine, delivered by a warm playful-mentor coach.
 
