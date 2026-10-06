@@ -1,6 +1,6 @@
 import { Chess, type Color, type PieceSymbol, type Square } from "chess.js";
 
-export const CLASSIC_MOVE_INTERVAL_MS = 2500;
+export const CLASSIC_MOVE_INTERVAL_MS = 1750;
 
 export interface ReplayPiece {
   /** Stable across moves, castling and promotion, so the piece slides between squares. */

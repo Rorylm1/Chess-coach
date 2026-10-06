@@ -164,7 +164,7 @@ export function ClassicShowcase({ intro }: { intro: ReactNode }) {
           {game && <a href={game.sourceUrl} target="_blank" rel="noopener noreferrer">Game & story <span aria-hidden="true">↗</span></a>}
           <button type="button" onClick={anotherGame} disabled={!game}>Another classic <span aria-hidden="true">↻</span></button>
         </div>
-        <span className="classic-pace">One move every 2.5 seconds.</span>
+        <span className="classic-pace">One move every {CLASSIC_MOVE_INTERVAL_MS / 1000} seconds.</span>
         <noscript>Enable JavaScript to watch the complete games.</noscript>
       </aside>
     </section>

@@ -22,7 +22,7 @@ describe("homepage classic game scores", () => {
   it("contains ten distinct, sourced games at the requested pace", () => {
     expect(CLASSIC_GAMES).toHaveLength(10);
     expect(new Set(CLASSIC_GAMES.map(game => game.id)).size).toBe(10);
-    expect(CLASSIC_MOVE_INTERVAL_MS).toBe(2500);
+    expect(CLASSIC_MOVE_INTERVAL_MS).toBe(1750);
   });
 
   for (const game of CLASSIC_GAMES) {
