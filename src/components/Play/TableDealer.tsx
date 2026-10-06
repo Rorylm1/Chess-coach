@@ -41,10 +41,10 @@ export function TableDealer({ table }: { table: GameTable }) {
         {error ? <p className="dealer-error" role="alert">{error}</p> : null}
         <p className="dealer-note mono" role="status" aria-live="polite">
           {dealing
-            ? "New pieces, colours & atmosphere on the way…"
+            ? "Creating your board…"
             : fallback
               ? "Shuffled from the built-in worlds · AI is unavailable"
-              : "A little chess magic · new pieces, colours & atmosphere · ~15–30s"}
+              : "New pieces, colours & atmosphere · ~15–30s"}
         </p>
       </div>
     </section>

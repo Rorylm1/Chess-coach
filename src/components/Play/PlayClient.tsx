@@ -135,7 +135,7 @@ export function PlayClient() {
         {/* Online invites stay available in both modes and in the initial page HTML. */}
         <InviteFriend table={table.spec} disabled={table.dealing} />
 
-        {!isBot && <p className="online-note">Playing on one device? Take turns on the board, or create a link to play online.</p>}
+        {!isBot && <p className="online-note">On one device? Take turns on the board.</p>}
 
         <TableDealer table={table} />
 

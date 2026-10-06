@@ -29,9 +29,7 @@ export default function OpeningsPage() {
         </Reveal>
         <Reveal delay={0.16}>
           <p className="lede">
-            Find a favourite first move. Explore the plans, piece placement and sneaky traps
-            behind each opening, then try it yourself in a quick practice game.
-            A new chess opening is added each day.
+            Learn the moves, spot the traps, then try it yourself.
           </p>
         </Reveal>
       </header>

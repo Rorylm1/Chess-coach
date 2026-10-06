@@ -28,11 +28,11 @@ export function InviteFriend({ table, disabled = false }: { table: TableSpec | n
     <section className="card online-invite" aria-label="Play a friend online">
       <div className="card-head"><h2>Play a friend</h2><span className="tag">Multiplayer</span></div>
       <div className="online-body">
-        <p>Two devices. One board. Send a private link and play together.</p>
+        <p>Share a link. Play on the same board.</p>
         <button className="btn btn-primary" disabled={disabled || creating} onClick={() => void create()}>
           {creating ? "Creating your invite…" : "Create invite link"}
         </button>
-        <p className="online-note">You’ll play White. Your friend plays Black. Your current board design comes along.</p>
+        <p className="online-note">You’re White. Your friend is Black.</p>
         {error ? <p role="alert" className="dealer-error">{error}</p> : null}
       </div>
     </section>
