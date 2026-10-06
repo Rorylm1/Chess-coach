@@ -1,0 +1,128 @@
+[
+  {
+    "id": "declined",
+    "version": 1,
+    "name": "Queen’s Gambit Declined",
+    "idea": "Develop behind a strong centre and keep pressure on d5.",
+    "moves": [
+      "d4",
+      "d5",
+      "c4",
+      "e6",
+      "Nc3",
+      "Nf6",
+      "Bg5",
+      "Be7",
+      "e3",
+      "O-O",
+      "Nf3",
+      "Nbd7"
+    ],
+    "notes": [
+      "Claim central space and free the queen’s bishop.",
+      "Black meets your pawn in the centre.",
+      "Offer the c-pawn to draw Black’s d-pawn away from the centre.",
+      "Black supports d5, but closes the c8-bishop’s diagonal.",
+      "Develop and add pressure to d5.",
+      "Black develops towards the centre.",
+      "Pin the knight to the queen.",
+      "Black breaks the pin and prepares to castle.",
+      "Support d4 and free your other bishop.",
+      "Black secures the king.",
+      "Develop your remaining knight.",
+      "Black adds support to f6. Bring out the f1-bishop next."
+    ],
+    "challenge": {
+      "prompt": "Develop your king’s bishop towards the centre.",
+      "hint": "Develop your king’s bishop towards the centre.",
+      "answers": [
+        "Bd3"
+      ],
+      "explanation": "Develop behind a strong centre and keep pressure on d5."
+    }
+  },
+  {
+    "id": "accepted",
+    "version": 1,
+    "name": "Queen’s Gambit Accepted",
+    "idea": "Recover the pawn through development rather than chasing it immediately.",
+    "moves": [
+      "d4",
+      "d5",
+      "c4",
+      "dxc4",
+      "Nf3",
+      "Nf6",
+      "e3",
+      "e6",
+      "Bxc4",
+      "c5",
+      "O-O",
+      "a6"
+    ],
+    "notes": [
+      "Claim central space and free the queen’s bishop.",
+      "Black meets your pawn in the centre.",
+      "Offer the c-pawn to draw Black’s d-pawn away from the centre.",
+      "Black accepts the pawn offer.",
+      "Develop first and control e5.",
+      "Black develops the king’s knight.",
+      "Open a route for your bishop to recover c4.",
+      "Black prepares to develop the f8-bishop.",
+      "Recover the pawn with an active bishop.",
+      "Black attacks your d4-pawn.",
+      "Secure the king before resolving the central tension.",
+      "Black prepares queenside expansion. Your queen can support e3 and free d1 for a rook."
+    ],
+    "challenge": {
+      "prompt": "Develop your queen to support the centre and clear d1.",
+      "hint": "Develop your queen to support the centre and clear d1.",
+      "answers": [
+        "Qe2"
+      ],
+      "explanation": "Recover the pawn through development rather than chasing it immediately."
+    }
+  },
+  {
+    "id": "slav",
+    "version": 1,
+    "name": "Against the Slav",
+    "idea": "Recover c4 while stopping Black from holding it with …b5.",
+    "moves": [
+      "d4",
+      "d5",
+      "c4",
+      "c6",
+      "Nf3",
+      "Nf6",
+      "Nc3",
+      "dxc4",
+      "a4",
+      "Bf5",
+      "e3",
+      "e6"
+    ],
+    "notes": [
+      "Claim central space and free the queen’s bishop.",
+      "Black meets your pawn in the centre.",
+      "Offer the c-pawn to draw Black’s d-pawn away from the centre.",
+      "Black supports d5 without blocking the c8-bishop.",
+      "Develop towards the centre.",
+      "Black develops in turn.",
+      "Add another piece to the central battle.",
+      "Black captures on c4.",
+      "Stop …b5 from supporting the captured pawn.",
+      "Black develops the bishop before playing …e6.",
+      "Open the f1-bishop’s diagonal to c4.",
+      "Black completes the pawn chain. Your bishop can now recover c4."
+    ],
+    "challenge": {
+      "prompt": "Recover the c4-pawn with your bishop.",
+      "hint": "Recover the c4-pawn with your bishop.",
+      "answers": [
+        "Bxc4"
+      ],
+      "explanation": "Recover c4 while stopping Black from holding it with …b5."
+    }
+  }
+]

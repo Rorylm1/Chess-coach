@@ -1,0 +1,177 @@
+[
+  {
+    "id": "pianissimo",
+    "name": "Giuoco Pianissimo",
+    "idea": "Build your position before opening the centre.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "Bc4",
+      "Bc5",
+      "c3",
+      "Nf6",
+      "d3",
+      "d6",
+      "O-O",
+      "O-O"
+    ],
+    "notes": [
+      "Take space in the centre and open a diagonal for your bishop.",
+      "Black claims an equal share of the centre.",
+      "Develop a knight with a threat against e5.",
+      "Black develops and defends the central pawn.",
+      "The Italian bishop arrives. Its diagonal points towards f7, guarded only by the king.",
+      "Black's bishop mirrors yours. Both sides can develop naturally.",
+      "Prepare d4. You can decide when to open the centre.",
+      "Black attacks e4 while developing a knight.",
+      "Support e4. The central break can wait until your pieces are ready.",
+      "Black supports e5 and opens a path for the other bishop.",
+      "Get your king safe and bring the rook towards the centre.",
+      "Both kings are safe. Next, bring another piece into the game: Re1 or Nbd2 supports your buildup."
+    ],
+    "challenge": {
+      "prompt": "Your king is safe. Improve another piece.",
+      "hint": "Activate the f1-rook or develop the b1-knight towards d2.",
+      "answers": [
+        "Re1",
+        "Nbd2"
+      ],
+      "explanation": "Your pieces are joining the centre. Keep preparing d4 rather than rushing the attack."
+    },
+    "version": 1
+  },
+  {
+    "id": "centre",
+    "name": "Centre Attack",
+    "idea": "Challenge e5 and open lines for your pieces.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "Bc4",
+      "Bc5",
+      "c3",
+      "Nf6",
+      "d4",
+      "exd4",
+      "cxd4",
+      "Bb4+",
+      "Bd2",
+      "Bxd2+"
+    ],
+    "notes": [
+      "Take space in the centre and open a diagonal for your bishop.",
+      "Black claims an equal share of the centre.",
+      "Develop a knight with a threat against e5.",
+      "Black develops and defends the central pawn.",
+      "The Italian bishop arrives. Its diagonal points towards f7, guarded only by the king.",
+      "Black develops the bishop to its active diagonal.",
+      "This pawn supports the coming d4 push.",
+      "Black develops with an attack on e4.",
+      "Strike now. The central pawns give you space, but development matters too.",
+      "Black exchanges in the centre.",
+      "Recapture with the c-pawn and keep a strong central presence.",
+      "A check interrupts your development. You must answer it.",
+      "Block the check and offer a bishop exchange.",
+      "Black trades bishops with check. Recapturing with your queen or b1-knight answers the check; the knight also develops."
+    ],
+    "challenge": {
+      "prompt": "You’re in check. Recapture and keep developing.",
+      "hint": "Your b1-knight can recapture on d2; your queen can too.",
+      "answers": [
+        "Nbxd2",
+        "Qxd2"
+      ],
+      "explanation": "You answered the check and recovered the bishop. Keep the centre supported as your remaining pieces come out."
+    },
+    "version": 1
+  },
+  {
+    "id": "two-knights",
+    "name": "Two Knights Defence",
+    "idea": "Meet an active defence with a solid centre.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "Bc4",
+      "Nf6",
+      "d3",
+      "Bc5",
+      "O-O",
+      "d6",
+      "c3",
+      "O-O"
+    ],
+    "notes": [
+      "Take space in the centre and open a diagonal for your bishop.",
+      "Black claims an equal share of the centre.",
+      "Develop a knight with a threat against e5.",
+      "Black develops and defends the central pawn.",
+      "The Italian bishop arrives. Its diagonal points towards f7, guarded only by the king.",
+      "The second knight comes out and attacks e4. This is the Two Knights Defence.",
+      "Defend e4. You choose a quieter game instead of the sharp Ng5 lines.",
+      "Black develops the bishop and prepares to castle.",
+      "Protect your king before starting anything ambitious.",
+      "Black supports the centre.",
+      "Keep the d4 break in reserve while completing development.",
+      "The position resembles a quiet Italian. Re1 or Nbd2 continues your plan without forcing matters."
+    ],
+    "challenge": {
+      "prompt": "Keep building. Where should your next piece go?",
+      "hint": "The rook can support e4 from e1, or the b1-knight can develop to d2.",
+      "answers": [
+        "Re1",
+        "Nbd2"
+      ],
+      "explanation": "An active defence does not force a wild game. Finish developing, then choose the right moment for d4."
+    },
+    "version": 1
+  },
+  {
+    "id": "evans",
+    "name": "Evans Gambit",
+    "idea": "Give a pawn to gain time and open the centre.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "Bc4",
+      "Bc5",
+      "b4",
+      "Bxb4",
+      "c3",
+      "Ba5",
+      "d4",
+      "exd4"
+    ],
+    "notes": [
+      "Take space in the centre and open a diagonal for your bishop.",
+      "Black claims an equal share of the centre.",
+      "Develop a knight with a threat against e5.",
+      "Black develops and defends the central pawn.",
+      "The Italian bishop arrives. Its diagonal points towards f7, guarded only by the king.",
+      "The bishop on c5 becomes a target for your next idea.",
+      "Offer the b-pawn. You want time to develop, not an immediate material return.",
+      "Black accepts. You are a pawn down, so make the extra time count.",
+      "Attack the bishop while preparing d4.",
+      "The bishop retreats but keeps an eye on your king.",
+      "Open the centre while your pieces have active routes into the game.",
+      "Black takes another pawn. Castling now moves your king off the bishop's diagonal and frees the rook."
+    ],
+    "challenge": {
+      "prompt": "You’ve opened the centre. Secure your king.",
+      "hint": "Castle kingside: move your king from e1 to g1.",
+      "answers": [
+        "O-O"
+      ],
+      "explanation": "Your king is safe and your rook can join the attack. The gambit is about active pieces and open lines."
+    },
+    "version": 1
+  }
+]

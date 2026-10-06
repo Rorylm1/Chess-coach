@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { OpeningJourney } from "@/components/OpeningJourney/OpeningJourney";
 import { OPENINGS, getOpening } from "@/content/openings";
+import { getCourse } from "@/content/opening-lessons";
+import { british } from "@/lib/openings/lessons";
 
 /** Pre-render a static page for every authored opening. */
 export function generateStaticParams() {
@@ -17,7 +19,7 @@ export async function generateMetadata({
   const opening = getOpening(slug);
   if (!opening) return { title: "Opening not found — Chess Playground" };
   return {
-    title: `${opening.name} — Chess Playground`,
+    title: `${british(opening.name)} — Chess Playground`,
     description: opening.blurb,
   };
 }
@@ -30,5 +32,7 @@ export default async function OpeningJourneyPage({
   const { slug } = await params;
   const opening = getOpening(slug);
   if (!opening) notFound();
-  return <OpeningJourney opening={opening} />;
+  const course = getCourse(slug);
+  if (!course) notFound();
+  return <OpeningJourney opening={opening} course={course} />;
 }

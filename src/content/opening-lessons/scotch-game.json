@@ -1,0 +1,132 @@
+[
+  {
+    "id": "classical",
+    "version": 1,
+    "name": "Classical · …Bc5",
+    "idea": "Support the central knight and develop behind it.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "d4",
+      "exd4",
+      "Nxd4",
+      "Bc5",
+      "Be3",
+      "Qf6",
+      "c3",
+      "Nge7"
+    ],
+    "notes": [
+      "Claim the centre.",
+      "Black matches your pawn.",
+      "Develop and attack e5.",
+      "Black develops and defends.",
+      "Open the centre before developing the bishops.",
+      "Black exchanges the central pawn.",
+      "Recover the pawn with the knight.",
+      "Black attacks your central knight.",
+      "Defend the knight with a developing move.",
+      "Black adds pressure along the diagonal to d4.",
+      "Support the knight and prepare queenside development.",
+      "Black develops without blocking the queen. Develop your f1-bishop next."
+    ],
+    "challenge": {
+      "prompt": "Develop your bishop to c4 and prepare castling.",
+      "hint": "Develop your bishop to c4 and prepare castling.",
+      "answers": [
+        "Bc4"
+      ],
+      "explanation": "Support the central knight and develop behind it."
+    }
+  },
+  {
+    "id": "mieses",
+    "version": 1,
+    "name": "Mieses Variation",
+    "idea": "Use the e-pawn to gain space while the knights regroup.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "d4",
+      "exd4",
+      "Nxd4",
+      "Nf6",
+      "Nxc6",
+      "bxc6",
+      "e5",
+      "Qe7",
+      "Qe2",
+      "Nd5"
+    ],
+    "notes": [
+      "Claim the centre.",
+      "Black matches your pawn.",
+      "Develop and attack e5.",
+      "Black develops and defends.",
+      "Open the centre before developing the bishops.",
+      "Black exchanges the central pawn.",
+      "Recover the central pawn.",
+      "Black attacks e4.",
+      "Exchange before advancing the e-pawn.",
+      "Black opens the b-file but takes doubled pawns.",
+      "Gain space and chase the knight.",
+      "Black pins your e-pawn to the king.",
+      "Break the pin and support e5.",
+      "Black finds a central square. Challenge its support with c4."
+    ],
+    "challenge": {
+      "prompt": "Attack the d5-knight with your c-pawn.",
+      "hint": "Attack the d5-knight with your c-pawn.",
+      "answers": [
+        "c4"
+      ],
+      "explanation": "Use the e-pawn to gain space while the knights regroup."
+    }
+  },
+  {
+    "id": "gambit",
+    "version": 1,
+    "name": "Scotch Gambit",
+    "idea": "Prioritise development and king safety over immediate material recovery.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "d4",
+      "exd4",
+      "Bc4",
+      "Nf6",
+      "e5",
+      "d5",
+      "Bb5",
+      "Ne4"
+    ],
+    "notes": [
+      "Claim the centre.",
+      "Black matches your pawn.",
+      "Develop and attack e5.",
+      "Black develops and defends.",
+      "Open the centre before developing the bishops.",
+      "Black exchanges the central pawn.",
+      "Develop with pressure on f7 instead of recapturing.",
+      "Black attacks e4.",
+      "Gain space by attacking the knight.",
+      "Black counterattacks your bishop in the centre.",
+      "Pin the c6-knight to the king.",
+      "Black centralises the other knight. Secure your king before resolving the tension."
+    ],
+    "challenge": {
+      "prompt": "Castle kingside to bring your rook into play.",
+      "hint": "Castle kingside to bring your rook into play.",
+      "answers": [
+        "O-O"
+      ],
+      "explanation": "Prioritise development and king safety over immediate material recovery."
+    }
+  }
+]

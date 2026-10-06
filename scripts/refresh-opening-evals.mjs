@@ -2,7 +2,7 @@
  * Build-time eval verification for opening journeys (M5, task #7).
  *
  * The opening *ideas* are human-curated, but the eval numbers shown in the read-through
- * must be the engine's, not ours. This script replays each opening's main line through
+ * must be the engine's, not ours. This script replays each authored lesson and final challenge through
  * chess.js, asks the Lichess cloud-eval API for each resulting position, and prints the
  * White-POV centipawns to bake into `content/openings/*.ts` (`evalCp` on each main move).
  *
@@ -12,27 +12,21 @@
  */
 
 import { Chess } from "chess.js";
-import { writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 const OUT = "src/content/openings/evals.generated.json";
 
-const MAIN_LINES = {
-  "italian-game": ["e4", "e5", "Nf3", "Nc6", "Bc4", "Bc5", "c3", "Nf6", "d3"],
-  "queens-gambit": ["d4", "d5", "c4", "e6", "Nc3", "Nf6", "Bg5", "Be7", "Nf3"],
-  "sicilian-defense": ["e4", "c5", "Nf3", "d6", "d4", "cxd4", "Nxd4", "Nf6", "Nc3"],
-  "french-defense": ["e4", "e6", "d4", "d5", "e5", "c5", "c3", "Nc6", "Nf3"],
-  "ruy-lopez": ["e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Ba4", "Nf6", "O-O", "Be7"],
-  "caro-kann-defense": ["e4", "c6", "d4", "d5", "e5", "Bf5", "Nf3", "e6", "Be2", "c5"],
-  "kings-indian-defense": ["d4", "Nf6", "c4", "g6", "Nc3", "Bg7", "e4", "d6", "Nf3", "O-O"],
-  "english-opening": ["c4", "e5", "Nc3", "Nf6", "Nf3", "Nc6", "g3", "d5", "cxd5", "Nxd5"],
-  "london-system": ["d4", "d5", "Nf3", "Nf6", "Bf4", "e6", "e3", "Bd6", "Bg3", "O-O"],
-  "scotch-game": ["e4", "e5", "Nf3", "Nc6", "d4", "exd4", "Nxd4", "Nf6", "Nxc6", "bxc6"],
-  "vienna-game": ["e4", "e5", "Nc3", "Nf6", "f4", "d5", "fxe5", "Nxe4", "Nf3", "Be7"],
-  "petrov-defense": ["e4", "e5", "Nf3", "Nf6", "Nxe5", "d6", "Nf3", "Nxe4", "d4", "d5", "Bd3", "Be7"],
-  "scandinavian-defense": ["e4", "d5", "exd5", "Qxd5", "Nc3", "Qa5", "d4", "Nf6", "Nf3", "c6", "Bc4", "Bf5"],
-  "slav-defense": ["d4", "d5", "c4", "c6", "Nf3", "Nf6", "Nc3", "dxc4", "a4", "Bf5", "e3", "e6"],
-  "nimzo-indian-defense": ["d4", "Nf6", "c4", "e6", "Nc3", "Bb4", "e3", "O-O", "Bd3", "d5", "Nf3", "c5"],
-};
+// Derive every position from the actual catalogue; retain legacy branches too.
+const { tsImport } = await import("tsx/esm/api");
+const { OPENINGS } = await tsImport("../src/content/openings/index.ts", import.meta.url);
+const { getCourse } = await tsImport("../src/content/opening-lessons/index.ts", import.meta.url);
+const { allLines } = await tsImport("../src/lib/openings/tree.ts", import.meta.url);
+const MAIN_LINES = Object.fromEntries(Object.entries(OPENINGS).flatMap(([slug, opening]) => [
+  ...allLines(opening).map((moves, i) => [`${slug}/legacy-${i}`, moves]),
+  ...getCourse(slug).lessons.flatMap(line => line.challenge.answers.map((answer, i) => [
+    `${slug}/${line.id}/${i}`, [...line.moves, answer],
+  ])),
+]));
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -57,7 +51,8 @@ async function cloudEval(fen) {
 }
 
 // FEN -> White-POV centipawns, the authoritative eval source baked into the build.
-const fenToCp = {};
+const fenToCp = JSON.parse(readFileSync(OUT, "utf8"));
+const seen = new Set();
 
 for (const [slug, sans] of Object.entries(MAIN_LINES)) {
   console.log(`\n## ${slug}`);
@@ -65,6 +60,8 @@ for (const [slug, sans] of Object.entries(MAIN_LINES)) {
   for (const san of sans) {
     game.move(san);
     const fen = game.fen();
+    if (seen.has(fen)) continue;
+    seen.add(fen);
     const r = await cloudEval(fen);
     const val =
       r.cp != null

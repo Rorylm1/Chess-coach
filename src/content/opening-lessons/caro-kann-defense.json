@@ -1,0 +1,134 @@
+[
+  {
+    "id": "advance",
+    "version": 1,
+    "name": "Advance · Short system",
+    "idea": "Develop the light-squared bishop before closing the pawn chain.",
+    "moves": [
+      "e4",
+      "c6",
+      "d4",
+      "d5",
+      "e5",
+      "Bf5",
+      "Nf3",
+      "e6",
+      "Be2",
+      "c5",
+      "O-O",
+      "Nc6",
+      "Be3"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Prepare …d5 without closing your queen’s bishop in.",
+      "White builds the pawn centre.",
+      "Challenge e4 with a supported pawn.",
+      "White gains space and locks the centre.",
+      "Develop the bishop outside your pawn chain.",
+      "White develops the king’s knight.",
+      "Support d5 and free your other bishop.",
+      "White prepares to castle.",
+      "Challenge d4 with your c-pawn.",
+      "White secures the king.",
+      "Develop and increase pressure on d4.",
+      "White supports the centre. Develop your king’s knight via e7."
+    ],
+    "challenge": {
+      "prompt": "Develop the g8-knight towards e7 and prepare to castle.",
+      "hint": "Develop the g8-knight towards e7 and prepare to castle.",
+      "answers": [
+        "Nge7"
+      ],
+      "explanation": "Develop the light-squared bishop before closing the pawn chain."
+    }
+  },
+  {
+    "id": "classical",
+    "version": 1,
+    "name": "Classical · …Bf5",
+    "idea": "Trade the central pawn, then develop with tempo.",
+    "moves": [
+      "e4",
+      "c6",
+      "d4",
+      "d5",
+      "Nc3",
+      "dxe4",
+      "Nxe4",
+      "Bf5",
+      "Ng3",
+      "Bg6",
+      "h4",
+      "h6",
+      "Nf3"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Prepare …d5 without closing your queen’s bishop in.",
+      "White builds the pawn centre.",
+      "Challenge e4 with a supported pawn.",
+      "White develops and defends e4.",
+      "Exchange the central pawn.",
+      "White recaptures with the knight.",
+      "Develop while attacking the knight.",
+      "White attacks your bishop.",
+      "Keep the bishop on its active diagonal.",
+      "White gains space and threatens h5.",
+      "Give your bishop an escape square on h7.",
+      "White develops. The b8-knight can support a later …Ngf6 from d7."
+    ],
+    "challenge": {
+      "prompt": "Develop your queenside knight to support the other knight’s development.",
+      "hint": "Develop your queenside knight to support the other knight’s development.",
+      "answers": [
+        "Nd7"
+      ],
+      "explanation": "Trade the central pawn, then develop with tempo."
+    }
+  },
+  {
+    "id": "exchange",
+    "version": 1,
+    "name": "Exchange Variation",
+    "idea": "Develop actively and use the open files in a balanced pawn structure.",
+    "moves": [
+      "e4",
+      "c6",
+      "d4",
+      "d5",
+      "exd5",
+      "cxd5",
+      "Bd3",
+      "Nc6",
+      "c3",
+      "Nf6",
+      "Bf4",
+      "Bg4",
+      "Qb3"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Prepare …d5 without closing your queen’s bishop in.",
+      "White builds the pawn centre.",
+      "Challenge e4 with a supported pawn.",
+      "White exchanges the central pawns.",
+      "Recapture towards the centre and open the c-file.",
+      "White develops actively.",
+      "Develop and control e5.",
+      "White supports d4.",
+      "Develop the king’s knight.",
+      "White brings out the bishop before playing e3.",
+      "Develop the bishop with pressure along the diagonal towards d1.",
+      "White attacks b7. Defend it by developing your queen to d7."
+    ],
+    "challenge": {
+      "prompt": "Defend b7 with your queen while keeping your pieces active.",
+      "hint": "Defend b7 with your queen while keeping your pieces active.",
+      "answers": [
+        "Qd7"
+      ],
+      "explanation": "Develop actively and use the open files in a balanced pawn structure."
+    }
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": "classical",
+    "version": 1,
+    "name": "Classical · …e5",
+    "idea": "Allow White space, then challenge it with a central pawn break.",
+    "moves": [
+      "d4",
+      "Nf6",
+      "c4",
+      "g6",
+      "Nc3",
+      "Bg7",
+      "e4",
+      "d6",
+      "Nf3",
+      "O-O",
+      "Be2",
+      "e5",
+      "O-O"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Control e4 with a piece.",
+      "White expands the centre.",
+      "Prepare a fianchetto to challenge the centre from a distance.",
+      "White develops towards e4 and d5.",
+      "Place your bishop on the long diagonal.",
+      "White builds a broad centre.",
+      "Control e5 and free your other bishop.",
+      "White develops naturally.",
+      "Secure your king before striking.",
+      "White prepares to castle.",
+      "Challenge d4 and claim central space.",
+      "White castles. Bring your b8-knight out to increase pressure on d4."
+    ],
+    "challenge": {
+      "prompt": "Develop your queenside knight with pressure on d4.",
+      "hint": "Develop your queenside knight with pressure on d4.",
+      "answers": [
+        "Nc6"
+      ],
+      "explanation": "Allow White space, then challenge it with a central pawn break."
+    }
+  },
+  {
+    "id": "samisch",
+    "version": 1,
+    "name": "Sämisch · …c5",
+    "idea": "Counter White’s supported centre with a timely …c5 break.",
+    "moves": [
+      "d4",
+      "Nf6",
+      "c4",
+      "g6",
+      "Nc3",
+      "Bg7",
+      "e4",
+      "d6",
+      "f3",
+      "O-O",
+      "Be3",
+      "c5",
+      "d5"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Control e4 with a piece.",
+      "White expands the centre.",
+      "Prepare a fianchetto to challenge the centre from a distance.",
+      "White develops towards e4 and d5.",
+      "Place your bishop on the long diagonal.",
+      "White builds a broad centre.",
+      "Control e5 and prepare development.",
+      "White supports e4 but blocks the g1-knight’s usual square.",
+      "Secure your king.",
+      "White prepares a flexible attacking set-up.",
+      "Challenge d4 with the c-pawn.",
+      "White closes the centre. Your b8-knight can develop behind the pawn tension."
+    ],
+    "challenge": {
+      "prompt": "Develop the b8-knight towards c7 via a6.",
+      "hint": "Develop the b8-knight towards c7 via a6.",
+      "answers": [
+        "Na6"
+      ],
+      "explanation": "Counter White’s supported centre with a timely …c5 break."
+    }
+  },
+  {
+    "id": "fianchetto",
+    "version": 1,
+    "name": "Fianchetto Variation",
+    "idea": "Meet White’s long-diagonal bishop with patient development.",
+    "moves": [
+      "d4",
+      "Nf6",
+      "c4",
+      "g6",
+      "Nc3",
+      "Bg7",
+      "Nf3",
+      "O-O",
+      "g3",
+      "d6",
+      "Bg2",
+      "Nbd7",
+      "O-O"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Control e4 with a piece.",
+      "White expands the centre.",
+      "Prepare a fianchetto to challenge the centre from a distance.",
+      "White develops towards e4 and d5.",
+      "Place your bishop on the long diagonal.",
+      "White develops without committing the e-pawn.",
+      "Castle early to secure your king.",
+      "White prepares a matching fianchetto.",
+      "Support e5 and free the c8-bishop.",
+      "White places the bishop on the long diagonal.",
+      "Support a central …e5 break.",
+      "White castles. Now challenge the centre with the prepared pawn advance."
+    ],
+    "challenge": {
+      "prompt": "Advance the e-pawn to challenge White’s d4-pawn.",
+      "hint": "Advance the e-pawn to challenge White’s d4-pawn.",
+      "answers": [
+        "e5"
+      ],
+      "explanation": "Meet White’s long-diagonal bishop with patient development."
+    }
+  }
+]

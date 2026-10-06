@@ -1,0 +1,128 @@
+[
+  {
+    "id": "reversed",
+    "version": 1,
+    "name": "Reversed Sicilian",
+    "idea": "Build pressure on the long diagonal while keeping d4 in reserve.",
+    "moves": [
+      "c4",
+      "e5",
+      "Nc3",
+      "Nf6",
+      "g3",
+      "d5",
+      "cxd5",
+      "Nxd5",
+      "Bg2",
+      "Nb6",
+      "Nf3",
+      "Nc6"
+    ],
+    "notes": [
+      "Control d5 with a wing pawn while keeping your central pawns flexible.",
+      "Black claims central space.",
+      "Develop and increase control over d5.",
+      "Black develops towards the centre.",
+      "Prepare a fianchetto.",
+      "Black opens the centre.",
+      "Exchange the c-pawn for a central pawn.",
+      "Black recaptures actively.",
+      "Aim your bishop down the long diagonal.",
+      "Black moves the knight away from the bishop’s line.",
+      "Develop and attack e5.",
+      "Black defends e5. Your king is ready to castle."
+    ],
+    "challenge": {
+      "prompt": "Secure your king with kingside castling.",
+      "hint": "Secure your king with kingside castling.",
+      "answers": [
+        "O-O"
+      ],
+      "explanation": "Build pressure on the long diagonal while keeping d4 in reserve."
+    }
+  },
+  {
+    "id": "symmetrical",
+    "version": 1,
+    "name": "Symmetrical English",
+    "idea": "Use the first move to develop smoothly and prepare a central break.",
+    "moves": [
+      "c4",
+      "c5",
+      "Nc3",
+      "Nc6",
+      "g3",
+      "g6",
+      "Bg2",
+      "Bg7",
+      "Nf3",
+      "Nf6",
+      "O-O",
+      "O-O"
+    ],
+    "notes": [
+      "Control d5 with a wing pawn while keeping your central pawns flexible.",
+      "Black mirrors your flank pawn.",
+      "Develop towards the centre.",
+      "Black mirrors your knight.",
+      "Prepare the long-diagonal bishop.",
+      "Black prepares the same structure.",
+      "Develop the bishop.",
+      "Black completes the fianchetto.",
+      "Develop and control d4.",
+      "Black controls d5.",
+      "Secure your king.",
+      "Black castles too. Break the symmetry by advancing in the centre."
+    ],
+    "challenge": {
+      "prompt": "Challenge the centre with your d-pawn.",
+      "hint": "Challenge the centre with your d-pawn.",
+      "answers": [
+        "d4"
+      ],
+      "explanation": "Use the first move to develop smoothly and prepare a central break."
+    }
+  },
+  {
+    "id": "four-knights",
+    "version": 1,
+    "name": "Four Knights · …Bb4",
+    "idea": "Keep central control while Black pins your queenside knight.",
+    "moves": [
+      "c4",
+      "e5",
+      "Nc3",
+      "Nf6",
+      "Nf3",
+      "Nc6",
+      "g3",
+      "Bb4",
+      "Bg2",
+      "O-O",
+      "O-O",
+      "e4"
+    ],
+    "notes": [
+      "Control d5 with a wing pawn while keeping your central pawns flexible.",
+      "Black takes central space.",
+      "Develop and watch d5.",
+      "Black develops towards the centre.",
+      "Attack e5 with a developing move.",
+      "Black defends e5.",
+      "Prepare a fianchetto.",
+      "Black pins your knight to the king.",
+      "Complete the fianchetto.",
+      "Black secures the king.",
+      "Castle, removing the pin on c3.",
+      "Black gains space and attacks your knight. Move it towards g5."
+    ],
+    "challenge": {
+      "prompt": "Move your attacked f3-knight to g5.",
+      "hint": "Move your attacked f3-knight to g5.",
+      "answers": [
+        "Ng5"
+      ],
+      "explanation": "Keep central control while Black pins your queenside knight."
+    }
+  }
+]

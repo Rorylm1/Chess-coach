@@ -1,0 +1,275 @@
+{
+  "italian-game": {
+    "era": "1500s",
+    "title": "A quiet game. A daring captain.",
+    "text": "Studied by Damiano, Polerio and later Greco, the Italian grew over generations. It has no single inventor. Captain William Davies Evans later added the Evans Gambit, its bold pawn sacrifice.",
+    "source": "https://www.chess.com/openings/Italian-Game",
+    "image": {
+      "src": "/images/openings/captain-evans.jpg",
+      "alt": "Archival portrait of Captain William Davies Evans",
+      "caption": "William Davies Evans, creator of the Evans Gambit; portrait c. 1830.",
+      "width": 361,
+      "height": 478,
+      "source": "https://commons.wikimedia.org/wiki/File:Capt_Evans.JPG",
+      "credit": "Unknown artist",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "queens-gambit": {
+    "era": "c. 1490 onwards",
+    "title": "An old idea, a world title staple.",
+    "text": "The Queen’s Gambit appears in the Göttingen manuscript around 1490. Generations developed it, rather than one inventor. By the 1927 world title match, Capablanca and Alekhine used it in 32 of their 34 games.",
+    "source": "https://www.chess.com/openings/Queens-Gambit",
+    "image": {
+      "src": "/images/openings/capablanca.jpg",
+      "alt": "José Raúl Capablanca in a historical image",
+      "caption": "José Raúl Capablanca in 1931; a leading exponent, not the opening’s inventor.",
+      "width": 494,
+      "height": 658,
+      "source": "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Ra%C3%BAl_Capablanca_1931.jpg",
+      "credit": "AnonymousUnknown author (Keystone-France)",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "sicilian-defense": {
+    "era": "1594 onwards",
+    "title": "A counterattack across the centuries.",
+    "text": "Polerio recorded the Sicilian in 1594. The 1834 La Bourdonnais–McDonnell matches helped bring it to prominence. Much later, Fischer and Kasparov made its unbalanced positions central to their repertoires.",
+    "source": "https://www.chess.com/openings/Sicilian-Defense",
+    "image": {
+      "src": "/images/classics/fischer.jpg",
+      "caption": "Bobby Fischer in 1972; one of the Sicilian’s great modern exponents.",
+      "alt": "Bobby Fischer photographed in 1972",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bobby_Fischer_1972.jpg",
+      "credit": "Bert Verhoeff / Anefo, Dutch National Archives",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "width": 600,
+      "height": 818,
+      "source": "https://commons.wikimedia.org/wiki/File:Bobby_Fischer_1972.jpg",
+      "licence": "CC0",
+      "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+    }
+  },
+  "french-defense": {
+    "era": "1834",
+    "title": "Named for a match, not an inventor.",
+    "text": "The French takes its name from a correspondence game between London and Paris in 1834. Its sturdy pawn chains later attracted masters including Rubinstein, Nimzowitsch and Botvinnik. The enduring idea is to undermine White’s centre.",
+    "source": "https://www.chess.com/openings/French-Defense",
+    "image": {
+      "src": "/images/classics/rubinstein.jpg",
+      "caption": "Akiba Rubinstein, c. 1907–08; a leading exponent of the French.",
+      "alt": "Archival photograph of Akiba Rubinstein around 1907 or 1908",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Akiba-RubinsteinC.jpg",
+      "credit": "Unknown photographer",
+      "license": "Public domain",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "width": 600,
+      "height": 807,
+      "source": "https://commons.wikimedia.org/wiki/File:Akiba-RubinsteinC.jpg",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "ruy-lopez": {
+    "era": "1561",
+    "title": "A bishop move with a long history.",
+    "text": "Spanish priest Ruy López analysed this opening in his 1561 chess book. It became a regular choice among leading masters in the nineteenth century. Its lasting theme is patient pressure on the centre.",
+    "source": "https://www.chess.com/openings/Ruy-Lopez-Opening",
+    "image": {
+      "src": "/images/openings/spanish-court.jpg",
+      "alt": "Luigi Mussini’s 1871 painting of chess at the Spanish court",
+      "caption": "Chess at the Spanish court, painted by Luigi Mussini in 1871. A later historical interpretation, not a contemporary portrait of Ruy López.",
+      "width": 2706,
+      "height": 1553,
+      "source": "https://commons.wikimedia.org/wiki/File:Luigi_Mussini-_Leonardo_da_Cutro_e_Ruy_Lopez_giocano_a_scacchi_alla_corte_di_Spagna.jpg",
+      "credit": "Luigi Mussini",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "caro-kann-defense": {
+    "era": "1880s",
+    "title": "Two analysts, one durable defence.",
+    "text": "Horatio Caro and Marcus Kann analysed the opening in the 1880s, giving it their names. Capablanca later helped establish its reputation at the highest level, using it successfully at New York in 1927.",
+    "source": "https://www.chess.com/openings/Caro-Kann-Defense",
+    "image": {
+      "src": "/images/openings/capablanca.jpg",
+      "alt": "José Raúl Capablanca in a historical image",
+      "caption": "José Raúl Capablanca in 1931; an influential Caro–Kann exponent.",
+      "width": 494,
+      "height": 658,
+      "source": "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Ra%C3%BAl_Capablanca_1931.jpg",
+      "credit": "AnonymousUnknown author (Keystone-France)",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "kings-indian-defense": {
+    "era": "20th century",
+    "title": "Space now, counterplay later.",
+    "text": "The King’s Indian gained acceptance with the rise of hypermodern ideas. Bronstein helped show that Black could allow a broad pawn centre and then attack it. Tal and Kasparov became celebrated exponents of that approach.",
+    "source": "https://www.chess.com/openings/Kings-Indian-Defense",
+    "image": {
+      "src": "/images/classics/kasparov.jpg",
+      "caption": "Garry Kasparov in 1999; a leading King’s Indian exponent.",
+      "alt": "Garry Kasparov at the Frankfurt Chess Classics in July 1999",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kasparow001.jpg",
+      "credit": "dontworry / Wikimedia Commons",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "width": 600,
+      "height": 407,
+      "source": "https://commons.wikimedia.org/wiki/File:Kasparow001.jpg",
+      "licence": "CC BY-SA 3.0",
+      "licenceUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+    }
+  },
+  "english-opening": {
+    "era": "1840s",
+    "title": "Staunton’s flexible first move.",
+    "text": "The English takes its name from Howard Staunton’s use of 1.c4 against Saint-Amant. It became much more popular after Botvinnik adopted it in the 1930s. The flexible centre remains its defining attraction.",
+    "source": "https://www.chess.com/openings/English-Opening",
+    "image": {
+      "src": "/images/openings/staunton.jpg",
+      "alt": "Howard Staunton in a historical image",
+      "caption": "Howard Staunton, in an engraving published in 1874.",
+      "width": 278,
+      "height": 341,
+      "source": "https://commons.wikimedia.org/wiki/File:Howard-Staunton-ILN-detail-1.jpeg",
+      "credit": "R. & E. Taylor (Firm) / After Thomas Dewell Scott",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "london-system": {
+    "era": "1922",
+    "title": "A city gives a set-up its name.",
+    "text": "Developing the bishop outside the pawn chain is an old idea. The 1922 London tournament helped establish this set-up, including Alekhine’s game against Euwe. It developed through many players’ practice rather than a single invention.",
+    "source": "https://www.chess.com/openings/London-System",
+    "image": {
+      "src": "/images/openings/alekhine.jpg",
+      "alt": "Alexander Alekhine in a historical image",
+      "caption": "Alexander Alekhine; a leading player at London 1922.",
+      "width": 1443,
+      "height": 2033,
+      "source": "https://commons.wikimedia.org/wiki/File:Alexandre_Alekhine_01.jpg",
+      "credit": "George Grantham Bain Collection (Library of Congress)",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "scotch-game": {
+    "era": "1750 · 1824",
+    "title": "A correspondence rivalry.",
+    "text": "Del Rio described the Scotch in 1750. Its name comes from the Edinburgh–London correspondence match begun in 1824. Kasparov revived interest in the opening through his world championship matches in the 1990s.",
+    "source": "https://www.chess.com/openings/Scotch-Game",
+    "image": {
+      "src": "/images/classics/kasparov.jpg",
+      "caption": "Garry Kasparov in 1999; a champion of the Scotch’s modern revival.",
+      "alt": "Garry Kasparov at the Frankfurt Chess Classics in July 1999",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kasparow001.jpg",
+      "credit": "dontworry / Wikimedia Commons",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "width": 600,
+      "height": 407,
+      "source": "https://commons.wikimedia.org/wiki/File:Kasparow001.jpg",
+      "licence": "CC BY-SA 3.0",
+      "licenceUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+    }
+  },
+  "vienna-game": {
+    "era": "19th century",
+    "title": "From Vienna’s chess circles.",
+    "text": "Recorded by the mid-nineteenth century, the Vienna gained support from masters based in the Austrian capital. Steinitz, Spielmann and Tartakower were among its exponents. Developing the queenside knight keeps White’s f-pawn free for an attack.",
+    "source": "https://www.chess.com/openings/Vienna-Game",
+    "image": {
+      "src": "/images/classics/steinitz.jpg",
+      "caption": "Wilhelm Steinitz, an influential exponent of the Vienna Game.",
+      "alt": "Archival portrait of Wilhelm Steinitz",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Steinitz,_William-4_-_DPLA_-_9eeab9ac335135c24b69ab7e36fc5354_(cropped).jpg",
+      "credit": "Fritz Schumann / Cleveland Public Library",
+      "license": "Public domain",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "width": 600,
+      "height": 722,
+      "source": "https://commons.wikimedia.org/wiki/File:Steinitz,_William-4_-_DPLA_-_9eeab9ac335135c24b69ab7e36fc5354_(cropped).jpg",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "petrov-defense": {
+    "era": "19th century",
+    "title": "A Russian namesake, an older idea.",
+    "text": "The defence is named after Alexander Petrov, the nineteenth-century Russian master. The underlying idea predates him and appears in early chess writing. Instead of protecting e5 immediately, Black counterattacks e4 with a knight.",
+    "source": "https://www.chess.com/openings/Petrovs-Defense",
+    "image": {
+      "src": "/images/openings/petrov.jpg",
+      "alt": "Alexander Petrov in a historical image",
+      "caption": "Alexander Petrov; 1871 engraving after a drawing by Pyotr Borel.",
+      "width": 464,
+      "height": 700,
+      "source": "https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B5%D0%B2%D0%B8%D1%87_(%D1%88%D0%B0%D1%85%D0%BC%D0%B0%D1%82%D0%B8%D1%81%D1%82).jpg",
+      "credit": "Рисовал П. Ф. Борель, гравировал Л. А. Серяков",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "scandinavian-defense": {
+    "era": "Early chess records",
+    "title": "An immediate challenge.",
+    "text": "The Scandinavian appears in very early recorded chess. Anderssen tried it against Morphy in 1858; Blackburne and Mieses later used it more regularly. In 1995, Anand brought it to a world championship match against Kasparov.",
+    "source": "https://www.chess.com/openings/Scandinavian-Defense",
+    "image": {
+      "src": "/images/classics/anderssen.jpg",
+      "caption": "Adolf Anderssen; an early master who tried the Scandinavian, not its inventor.",
+      "alt": "Adolf Anderssen in an archival portrait",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Anderssen,_Adolf_%22-5%22_-_DPLA_-_9ca464339f18b3d8be87fccc68c3ee73_(cropped).jpg",
+      "credit": "Creator unrecorded / Cleveland Public Library",
+      "license": "Public domain",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "width": 600,
+      "height": 653,
+      "source": "https://commons.wikimedia.org/wiki/File:Anderssen,_Adolf_%22-5%22_-_DPLA_-_9ca464339f18b3d8be87fccc68c3ee73_(cropped).jpg",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "slav-defense": {
+    "era": "Early 20th century",
+    "title": "A bishop kept outside the chain.",
+    "text": "Semyon Alapin helped develop Slav theory. The opening gained wider recognition through the Euwe–Alekhine world championship matches of the 1930s. Supporting d5 with the c-pawn leaves Black’s queen’s bishop free to develop.",
+    "source": "https://www.chess.com/openings/Slav-Defense",
+    "image": {
+      "src": "/images/openings/alekhine.jpg",
+      "alt": "Alexander Alekhine in a historical image",
+      "caption": "Alexander Alekhine; his world championship matches helped popularise the Slav.",
+      "width": 1443,
+      "height": 2033,
+      "source": "https://commons.wikimedia.org/wiki/File:Alexandre_Alekhine_01.jpg",
+      "credit": "George Grantham Bain Collection (Library of Congress)",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "nimzo-indian-defense": {
+    "era": "Early 20th century",
+    "title": "Nimzowitsch’s pressure on the centre.",
+    "text": "Aron Nimzowitsch was not the first to play this defence, but he was crucial to popularising it. The pin on c3 shows the hypermodern approach: pieces can restrain a pawn centre before Black commits central pawns.",
+    "source": "https://www.chess.com/openings/Nimzo-Indian-Defense",
+    "image": {
+      "src": "/images/openings/nimzowitsch.jpg",
+      "alt": "Aron Nimzowitsch in a historical image",
+      "caption": "Aron Nimzowitsch, who helped popularise the defence that bears his name.",
+      "width": 170,
+      "height": 244,
+      "source": "https://commons.wikimedia.org/wiki/File:Aron_Nimzowitsch.jpg",
+      "credit": "Not mentioned",
+      "licence": "Public domain",
+      "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  }
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": "classical",
+    "version": 1,
+    "name": "Classical Attack",
+    "idea": "Recover the central pawn, then support an active knight.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nf6",
+      "Nxe5",
+      "d6",
+      "Nf3",
+      "Nxe4",
+      "d4",
+      "d5",
+      "Bd3",
+      "Be7",
+      "O-O"
+    ],
+    "notes": [
+      "White claims the centre.",
+      "Match White’s central pawn.",
+      "White develops and attacks e5.",
+      "Counterattack e4 rather than simply defending e5.",
+      "White captures e5.",
+      "Chase the knight before recovering e4.",
+      "White retreats the knight.",
+      "Recover the pawn and centralise your knight.",
+      "White challenges the centre.",
+      "Support your advanced knight.",
+      "White develops and attacks e4.",
+      "Prepare to castle.",
+      "White secures the king. Do the same."
+    ],
+    "challenge": {
+      "prompt": "Castle kingside and bring your rook into the game.",
+      "hint": "Castle kingside and bring your rook into the game.",
+      "answers": [
+        "O-O"
+      ],
+      "explanation": "Recover the central pawn, then support an active knight."
+    }
+  },
+  {
+    "id": "steinitz",
+    "version": 1,
+    "name": "Steinitz Attack",
+    "idea": "Answer White’s central advance with concrete piece activity.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nf6",
+      "d4",
+      "Nxe4",
+      "Bd3",
+      "d5",
+      "Nxe5",
+      "Nd7",
+      "Nxd7",
+      "Bxd7",
+      "O-O"
+    ],
+    "notes": [
+      "White claims the centre.",
+      "Match White’s central pawn.",
+      "White develops and attacks e5.",
+      "Counterattack e4 rather than simply defending e5.",
+      "White challenges the centre immediately.",
+      "Capture e4 with the knight.",
+      "White develops with an attack on e4.",
+      "Support your central knight.",
+      "White captures e5.",
+      "Develop and challenge White’s advanced knight.",
+      "White exchanges knights.",
+      "Recapture with development.",
+      "White castles. Develop your f8-bishop to prepare your own castling."
+    ],
+    "challenge": {
+      "prompt": "Develop your dark-squared bishop actively towards h2.",
+      "hint": "Develop your dark-squared bishop actively towards h2.",
+      "answers": [
+        "Bd6"
+      ],
+      "explanation": "Answer White’s central advance with concrete piece activity."
+    }
+  },
+  {
+    "id": "three-knights",
+    "version": 1,
+    "name": "Three Knights · Four Knights",
+    "idea": "Transpose to a balanced open game and complete development.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nf6",
+      "Nc3",
+      "Nc6",
+      "Bb5",
+      "Bb4",
+      "O-O",
+      "O-O",
+      "d3",
+      "d6",
+      "Bg5"
+    ],
+    "notes": [
+      "White claims the centre.",
+      "Match White’s central pawn.",
+      "White develops and attacks e5.",
+      "Counterattack e4 rather than simply defending e5.",
+      "White defends e4 with another knight.",
+      "Develop and defend e5, reaching the Four Knights.",
+      "White pins your c6-knight.",
+      "Create a matching pin.",
+      "White castles and brings the rook towards the centre.",
+      "Secure your king too.",
+      "White supports e4.",
+      "Support e5 and free your bishop.",
+      "White pins f6. Break that pin by exchanging the c3-knight."
+    ],
+    "challenge": {
+      "prompt": "Exchange your b4-bishop for the c3-knight.",
+      "hint": "Exchange your b4-bishop for the c3-knight.",
+      "answers": [
+        "Bxc3"
+      ],
+      "explanation": "Transpose to a balanced open game and complete development."
+    }
+  }
+]

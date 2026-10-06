@@ -1,0 +1,128 @@
+[
+  {
+    "id": "gambit",
+    "version": 1,
+    "name": "Vienna Gambit",
+    "idea": "Meet the central counterstrike with development and king safety.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nc3",
+      "Nf6",
+      "f4",
+      "d5",
+      "fxe5",
+      "Nxe4",
+      "Nf3",
+      "Be7",
+      "d4",
+      "O-O"
+    ],
+    "notes": [
+      "Claim the centre.",
+      "Black meets your pawn.",
+      "Develop the queenside knight and keep the f-pawn free.",
+      "Black attacks e4.",
+      "Challenge Black’s e-pawn with your f-pawn.",
+      "Black strikes in the centre rather than grabbing f4.",
+      "Capture and gain space.",
+      "Black recovers a pawn with the knight.",
+      "Develop and prepare to secure the king.",
+      "Black prepares to castle.",
+      "Support e5 and open your bishop’s diagonal.",
+      "Black castles. Develop your f1-bishop towards the centre."
+    ],
+    "challenge": {
+      "prompt": "Develop your king’s bishop towards the centre.",
+      "hint": "Develop your king’s bishop towards the centre.",
+      "answers": [
+        "Bd3"
+      ],
+      "explanation": "Meet the central counterstrike with development and king safety."
+    }
+  },
+  {
+    "id": "fianchetto",
+    "version": 1,
+    "name": "Falkbeer · Mieses set-up",
+    "idea": "Keep a quiet centre and develop a long-diagonal bishop.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nc3",
+      "Nf6",
+      "g3",
+      "d5",
+      "exd5",
+      "Nxd5",
+      "Bg2",
+      "Nxc3",
+      "bxc3",
+      "Bd6"
+    ],
+    "notes": [
+      "Claim the centre.",
+      "Black meets your pawn.",
+      "Develop the queenside knight and keep the f-pawn free.",
+      "Black attacks e4.",
+      "Prepare a fianchetto.",
+      "Black challenges the centre.",
+      "Exchange the central pawns.",
+      "Black recaptures actively.",
+      "Develop with pressure down the diagonal.",
+      "Black exchanges your queenside knight.",
+      "Recapture and support a later d4 break.",
+      "Black develops the bishop. Bring the g1-knight out before castling."
+    ],
+    "challenge": {
+      "prompt": "Develop your king’s knight towards the centre.",
+      "hint": "Develop your king’s knight towards the centre.",
+      "answers": [
+        "Nf3"
+      ],
+      "explanation": "Keep a quiet centre and develop a long-diagonal bishop."
+    }
+  },
+  {
+    "id": "max-lange",
+    "version": 1,
+    "name": "Max Lange · quiet development",
+    "idea": "Develop naturally while preserving the option of a later f-pawn advance.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nc3",
+      "Nc6",
+      "Bc4",
+      "Nf6",
+      "d3",
+      "Bc5",
+      "Nf3",
+      "d6",
+      "O-O",
+      "O-O"
+    ],
+    "notes": [
+      "Claim the centre.",
+      "Black meets your pawn.",
+      "Develop the queenside knight and keep the f-pawn free.",
+      "Black develops the queenside knight.",
+      "Aim your bishop towards f7.",
+      "Black attacks e4.",
+      "Support e4 and free your queen’s bishop.",
+      "Black mirrors the bishop.",
+      "Develop and reinforce the centre.",
+      "Black supports e5.",
+      "Secure your king.",
+      "Black castles too. Pin the f6-knight to build pressure."
+    ],
+    "challenge": {
+      "prompt": "Develop your c1-bishop by pinning the f6-knight.",
+      "hint": "Develop your c1-bishop by pinning the f6-knight.",
+      "answers": [
+        "Bg5"
+      ],
+      "explanation": "Develop naturally while preserving the option of a later f-pawn advance."
+    }
+  }
+]

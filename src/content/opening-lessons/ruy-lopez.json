@@ -1,0 +1,140 @@
+[
+  {
+    "id": "closed",
+    "version": 1,
+    "name": "Closed Spanish",
+    "idea": "Keep the bishop pair and build towards a central d4 break.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "Bb5",
+      "a6",
+      "Ba4",
+      "Nf6",
+      "O-O",
+      "Be7",
+      "Re1",
+      "b5",
+      "Bb3",
+      "d6"
+    ],
+    "notes": [
+      "Claim the centre and open lines for development.",
+      "Black matches your central pawn.",
+      "Develop and attack e5.",
+      "Black develops and defends the pawn.",
+      "Attack the knight that helps defend Black’s centre.",
+      "Black asks your bishop to decide.",
+      "Preserve the bishop on its long diagonal.",
+      "Black develops and attacks e4.",
+      "Castle; the central tactics protect your pawn for now.",
+      "Black prepares to castle.",
+      "Support e4 and free the f1-square.",
+      "Black gains space and attacks the bishop.",
+      "Retreat while keeping pressure on f7.",
+      "Black supports e5. Prepare d4 with your c-pawn."
+    ],
+    "challenge": {
+      "prompt": "Prepare the central d4 break with a supporting pawn.",
+      "hint": "Prepare the central d4 break with a supporting pawn.",
+      "answers": [
+        "c3"
+      ],
+      "explanation": "Keep the bishop pair and build towards a central d4 break."
+    }
+  },
+  {
+    "id": "exchange",
+    "version": 1,
+    "name": "Exchange Spanish",
+    "idea": "Trade the bishop for a structural target, then secure your king.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "Bb5",
+      "a6",
+      "Bxc6",
+      "dxc6",
+      "O-O",
+      "f6",
+      "d4",
+      "exd4",
+      "Nxd4",
+      "c5"
+    ],
+    "notes": [
+      "Claim the centre and open lines for development.",
+      "Black matches your central pawn.",
+      "Develop and attack e5.",
+      "Black develops and defends the pawn.",
+      "Attack the knight that helps defend Black’s centre.",
+      "Black challenges your bishop.",
+      "Exchange and damage Black’s queenside structure.",
+      "Black opens lines for both bishops.",
+      "Secure your king before opening the centre.",
+      "Black supports e5.",
+      "Challenge the central pawn.",
+      "Black exchanges in the centre.",
+      "Recapture with an active knight.",
+      "Black attacks the knight. Retreat it towards b3, keeping the centre supported."
+    ],
+    "challenge": {
+      "prompt": "Move your attacked knight back to b3.",
+      "hint": "Move your attacked knight back to b3.",
+      "answers": [
+        "Nb3"
+      ],
+      "explanation": "Trade the bishop for a structural target, then secure your king."
+    }
+  },
+  {
+    "id": "berlin",
+    "version": 1,
+    "name": "Berlin · quiet d3",
+    "idea": "Keep the queens on and support e4 before building further.",
+    "moves": [
+      "e4",
+      "e5",
+      "Nf3",
+      "Nc6",
+      "Bb5",
+      "Nf6",
+      "d3",
+      "Bc5",
+      "c3",
+      "O-O",
+      "O-O",
+      "d6",
+      "Re1",
+      "a6"
+    ],
+    "notes": [
+      "Claim the centre and open lines for development.",
+      "Black matches your central pawn.",
+      "Develop and attack e5.",
+      "Black develops and defends the pawn.",
+      "Attack the knight that helps defend Black’s centre.",
+      "Black attacks e4 with the king’s knight.",
+      "Support e4 and avoid the early queen trade.",
+      "Black develops the bishop actively.",
+      "Prepare a later d4 advance.",
+      "Black secures the king.",
+      "Castle and connect your rook to the centre.",
+      "Black supports e5.",
+      "Reinforce e4 with the rook.",
+      "Black questions your bishop. Preserve it on a4."
+    ],
+    "challenge": {
+      "prompt": "Retreat your bishop to a4 and keep the pin.",
+      "hint": "Retreat your bishop to a4 and keep the pin.",
+      "answers": [
+        "Ba4"
+      ],
+      "explanation": "Keep the queens on and support e4 before building further."
+    }
+  }
+]

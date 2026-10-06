@@ -1,0 +1,134 @@
+[
+  {
+    "id": "qa5",
+    "version": 1,
+    "name": "Main line · …Qa5",
+    "idea": "Move the queen out of danger and develop behind a solid pawn structure.",
+    "moves": [
+      "e4",
+      "d5",
+      "exd5",
+      "Qxd5",
+      "Nc3",
+      "Qa5",
+      "d4",
+      "Nf6",
+      "Nf3",
+      "c6",
+      "Bc4",
+      "Bf5",
+      "Bd2"
+    ],
+    "notes": [
+      "White claims central space.",
+      "Challenge the centre immediately.",
+      "White takes your central pawn.",
+      "Recover the pawn with the queen.",
+      "White develops while attacking your queen.",
+      "Keep the queen active on the flank.",
+      "White takes central space.",
+      "Develop with control of e4.",
+      "White develops the king’s knight.",
+      "Support d5 and provide the queen a retreat square.",
+      "White develops towards f7.",
+      "Develop your bishop before closing the diagonal.",
+      "White unpins the knight. Support your centre and free the f8-bishop."
+    ],
+    "challenge": {
+      "prompt": "Advance the e-pawn one square to support the centre and free your bishop.",
+      "hint": "Advance the e-pawn one square to support the centre and free your bishop.",
+      "answers": [
+        "e6"
+      ],
+      "explanation": "Move the queen out of danger and develop behind a solid pawn structure."
+    }
+  },
+  {
+    "id": "qd6",
+    "version": 1,
+    "name": "…Qd6 system",
+    "idea": "Keep the queen near the centre and complete development quickly.",
+    "moves": [
+      "e4",
+      "d5",
+      "exd5",
+      "Qxd5",
+      "Nc3",
+      "Qd6",
+      "d4",
+      "Nf6",
+      "Nf3",
+      "c6",
+      "g3",
+      "Bf5",
+      "Bg2"
+    ],
+    "notes": [
+      "White claims central space.",
+      "Challenge the centre immediately.",
+      "White takes your central pawn.",
+      "Recover the pawn.",
+      "White develops with a threat to your queen.",
+      "Retreat while keeping the queen near the centre.",
+      "White takes space.",
+      "Develop towards e4.",
+      "White develops naturally.",
+      "Control d5 and make room for the queen.",
+      "White prepares a fianchetto.",
+      "Develop your bishop outside the pawn chain.",
+      "White completes the fianchetto. Prepare your other bishop’s development."
+    ],
+    "challenge": {
+      "prompt": "Support the centre and open the f8-bishop’s diagonal.",
+      "hint": "Support the centre and open the f8-bishop’s diagonal.",
+      "answers": [
+        "e6"
+      ],
+      "explanation": "Keep the queen near the centre and complete development quickly."
+    }
+  },
+  {
+    "id": "modern",
+    "version": 1,
+    "name": "Modern · …Nf6",
+    "idea": "Recover the pawn with a piece rather than exposing the queen.",
+    "moves": [
+      "e4",
+      "d5",
+      "exd5",
+      "Nf6",
+      "d4",
+      "Nxd5",
+      "Nf3",
+      "g6",
+      "Be2",
+      "Bg7",
+      "O-O",
+      "O-O",
+      "c4"
+    ],
+    "notes": [
+      "White claims central space.",
+      "Challenge the centre immediately.",
+      "White takes your central pawn.",
+      "Develop first and attack the captured pawn.",
+      "White takes central space.",
+      "Recover the pawn with the knight.",
+      "White develops towards the centre.",
+      "Prepare a fianchetto.",
+      "White prepares to castle.",
+      "Complete the fianchetto.",
+      "White castles and brings the rook towards the centre.",
+      "Secure your own king.",
+      "White attacks your central knight. Retreat it to b6."
+    ],
+    "challenge": {
+      "prompt": "Move the attacked knight from d5 to b6.",
+      "hint": "Move the attacked knight from d5 to b6.",
+      "answers": [
+        "Nb6"
+      ],
+      "explanation": "Recover the pawn with a piece rather than exposing the queen."
+    }
+  }
+]

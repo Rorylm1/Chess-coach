@@ -1,0 +1,134 @@
+[
+  {
+    "id": "main",
+    "version": 1,
+    "name": "Main line · …Bf5",
+    "idea": "Develop the queen’s bishop before closing the centre with …e6.",
+    "moves": [
+      "d4",
+      "d5",
+      "c4",
+      "c6",
+      "Nf3",
+      "Nf6",
+      "Nc3",
+      "dxc4",
+      "a4",
+      "Bf5",
+      "e3",
+      "e6",
+      "Bxc4"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Meet the pawn in the centre.",
+      "White challenges d5 with a wing pawn.",
+      "Support d5 while keeping the c8-bishop free.",
+      "White develops towards the centre.",
+      "Develop and control e4.",
+      "White adds pressure to d5.",
+      "Capture c4 once White has committed the knight.",
+      "White prevents …b5 from holding the pawn.",
+      "Develop your bishop outside the pawn chain.",
+      "White opens the f1-bishop’s diagonal.",
+      "Support the centre and free your other bishop.",
+      "White recovers the pawn. Develop the f8-bishop to a useful central diagonal."
+    ],
+    "challenge": {
+      "prompt": "Develop your dark-squared bishop to b4 and pin the c3-knight.",
+      "hint": "Develop your dark-squared bishop to b4 and pin the c3-knight.",
+      "answers": [
+        "Bb4"
+      ],
+      "explanation": "Develop the queen’s bishop before closing the centre with …e6."
+    }
+  },
+  {
+    "id": "exchange",
+    "version": 1,
+    "name": "Exchange Slav",
+    "idea": "Use active pieces to make a symmetrical pawn structure useful.",
+    "moves": [
+      "d4",
+      "d5",
+      "c4",
+      "c6",
+      "cxd5",
+      "cxd5",
+      "Nc3",
+      "Nf6",
+      "Nf3",
+      "Nc6",
+      "Bf4",
+      "Bf5",
+      "e3"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Meet the pawn in the centre.",
+      "White challenges d5 with a wing pawn.",
+      "Support d5 while keeping the c8-bishop free.",
+      "White exchanges the c-pawn.",
+      "Recapture towards the centre.",
+      "White develops naturally.",
+      "Develop your king’s knight.",
+      "White brings out the other knight.",
+      "Increase central control.",
+      "White develops the bishop before e3.",
+      "Match that active development.",
+      "White supports d4. Free your dark-squared bishop without blocking the bishop already on f5."
+    ],
+    "challenge": {
+      "prompt": "Support d5 and free your f8-bishop with …e6.",
+      "hint": "Support d5 and free your f8-bishop with …e6.",
+      "answers": [
+        "e6"
+      ],
+      "explanation": "Use active pieces to make a symmetrical pawn structure useful."
+    }
+  },
+  {
+    "id": "quiet",
+    "version": 1,
+    "name": "Quiet Slav · e3",
+    "idea": "Keep the bishop active while White builds a compact centre.",
+    "moves": [
+      "d4",
+      "d5",
+      "c4",
+      "c6",
+      "Nf3",
+      "Nf6",
+      "e3",
+      "Bf5",
+      "Bd3",
+      "Bxd3",
+      "Qxd3",
+      "e6",
+      "O-O"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Meet the pawn in the centre.",
+      "White challenges d5 with a wing pawn.",
+      "Support d5 while keeping the c8-bishop free.",
+      "White develops naturally.",
+      "Develop towards e4.",
+      "White supports d4 but closes the c1-bishop’s diagonal.",
+      "Develop your bishop before playing …e6.",
+      "White offers a bishop exchange.",
+      "Exchange the bishop while it has a useful target.",
+      "White recaptures with the queen.",
+      "Build your pawn chain and free the f8-bishop.",
+      "White castles. Develop the b8-knight without blocking the c-pawn."
+    ],
+    "challenge": {
+      "prompt": "Develop your queenside knight to d7.",
+      "hint": "Develop your queenside knight to d7.",
+      "answers": [
+        "Nbd7"
+      ],
+      "explanation": "Keep the bishop active while White builds a compact centre."
+    }
+  }
+]

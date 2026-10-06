@@ -1,0 +1,128 @@
+[
+  {
+    "id": "classical",
+    "version": 1,
+    "name": "Against …d5",
+    "idea": "Build a compact centre while keeping the dark-squared bishop active.",
+    "moves": [
+      "d4",
+      "d5",
+      "Nf3",
+      "Nf6",
+      "Bf4",
+      "e6",
+      "e3",
+      "Bd6",
+      "Bg3",
+      "O-O",
+      "Bd3",
+      "c5"
+    ],
+    "notes": [
+      "Take central space and prepare to develop the queen’s bishop outside the pawn chain.",
+      "Black meets your central pawn.",
+      "Develop towards the centre.",
+      "Black develops naturally.",
+      "Bring the bishop outside your future pawn chain.",
+      "Black supports d5.",
+      "Support d4 and free the f1-bishop.",
+      "Black challenges your active bishop.",
+      "Retreat while preserving the bishop.",
+      "Black castles and brings the rook towards the centre.",
+      "Develop the other bishop towards h7.",
+      "Black attacks d4. Support the centre with c3."
+    ],
+    "challenge": {
+      "prompt": "Support your d4-pawn with the c-pawn.",
+      "hint": "Support your d4-pawn with the c-pawn.",
+      "answers": [
+        "c3"
+      ],
+      "explanation": "Build a compact centre while keeping the dark-squared bishop active."
+    }
+  },
+  {
+    "id": "indian",
+    "version": 1,
+    "name": "Against a fianchetto",
+    "idea": "Keep the London structure and prepare a central e4 break.",
+    "moves": [
+      "d4",
+      "Nf6",
+      "Nf3",
+      "g6",
+      "Bf4",
+      "Bg7",
+      "e3",
+      "d6",
+      "h3",
+      "O-O",
+      "Be2",
+      "Nbd7"
+    ],
+    "notes": [
+      "Take central space and prepare to develop the queen’s bishop outside the pawn chain.",
+      "Black controls e4 with a piece.",
+      "Develop the king’s knight.",
+      "Black prepares a fianchetto.",
+      "Develop the queen’s bishop actively.",
+      "Black takes the long diagonal.",
+      "Support your centre.",
+      "Black controls e5.",
+      "Give your f4-bishop a retreat square on h2.",
+      "Black secures the king.",
+      "Prepare to castle.",
+      "Black develops behind the centre. Secure your own king now."
+    ],
+    "challenge": {
+      "prompt": "Castle kingside before beginning your central expansion.",
+      "hint": "Castle kingside before beginning your central expansion.",
+      "answers": [
+        "O-O"
+      ],
+      "explanation": "Keep the London structure and prepare a central e4 break."
+    }
+  },
+  {
+    "id": "early-c5",
+    "version": 1,
+    "name": "Against early …c5",
+    "idea": "Support d4 and respond to pressure without abandoning development.",
+    "moves": [
+      "d4",
+      "d5",
+      "Bf4",
+      "c5",
+      "e3",
+      "Nc6",
+      "c3",
+      "Nf6",
+      "Nd2",
+      "e6",
+      "Ngf3",
+      "Bd6"
+    ],
+    "notes": [
+      "Take central space and prepare to develop the queen’s bishop outside the pawn chain.",
+      "Black takes central space.",
+      "Develop the bishop before closing the diagonal.",
+      "Black attacks d4 immediately.",
+      "Support d4 and free the f1-bishop.",
+      "Black adds pressure to d4.",
+      "Build a solid pawn chain.",
+      "Black develops towards e4.",
+      "Develop without blocking the c-pawn.",
+      "Black supports d5.",
+      "Develop your other knight.",
+      "Black challenges your bishop. Keep it active by retreating to g3."
+    ],
+    "challenge": {
+      "prompt": "Preserve your dark-squared bishop by retreating to g3.",
+      "hint": "Preserve your dark-squared bishop by retreating to g3.",
+      "answers": [
+        "Bg3"
+      ],
+      "explanation": "Support d4 and respond to pressure without abandoning development."
+    }
+  }
+]

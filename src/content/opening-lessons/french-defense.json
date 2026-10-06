@@ -1,0 +1,134 @@
+[
+  {
+    "id": "advance",
+    "version": 1,
+    "name": "Advance Variation",
+    "idea": "Attack the base of White’s pawn chain rather than its head.",
+    "moves": [
+      "e4",
+      "e6",
+      "d4",
+      "d5",
+      "e5",
+      "c5",
+      "c3",
+      "Nc6",
+      "Nf3",
+      "Qb6",
+      "a3",
+      "Nh6",
+      "b4"
+    ],
+    "notes": [
+      "White claims central space.",
+      "Prepare …d5 with a supporting pawn.",
+      "White builds a broad centre.",
+      "Challenge e4 and ask White to define the pawn structure.",
+      "White locks the centre and gains space.",
+      "Strike at d4, the base of the pawn chain.",
+      "White supports d4.",
+      "Add another attacker to d4.",
+      "White develops and defends d4.",
+      "Increase pressure on d4 and b2.",
+      "White prepares queenside expansion.",
+      "Route the knight towards f5, where it can attack d4.",
+      "White gains space on the queenside. Exchange on d4 before placing the h6-knight on f5."
+    ],
+    "challenge": {
+      "prompt": "Resolve the central tension by exchanging on d4.",
+      "hint": "Your c5-pawn can capture the d4-pawn.",
+      "answers": [
+        "cxd4"
+      ],
+      "explanation": "Exchanging on d4 first changes the pawn structure before you improve the h6-knight."
+    }
+  },
+  {
+    "id": "exchange",
+    "version": 1,
+    "name": "Exchange Variation",
+    "idea": "A symmetrical structure still rewards active development.",
+    "moves": [
+      "e4",
+      "e6",
+      "d4",
+      "d5",
+      "exd5",
+      "exd5",
+      "Nf3",
+      "Nf6",
+      "Bd3",
+      "Bd6",
+      "O-O",
+      "O-O",
+      "Re1"
+    ],
+    "notes": [
+      "White claims central space.",
+      "Prepare …d5 with a supporting pawn.",
+      "White builds a broad centre.",
+      "Challenge e4 and ask White to define the pawn structure.",
+      "White releases the central tension.",
+      "Recapture with the e-pawn and open your bishop’s diagonal.",
+      "White develops towards the centre.",
+      "Develop your king’s knight.",
+      "White aims a bishop towards h7.",
+      "Develop your own bishop actively.",
+      "White secures the king.",
+      "Castle and connect your king with safety.",
+      "White occupies the open e-file. Contest it with your rook."
+    ],
+    "challenge": {
+      "prompt": "Bring your f8-rook to the open e-file.",
+      "hint": "Bring your f8-rook to the open e-file.",
+      "answers": [
+        "Re8"
+      ],
+      "explanation": "A symmetrical structure still rewards active development."
+    }
+  },
+  {
+    "id": "classical",
+    "version": 1,
+    "name": "Classical · Steinitz structure",
+    "idea": "Meet White’s space with pressure on d4 and timely pawn breaks.",
+    "moves": [
+      "e4",
+      "e6",
+      "d4",
+      "d5",
+      "Nc3",
+      "Nf6",
+      "e5",
+      "Nfd7",
+      "f4",
+      "c5",
+      "Nf3",
+      "Nc6",
+      "Be3"
+    ],
+    "notes": [
+      "White claims central space.",
+      "Prepare …d5 with a supporting pawn.",
+      "White builds a broad centre.",
+      "Challenge e4 and ask White to define the pawn structure.",
+      "White develops and supports e4.",
+      "Attack e4 and develop.",
+      "White gains space by chasing your knight.",
+      "Retreat while keeping the c-pawn free to advance.",
+      "White supports the advanced centre.",
+      "Attack the base of the pawn chain.",
+      "White brings another defender to d4.",
+      "Increase your pressure on d4.",
+      "White develops the bishop. Your queen can add pressure on the same central target."
+    ],
+    "challenge": {
+      "prompt": "Develop the queen to b6, adding pressure on d4 and b2.",
+      "hint": "Develop the queen to b6, adding pressure on d4 and b2.",
+      "answers": [
+        "Qb6"
+      ],
+      "explanation": "Meet White’s space with pressure on d4 and timely pawn breaks."
+    }
+  }
+]

@@ -1,0 +1,1580 @@
+{
+  "engine": "Stockfish 18 lite single",
+  "depth": 18,
+  "date": "2026-10-06T16:24:31.341Z",
+  "results": [
+    {
+      "slug": "caro-kann-defense",
+      "line": "advance",
+      "moves": [
+        "e4",
+        "c6",
+        "d4",
+        "d5",
+        "e5",
+        "Bf5",
+        "Nf3",
+        "e6",
+        "Be2",
+        "c5",
+        "O-O",
+        "Nc6",
+        "Be3"
+      ],
+      "fen": "r2qkbnr/pp3ppp/2n1p3/2ppPb2/3P4/4BN2/PPP1BPPP/RN1Q1RK1 b kq - 3 7",
+      "baseline": {
+        "type": "cp",
+        "value": -21,
+        "bestmove": "c5d4"
+      },
+      "answers": [
+        {
+          "san": "Nge7",
+          "type": "cp",
+          "value": -79,
+          "bestmove": "g8e7",
+          "lossCp": 58
+        }
+      ]
+    },
+    {
+      "slug": "caro-kann-defense",
+      "line": "classical",
+      "moves": [
+        "e4",
+        "c6",
+        "d4",
+        "d5",
+        "Nc3",
+        "dxe4",
+        "Nxe4",
+        "Bf5",
+        "Ng3",
+        "Bg6",
+        "h4",
+        "h6",
+        "Nf3"
+      ],
+      "fen": "rn1qkbnr/pp2ppp1/2p3bp/8/3P3P/5NN1/PPP2PP1/R1BQKB1R b KQkq - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": -41,
+        "bestmove": "b8d7"
+      },
+      "answers": [
+        {
+          "san": "Nd7",
+          "type": "cp",
+          "value": -40,
+          "bestmove": "b8d7",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "caro-kann-defense",
+      "line": "exchange",
+      "moves": [
+        "e4",
+        "c6",
+        "d4",
+        "d5",
+        "exd5",
+        "cxd5",
+        "Bd3",
+        "Nc6",
+        "c3",
+        "Nf6",
+        "Bf4",
+        "Bg4",
+        "Qb3"
+      ],
+      "fen": "r2qkb1r/pp2pppp/2n2n2/3p4/3P1Bb1/1QPB4/PP3PPP/RN2K1NR b KQkq - 4 7",
+      "baseline": {
+        "type": "cp",
+        "value": -23,
+        "bestmove": "d8d7"
+      },
+      "answers": [
+        {
+          "san": "Qd7",
+          "type": "cp",
+          "value": -11,
+          "bestmove": "d8d7",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "english-opening",
+      "line": "reversed",
+      "moves": [
+        "c4",
+        "e5",
+        "Nc3",
+        "Nf6",
+        "g3",
+        "d5",
+        "cxd5",
+        "Nxd5",
+        "Bg2",
+        "Nb6",
+        "Nf3",
+        "Nc6"
+      ],
+      "fen": "r1bqkb1r/ppp2ppp/1nn5/4p3/8/2N2NP1/PP1PPPBP/R1BQK2R w KQkq - 4 7",
+      "baseline": {
+        "type": "cp",
+        "value": 17,
+        "bestmove": "a2a3"
+      },
+      "answers": [
+        {
+          "san": "O-O",
+          "type": "cp",
+          "value": 20,
+          "bestmove": "e1g1",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "english-opening",
+      "line": "symmetrical",
+      "moves": [
+        "c4",
+        "c5",
+        "Nc3",
+        "Nc6",
+        "g3",
+        "g6",
+        "Bg2",
+        "Bg7",
+        "Nf3",
+        "Nf6",
+        "O-O",
+        "O-O"
+      ],
+      "fen": "r1bq1rk1/pp1pppbp/2n2np1/2p5/2P5/2N2NP1/PP1PPPBP/R1BQ1RK1 w - - 6 7",
+      "baseline": {
+        "type": "cp",
+        "value": 45,
+        "bestmove": "d2d4"
+      },
+      "answers": [
+        {
+          "san": "d4",
+          "type": "cp",
+          "value": 46,
+          "bestmove": "d2d4",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "english-opening",
+      "line": "four-knights",
+      "moves": [
+        "c4",
+        "e5",
+        "Nc3",
+        "Nf6",
+        "Nf3",
+        "Nc6",
+        "g3",
+        "Bb4",
+        "Bg2",
+        "O-O",
+        "O-O",
+        "e4"
+      ],
+      "fen": "r1bq1rk1/pppp1ppp/2n2n2/8/1bP1p3/2N2NP1/PP1PPPBP/R1BQ1RK1 w - - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": 5,
+        "bestmove": "f3g5"
+      },
+      "answers": [
+        {
+          "san": "Ng5",
+          "type": "cp",
+          "value": -2,
+          "bestmove": "f3g5",
+          "lossCp": 7
+        }
+      ]
+    },
+    {
+      "slug": "french-defense",
+      "line": "advance",
+      "moves": [
+        "e4",
+        "e6",
+        "d4",
+        "d5",
+        "e5",
+        "c5",
+        "c3",
+        "Nc6",
+        "Nf3",
+        "Qb6",
+        "a3",
+        "Nh6",
+        "b4"
+      ],
+      "fen": "r1b1kb1r/pp3ppp/1qn1p2n/2ppP3/1P1P4/P1P2N2/5PPP/RNBQKB1R b KQkq - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": -66,
+        "bestmove": "c5d4"
+      },
+      "answers": [
+        {
+          "san": "cxd4",
+          "type": "cp",
+          "value": -38,
+          "bestmove": "c5d4",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "french-defense",
+      "line": "exchange",
+      "moves": [
+        "e4",
+        "e6",
+        "d4",
+        "d5",
+        "exd5",
+        "exd5",
+        "Nf3",
+        "Nf6",
+        "Bd3",
+        "Bd6",
+        "O-O",
+        "O-O",
+        "Re1"
+      ],
+      "fen": "rnbq1rk1/ppp2ppp/3b1n2/3p4/3P4/3B1N2/PPP2PPP/RNBQR1K1 b - - 7 7",
+      "baseline": {
+        "type": "cp",
+        "value": -18,
+        "bestmove": "b8c6"
+      },
+      "answers": [
+        {
+          "san": "Re8",
+          "type": "cp",
+          "value": -24,
+          "bestmove": "f8e8",
+          "lossCp": 6
+        }
+      ]
+    },
+    {
+      "slug": "french-defense",
+      "line": "classical",
+      "moves": [
+        "e4",
+        "e6",
+        "d4",
+        "d5",
+        "Nc3",
+        "Nf6",
+        "e5",
+        "Nfd7",
+        "f4",
+        "c5",
+        "Nf3",
+        "Nc6",
+        "Be3"
+      ],
+      "fen": "r1bqkb1r/pp1n1ppp/2n1p3/2ppP3/3P1P2/2N1BN2/PPP3PP/R2QKB1R b KQkq - 3 7",
+      "baseline": {
+        "type": "cp",
+        "value": -37,
+        "bestmove": "c5d4"
+      },
+      "answers": [
+        {
+          "san": "Qb6",
+          "type": "cp",
+          "value": -32,
+          "bestmove": "d8b6",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "italian-game",
+      "line": "pianissimo",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bc4",
+        "Bc5",
+        "c3",
+        "Nf6",
+        "d3",
+        "d6",
+        "O-O",
+        "O-O"
+      ],
+      "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQ1RK1 w - - 2 7",
+      "baseline": {
+        "type": "cp",
+        "value": 27,
+        "bestmove": "h2h3"
+      },
+      "answers": [
+        {
+          "san": "Re1",
+          "type": "cp",
+          "value": 27,
+          "bestmove": "f1e1",
+          "lossCp": 0
+        },
+        {
+          "san": "Nbd2",
+          "type": "cp",
+          "value": 22,
+          "bestmove": "b1d2",
+          "lossCp": 5
+        }
+      ]
+    },
+    {
+      "slug": "italian-game",
+      "line": "centre",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bc4",
+        "Bc5",
+        "c3",
+        "Nf6",
+        "d4",
+        "exd4",
+        "cxd4",
+        "Bb4+",
+        "Bd2",
+        "Bxd2+"
+      ],
+      "fen": "r1bqk2r/pppp1ppp/2n2n2/8/2BPP3/5N2/PP1b1PPP/RN1QK2R w KQkq - 0 8",
+      "baseline": {
+        "type": "cp",
+        "value": 0,
+        "bestmove": "b1d2"
+      },
+      "answers": [
+        {
+          "san": "Nbxd2",
+          "type": "cp",
+          "value": 6,
+          "bestmove": "b1d2",
+          "lossCp": 0
+        },
+        {
+          "san": "Qxd2",
+          "type": "cp",
+          "value": -38,
+          "bestmove": "d1d2",
+          "lossCp": 38
+        }
+      ]
+    },
+    {
+      "slug": "italian-game",
+      "line": "two-knights",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bc4",
+        "Nf6",
+        "d3",
+        "Bc5",
+        "O-O",
+        "d6",
+        "c3",
+        "O-O"
+      ],
+      "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQ1RK1 w - - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": 22,
+        "bestmove": "h2h3"
+      },
+      "answers": [
+        {
+          "san": "Re1",
+          "type": "cp",
+          "value": 27,
+          "bestmove": "f1e1",
+          "lossCp": 0
+        },
+        {
+          "san": "Nbd2",
+          "type": "cp",
+          "value": 23,
+          "bestmove": "b1d2",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "italian-game",
+      "line": "evans",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bc4",
+        "Bc5",
+        "b4",
+        "Bxb4",
+        "c3",
+        "Ba5",
+        "d4",
+        "exd4"
+      ],
+      "fen": "r1bqk1nr/pppp1ppp/2n5/b7/2BpP3/2P2N2/P4PPP/RNBQK2R w KQkq - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": 22,
+        "bestmove": "d1b3"
+      },
+      "answers": [
+        {
+          "san": "O-O",
+          "type": "cp",
+          "value": 12,
+          "bestmove": "e1g1",
+          "lossCp": 10
+        }
+      ]
+    },
+    {
+      "slug": "kings-indian-defense",
+      "line": "classical",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "g6",
+        "Nc3",
+        "Bg7",
+        "e4",
+        "d6",
+        "Nf3",
+        "O-O",
+        "Be2",
+        "e5",
+        "O-O"
+      ],
+      "fen": "rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N2N2/PP2BPPP/R1BQ1RK1 b - - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": -58,
+        "bestmove": "e5d4"
+      },
+      "answers": [
+        {
+          "san": "Nc6",
+          "type": "cp",
+          "value": -52,
+          "bestmove": "b8c6",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "kings-indian-defense",
+      "line": "samisch",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "g6",
+        "Nc3",
+        "Bg7",
+        "e4",
+        "d6",
+        "f3",
+        "O-O",
+        "Be3",
+        "c5",
+        "d5"
+      ],
+      "fen": "rnbq1rk1/pp2ppbp/3p1np1/2pP4/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": -30,
+        "bestmove": "e7e6"
+      },
+      "answers": [
+        {
+          "san": "Na6",
+          "type": "cp",
+          "value": -61,
+          "bestmove": "b8a6",
+          "lossCp": 31
+        }
+      ]
+    },
+    {
+      "slug": "kings-indian-defense",
+      "line": "fianchetto",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "g6",
+        "Nc3",
+        "Bg7",
+        "Nf3",
+        "O-O",
+        "g3",
+        "d6",
+        "Bg2",
+        "Nbd7",
+        "O-O"
+      ],
+      "fen": "r1bq1rk1/pppnppbp/3p1np1/8/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 3 7",
+      "baseline": {
+        "type": "cp",
+        "value": -61,
+        "bestmove": "e7e5"
+      },
+      "answers": [
+        {
+          "san": "e5",
+          "type": "cp",
+          "value": -54,
+          "bestmove": "e7e5",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "london-system",
+      "line": "classical",
+      "moves": [
+        "d4",
+        "d5",
+        "Nf3",
+        "Nf6",
+        "Bf4",
+        "e6",
+        "e3",
+        "Bd6",
+        "Bg3",
+        "O-O",
+        "Bd3",
+        "c5"
+      ],
+      "fen": "rnbq1rk1/pp3ppp/3bpn2/2pp4/3P4/3BPNB1/PPP2PPP/RN1QK2R w KQ - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": 10,
+        "bestmove": "d4c5"
+      },
+      "answers": [
+        {
+          "san": "c3",
+          "type": "cp",
+          "value": 0,
+          "bestmove": "c2c3",
+          "lossCp": 10
+        }
+      ]
+    },
+    {
+      "slug": "london-system",
+      "line": "indian",
+      "moves": [
+        "d4",
+        "Nf6",
+        "Nf3",
+        "g6",
+        "Bf4",
+        "Bg7",
+        "e3",
+        "d6",
+        "h3",
+        "O-O",
+        "Be2",
+        "Nbd7"
+      ],
+      "fen": "r1bq1rk1/pppnppbp/3p1np1/8/3P1B2/4PN1P/PPP1BPP1/RN1QK2R w KQ - 3 7",
+      "baseline": {
+        "type": "cp",
+        "value": 16,
+        "bestmove": "e1g1"
+      },
+      "answers": [
+        {
+          "san": "O-O",
+          "type": "cp",
+          "value": 16,
+          "bestmove": "e1g1",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "london-system",
+      "line": "early-c5",
+      "moves": [
+        "d4",
+        "d5",
+        "Bf4",
+        "c5",
+        "e3",
+        "Nc6",
+        "c3",
+        "Nf6",
+        "Nd2",
+        "e6",
+        "Ngf3",
+        "Bd6"
+      ],
+      "fen": "r1bqk2r/pp3ppp/2nbpn2/2pp4/3P1B2/2P1PN2/PP1N1PPP/R2QKB1R w KQkq - 2 7",
+      "baseline": {
+        "type": "cp",
+        "value": 13,
+        "bestmove": "f4g3"
+      },
+      "answers": [
+        {
+          "san": "Bg3",
+          "type": "cp",
+          "value": 26,
+          "bestmove": "f4g3",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "nimzo-indian-defense",
+      "line": "rubinstein",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "e6",
+        "Nc3",
+        "Bb4",
+        "e3",
+        "O-O",
+        "Bd3",
+        "d5",
+        "Nf3",
+        "c5",
+        "O-O"
+      ],
+      "fen": "rnbq1rk1/pp3ppp/4pn2/2pp4/1bPP4/2NBPN2/PP3PPP/R1BQ1RK1 b - - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": -21,
+        "bestmove": "d5c4"
+      },
+      "answers": [
+        {
+          "san": "Nc6",
+          "type": "cp",
+          "value": -36,
+          "bestmove": "b8c6",
+          "lossCp": 15
+        }
+      ]
+    },
+    {
+      "slug": "nimzo-indian-defense",
+      "line": "classical",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "e6",
+        "Nc3",
+        "Bb4",
+        "Qc2",
+        "O-O",
+        "a3",
+        "Bxc3+",
+        "Qxc3",
+        "d5",
+        "Nf3"
+      ],
+      "fen": "rnbq1rk1/ppp2ppp/4pn2/3p4/2PP4/P1Q2N2/1P2PPPP/R1B1KB1R b KQ - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": -15,
+        "bestmove": "b7b6"
+      },
+      "answers": [
+        {
+          "san": "c5",
+          "type": "cp",
+          "value": -53,
+          "bestmove": "c7c5",
+          "lossCp": 38
+        }
+      ]
+    },
+    {
+      "slug": "nimzo-indian-defense",
+      "line": "samisch",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "e6",
+        "Nc3",
+        "Bb4",
+        "a3",
+        "Bxc3+",
+        "bxc3",
+        "c5",
+        "e3",
+        "Nc6",
+        "Bd3"
+      ],
+      "fen": "r1bqk2r/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR b KQkq - 2 7",
+      "baseline": {
+        "type": "cp",
+        "value": -24,
+        "bestmove": "d7d6"
+      },
+      "answers": [
+        {
+          "san": "O-O",
+          "type": "cp",
+          "value": -27,
+          "bestmove": "e8g8",
+          "lossCp": 3
+        }
+      ]
+    },
+    {
+      "slug": "petrov-defense",
+      "line": "classical",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nf6",
+        "Nxe5",
+        "d6",
+        "Nf3",
+        "Nxe4",
+        "d4",
+        "d5",
+        "Bd3",
+        "Be7",
+        "O-O"
+      ],
+      "fen": "rnbqk2r/ppp1bppp/8/3p4/3Pn3/3B1N2/PPP2PPP/RNBQ1RK1 b kq - 3 7",
+      "baseline": {
+        "type": "cp",
+        "value": -40,
+        "bestmove": "c8f5"
+      },
+      "answers": [
+        {
+          "san": "O-O",
+          "type": "cp",
+          "value": -46,
+          "bestmove": "e8g8",
+          "lossCp": 6
+        }
+      ]
+    },
+    {
+      "slug": "petrov-defense",
+      "line": "steinitz",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nf6",
+        "d4",
+        "Nxe4",
+        "Bd3",
+        "d5",
+        "Nxe5",
+        "Nd7",
+        "Nxd7",
+        "Bxd7",
+        "O-O"
+      ],
+      "fen": "r2qkb1r/pppb1ppp/8/3p4/3Pn3/3B4/PPP2PPP/RNBQ1RK1 b kq - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": -43,
+        "bestmove": "d8f6"
+      },
+      "answers": [
+        {
+          "san": "Bd6",
+          "type": "cp",
+          "value": -30,
+          "bestmove": "f8d6",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "petrov-defense",
+      "line": "three-knights",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nf6",
+        "Nc3",
+        "Nc6",
+        "Bb5",
+        "Bb4",
+        "O-O",
+        "O-O",
+        "d3",
+        "d6",
+        "Bg5"
+      ],
+      "fen": "r1bq1rk1/ppp2ppp/2np1n2/1B2p1B1/1b2P3/2NP1N2/PPP2PPP/R2Q1RK1 b - - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": -23,
+        "bestmove": "b4c3"
+      },
+      "answers": [
+        {
+          "san": "Bxc3",
+          "type": "cp",
+          "value": -20,
+          "bestmove": "b4c3",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "queens-gambit",
+      "line": "declined",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "e6",
+        "Nc3",
+        "Nf6",
+        "Bg5",
+        "Be7",
+        "e3",
+        "O-O",
+        "Nf3",
+        "Nbd7"
+      ],
+      "fen": "r1bq1rk1/pppnbppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/R2QKB1R w KQ - 3 7",
+      "baseline": {
+        "type": "cp",
+        "value": 20,
+        "bestmove": "a1c1"
+      },
+      "answers": [
+        {
+          "san": "Bd3",
+          "type": "cp",
+          "value": 20,
+          "bestmove": "f1d3",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "queens-gambit",
+      "line": "accepted",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "dxc4",
+        "Nf3",
+        "Nf6",
+        "e3",
+        "e6",
+        "Bxc4",
+        "c5",
+        "O-O",
+        "a6"
+      ],
+      "fen": "rnbqkb1r/1p3ppp/p3pn2/2p5/2BP4/4PN2/PP3PPP/RNBQ1RK1 w kq - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": 41,
+        "bestmove": "d4c5"
+      },
+      "answers": [
+        {
+          "san": "Qe2",
+          "type": "cp",
+          "value": 23,
+          "bestmove": "d1e2",
+          "lossCp": 18
+        }
+      ]
+    },
+    {
+      "slug": "queens-gambit",
+      "line": "slav",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "c6",
+        "Nf3",
+        "Nf6",
+        "Nc3",
+        "dxc4",
+        "a4",
+        "Bf5",
+        "e3",
+        "e6"
+      ],
+      "fen": "rn1qkb1r/pp3ppp/2p1pn2/5b2/P1pP4/2N1PN2/1P3PPP/R1BQKB1R w KQkq - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": 37,
+        "bestmove": "f1c4"
+      },
+      "answers": [
+        {
+          "san": "Bxc4",
+          "type": "cp",
+          "value": 33,
+          "bestmove": "f1c4",
+          "lossCp": 4
+        }
+      ]
+    },
+    {
+      "slug": "ruy-lopez",
+      "line": "closed",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bb5",
+        "a6",
+        "Ba4",
+        "Nf6",
+        "O-O",
+        "Be7",
+        "Re1",
+        "b5",
+        "Bb3",
+        "d6"
+      ],
+      "fen": "r1bqk2r/2p1bppp/p1np1n2/1p2p3/4P3/1B3N2/PPPP1PPP/RNBQR1K1 w kq - 0 8",
+      "baseline": {
+        "type": "cp",
+        "value": 53,
+        "bestmove": "c2c3"
+      },
+      "answers": [
+        {
+          "san": "c3",
+          "type": "cp",
+          "value": 55,
+          "bestmove": "c2c3",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "ruy-lopez",
+      "line": "exchange",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bb5",
+        "a6",
+        "Bxc6",
+        "dxc6",
+        "O-O",
+        "f6",
+        "d4",
+        "exd4",
+        "Nxd4",
+        "c5"
+      ],
+      "fen": "r1bqkbnr/1pp3pp/p4p2/2p5/3NP3/8/PPP2PPP/RNBQ1RK1 w kq - 0 8",
+      "baseline": {
+        "type": "cp",
+        "value": 8,
+        "bestmove": "d4b3"
+      },
+      "answers": [
+        {
+          "san": "Nb3",
+          "type": "cp",
+          "value": 8,
+          "bestmove": "d4b3",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "ruy-lopez",
+      "line": "berlin",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bb5",
+        "Nf6",
+        "d3",
+        "Bc5",
+        "c3",
+        "O-O",
+        "O-O",
+        "d6",
+        "Re1",
+        "a6"
+      ],
+      "fen": "r1bq1rk1/1pp2ppp/p1np1n2/1Bb1p3/4P3/2PP1N2/PP3PPP/RNBQR1K1 w - - 0 8",
+      "baseline": {
+        "type": "cp",
+        "value": 23,
+        "bestmove": "b5c6"
+      },
+      "answers": [
+        {
+          "san": "Ba4",
+          "type": "cp",
+          "value": 31,
+          "bestmove": "b5a4",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "scandinavian-defense",
+      "line": "qa5",
+      "moves": [
+        "e4",
+        "d5",
+        "exd5",
+        "Qxd5",
+        "Nc3",
+        "Qa5",
+        "d4",
+        "Nf6",
+        "Nf3",
+        "c6",
+        "Bc4",
+        "Bf5",
+        "Bd2"
+      ],
+      "fen": "rn2kb1r/pp2pppp/2p2n2/q4b2/2BP4/2N2N2/PPPB1PPP/R2QK2R b KQkq - 3 7",
+      "baseline": {
+        "type": "cp",
+        "value": -49,
+        "bestmove": "e7e6"
+      },
+      "answers": [
+        {
+          "san": "e6",
+          "type": "cp",
+          "value": -54,
+          "bestmove": "e7e6",
+          "lossCp": 5
+        }
+      ]
+    },
+    {
+      "slug": "scandinavian-defense",
+      "line": "qd6",
+      "moves": [
+        "e4",
+        "d5",
+        "exd5",
+        "Qxd5",
+        "Nc3",
+        "Qd6",
+        "d4",
+        "Nf6",
+        "Nf3",
+        "c6",
+        "g3",
+        "Bf5",
+        "Bg2"
+      ],
+      "fen": "rn2kb1r/pp2pppp/2pq1n2/5b2/3P4/2N2NP1/PPP2PBP/R1BQK2R b KQkq - 2 7",
+      "baseline": {
+        "type": "cp",
+        "value": -49,
+        "bestmove": "h7h6"
+      },
+      "answers": [
+        {
+          "san": "e6",
+          "type": "cp",
+          "value": -67,
+          "bestmove": "e7e6",
+          "lossCp": 18
+        }
+      ]
+    },
+    {
+      "slug": "scandinavian-defense",
+      "line": "modern",
+      "moves": [
+        "e4",
+        "d5",
+        "exd5",
+        "Nf6",
+        "d4",
+        "Nxd5",
+        "Nf3",
+        "g6",
+        "Be2",
+        "Bg7",
+        "O-O",
+        "O-O",
+        "c4"
+      ],
+      "fen": "rnbq1rk1/ppp1ppbp/6p1/3n4/2PP4/5N2/PP2BPPP/RNBQ1RK1 b - - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": -74,
+        "bestmove": "d5b6"
+      },
+      "answers": [
+        {
+          "san": "Nb6",
+          "type": "cp",
+          "value": -73,
+          "bestmove": "d5b6",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "scotch-game",
+      "line": "classical",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "d4",
+        "exd4",
+        "Nxd4",
+        "Bc5",
+        "Be3",
+        "Qf6",
+        "c3",
+        "Nge7"
+      ],
+      "fen": "r1b1k2r/ppppnppp/2n2q2/2b5/3NP3/2P1B3/PP3PPP/RN1QKB1R w KQkq - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": 25,
+        "bestmove": "f1c4"
+      },
+      "answers": [
+        {
+          "san": "Bc4",
+          "type": "cp",
+          "value": 29,
+          "bestmove": "f1c4",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "scotch-game",
+      "line": "mieses",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "d4",
+        "exd4",
+        "Nxd4",
+        "Nf6",
+        "Nxc6",
+        "bxc6",
+        "e5",
+        "Qe7",
+        "Qe2",
+        "Nd5"
+      ],
+      "fen": "r1b1kb1r/p1ppqppp/2p5/3nP3/8/8/PPP1QPPP/RNB1KB1R w KQkq - 3 8",
+      "baseline": {
+        "type": "cp",
+        "value": 25,
+        "bestmove": "g2g3"
+      },
+      "answers": [
+        {
+          "san": "c4",
+          "type": "cp",
+          "value": 23,
+          "bestmove": "c2c4",
+          "lossCp": 2
+        }
+      ]
+    },
+    {
+      "slug": "scotch-game",
+      "line": "gambit",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "d4",
+        "exd4",
+        "Bc4",
+        "Nf6",
+        "e5",
+        "d5",
+        "Bb5",
+        "Ne4"
+      ],
+      "fen": "r1bqkb1r/ppp2ppp/2n5/1B1pP3/3pn3/5N2/PPP2PPP/RNBQK2R w KQkq - 2 7",
+      "baseline": {
+        "type": "cp",
+        "value": 14,
+        "bestmove": "f3d4"
+      },
+      "answers": [
+        {
+          "san": "O-O",
+          "type": "cp",
+          "value": -19,
+          "bestmove": "e1g1",
+          "lossCp": 33
+        }
+      ]
+    },
+    {
+      "slug": "sicilian-defense",
+      "line": "najdorf",
+      "moves": [
+        "e4",
+        "c5",
+        "Nf3",
+        "d6",
+        "d4",
+        "cxd4",
+        "Nxd4",
+        "Nf6",
+        "Nc3",
+        "a6",
+        "Be2",
+        "e5",
+        "Nb3"
+      ],
+      "fen": "rnbqkb1r/1p3ppp/p2p1n2/4p3/4P3/1NN5/PPP1BPPP/R1BQK2R b KQkq - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": -41,
+        "bestmove": "f8e7"
+      },
+      "answers": [
+        {
+          "san": "Be7",
+          "type": "cp",
+          "value": -34,
+          "bestmove": "f8e7",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "sicilian-defense",
+      "line": "alapin",
+      "moves": [
+        "e4",
+        "c5",
+        "c3",
+        "d5",
+        "exd5",
+        "Qxd5",
+        "d4",
+        "Nf6",
+        "Nf3",
+        "e6",
+        "Bd3",
+        "Nc6",
+        "O-O"
+      ],
+      "fen": "r1b1kb1r/pp3ppp/2n1pn2/2pq4/3P4/2PB1N2/PP3PPP/RNBQ1RK1 b kq - 3 7",
+      "baseline": {
+        "type": "cp",
+        "value": -39,
+        "bestmove": "c5d4"
+      },
+      "answers": [
+        {
+          "san": "Be7",
+          "type": "cp",
+          "value": -40,
+          "bestmove": "f8e7",
+          "lossCp": 1
+        }
+      ]
+    },
+    {
+      "slug": "sicilian-defense",
+      "line": "closed",
+      "moves": [
+        "e4",
+        "c5",
+        "Nc3",
+        "Nc6",
+        "g3",
+        "g6",
+        "Bg2",
+        "Bg7",
+        "d3",
+        "d6",
+        "f4",
+        "e6",
+        "Nf3"
+      ],
+      "fen": "r1bqk1nr/pp3pbp/2npp1p1/2p5/4PP2/2NP1NP1/PPP3BP/R1BQK2R b KQkq - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": 36,
+        "bestmove": "g8e7"
+      },
+      "answers": [
+        {
+          "san": "Nge7",
+          "type": "cp",
+          "value": 27,
+          "bestmove": "g8e7",
+          "lossCp": 9
+        }
+      ]
+    },
+    {
+      "slug": "slav-defense",
+      "line": "main",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "c6",
+        "Nf3",
+        "Nf6",
+        "Nc3",
+        "dxc4",
+        "a4",
+        "Bf5",
+        "e3",
+        "e6",
+        "Bxc4"
+      ],
+      "fen": "rn1qkb1r/pp3ppp/2p1pn2/5b2/P1BP4/2N1PN2/1P3PPP/R1BQK2R b KQkq - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": -39,
+        "bestmove": "f8b4"
+      },
+      "answers": [
+        {
+          "san": "Bb4",
+          "type": "cp",
+          "value": -35,
+          "bestmove": "f8b4",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "slav-defense",
+      "line": "exchange",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "c6",
+        "cxd5",
+        "cxd5",
+        "Nc3",
+        "Nf6",
+        "Nf3",
+        "Nc6",
+        "Bf4",
+        "Bf5",
+        "e3"
+      ],
+      "fen": "r2qkb1r/pp2pppp/2n2n2/3p1b2/3P1B2/2N1PN2/PP3PPP/R2QKB1R b KQkq - 0 7",
+      "baseline": {
+        "type": "cp",
+        "value": -19,
+        "bestmove": "e7e6"
+      },
+      "answers": [
+        {
+          "san": "e6",
+          "type": "cp",
+          "value": -15,
+          "bestmove": "e7e6",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "slav-defense",
+      "line": "quiet",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "c6",
+        "Nf3",
+        "Nf6",
+        "e3",
+        "Bf5",
+        "Bd3",
+        "Bxd3",
+        "Qxd3",
+        "e6",
+        "O-O"
+      ],
+      "fen": "rn1qkb1r/pp3ppp/2p1pn2/3p4/2PP4/3QPN2/PP3PPP/RNB2RK1 b kq - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": -24,
+        "bestmove": "b8d7"
+      },
+      "answers": [
+        {
+          "san": "Nbd7",
+          "type": "cp",
+          "value": -22,
+          "bestmove": "b8d7",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "vienna-game",
+      "line": "gambit",
+      "moves": [
+        "e4",
+        "e5",
+        "Nc3",
+        "Nf6",
+        "f4",
+        "d5",
+        "fxe5",
+        "Nxe4",
+        "Nf3",
+        "Be7",
+        "d4",
+        "O-O"
+      ],
+      "fen": "rnbq1rk1/ppp1bppp/8/3pP3/3Pn3/2N2N2/PPP3PP/R1BQKB1R w KQ - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": 11,
+        "bestmove": "f1d3"
+      },
+      "answers": [
+        {
+          "san": "Bd3",
+          "type": "cp",
+          "value": 11,
+          "bestmove": "f1d3",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "vienna-game",
+      "line": "fianchetto",
+      "moves": [
+        "e4",
+        "e5",
+        "Nc3",
+        "Nf6",
+        "g3",
+        "d5",
+        "exd5",
+        "Nxd5",
+        "Bg2",
+        "Nxc3",
+        "bxc3",
+        "Bd6"
+      ],
+      "fen": "rnbqk2r/ppp2ppp/3b4/4p3/8/2P3P1/P1PP1PBP/R1BQK1NR w KQkq - 1 7",
+      "baseline": {
+        "type": "cp",
+        "value": -15,
+        "bestmove": "d2d3"
+      },
+      "answers": [
+        {
+          "san": "Nf3",
+          "type": "cp",
+          "value": -2,
+          "bestmove": "g1f3",
+          "lossCp": 0
+        }
+      ]
+    },
+    {
+      "slug": "vienna-game",
+      "line": "max-lange",
+      "moves": [
+        "e4",
+        "e5",
+        "Nc3",
+        "Nc6",
+        "Bc4",
+        "Nf6",
+        "d3",
+        "Bc5",
+        "Nf3",
+        "d6",
+        "O-O",
+        "O-O"
+      ],
+      "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 2 7",
+      "baseline": {
+        "type": "cp",
+        "value": 18,
+        "bestmove": "c3a4"
+      },
+      "answers": [
+        {
+          "san": "Bg5",
+          "type": "cp",
+          "value": 15,
+          "bestmove": "c1g5",
+          "lossCp": 3
+        }
+      ]
+    }
+  ]
+}

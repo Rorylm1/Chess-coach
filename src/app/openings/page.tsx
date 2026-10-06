@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getCourse } from "@/content/opening-lessons";
+import { british } from "@/lib/openings/lessons";
 import { Reveal } from "@/components/Reveal";
 import { CATALOG, type OpeningSummary } from "@/content/openings";
 
@@ -70,10 +72,10 @@ function FeaturedCard({ opening }: { opening: OpeningSummary }) {
           You play {SIDE_LABEL[opening.learnerSide]}
         </span>
       </div>
-      <h2>{opening.name}</h2>
-      <p>{opening.blurb}</p>
+      <h2>{british(opening.name)}</h2>
+      <p>{british(opening.blurb)}</p>
       <span className="ocard-cta">
-        Start the journey
+        Explore {getCourse(opening.slug)?.lessons.length ?? 3} lines
         <span className="arrow" aria-hidden="true">
           →
         </span>
@@ -94,8 +96,8 @@ function SoonCard({ opening }: { opening: OpeningSummary }) {
           {SIDE_LABEL[opening.learnerSide]}
         </span>
       </div>
-      <h2>{opening.name}</h2>
-      <p>{opening.blurb}</p>
+      <h2>{british(opening.name)}</h2>
+      <p>{british(opening.blurb)}</p>
       <span className="ocard-soon-tag">Soon</span>
     </li>
   );

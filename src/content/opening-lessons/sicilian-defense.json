@@ -1,0 +1,134 @@
+[
+  {
+    "id": "najdorf",
+    "version": 1,
+    "name": "Open Sicilian · Najdorf",
+    "idea": "Keep a flexible centre and prepare queenside counterplay.",
+    "moves": [
+      "e4",
+      "c5",
+      "Nf3",
+      "d6",
+      "d4",
+      "cxd4",
+      "Nxd4",
+      "Nf6",
+      "Nc3",
+      "a6",
+      "Be2",
+      "e5",
+      "Nb3"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Contest d4 with a wing pawn and create an unbalanced position.",
+      "White develops before opening the centre.",
+      "Control e5 and free the c8-bishop.",
+      "White challenges the centre directly.",
+      "Exchange your wing pawn for a central pawn.",
+      "White recaptures with an active knight.",
+      "Develop and attack e4.",
+      "White defends e4 with a knight.",
+      "Prevent Nb5 and keep your central options open.",
+      "White prepares to castle.",
+      "Gain space and attack the d4-knight.",
+      "The knight retreats. Develop the f8-bishop so your king can castle."
+    ],
+    "challenge": {
+      "prompt": "Develop the dark-squared bishop to prepare castling.",
+      "hint": "Develop the dark-squared bishop to prepare castling.",
+      "answers": [
+        "Be7"
+      ],
+      "explanation": "Keep a flexible centre and prepare queenside counterplay."
+    }
+  },
+  {
+    "id": "alapin",
+    "version": 1,
+    "name": "Alapin · …d5",
+    "idea": "Challenge White’s intended pawn centre before it settles.",
+    "moves": [
+      "e4",
+      "c5",
+      "c3",
+      "d5",
+      "exd5",
+      "Qxd5",
+      "d4",
+      "Nf6",
+      "Nf3",
+      "e6",
+      "Bd3",
+      "Nc6",
+      "O-O"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Contest d4 with a wing pawn and create an unbalanced position.",
+      "White prepares d4, but occupies the knight’s natural square.",
+      "Strike in the centre immediately.",
+      "White exchanges the e-pawn.",
+      "Recover the pawn with the queen; Nc3 is not yet available.",
+      "White builds the intended centre.",
+      "Develop and watch e4 and d5.",
+      "White develops the king’s knight.",
+      "Support the centre and free your bishop.",
+      "White prepares to castle.",
+      "Develop with pressure on d4.",
+      "White secures the king. Your own bishop should come out next."
+    ],
+    "challenge": {
+      "prompt": "Develop your dark-squared bishop and prepare king safety.",
+      "hint": "Develop your dark-squared bishop and prepare king safety.",
+      "answers": [
+        "Be7"
+      ],
+      "explanation": "Challenge White’s intended pawn centre before it settles."
+    }
+  },
+  {
+    "id": "closed",
+    "version": 1,
+    "name": "Closed Sicilian",
+    "idea": "Use a fianchetto and central control against White’s slower build-up.",
+    "moves": [
+      "e4",
+      "c5",
+      "Nc3",
+      "Nc6",
+      "g3",
+      "g6",
+      "Bg2",
+      "Bg7",
+      "d3",
+      "d6",
+      "f4",
+      "e6",
+      "Nf3"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Contest d4 with a wing pawn and create an unbalanced position.",
+      "White develops without an immediate d4 break.",
+      "Increase control over d4.",
+      "White prepares a long-diagonal bishop.",
+      "Prepare your own fianchetto.",
+      "White’s bishop takes the diagonal.",
+      "Aim your bishop towards the centre.",
+      "White keeps the centre closed.",
+      "Support c5 and keep e5 under control.",
+      "White gains kingside space.",
+      "Control d5 and prepare flexible development.",
+      "White develops towards the centre. Put your king’s knight on e7 without blocking the bishop."
+    ],
+    "challenge": {
+      "prompt": "Develop the g8-knight without obstructing your g7-bishop.",
+      "hint": "Develop the g8-knight without obstructing your g7-bishop.",
+      "answers": [
+        "Nge7"
+      ],
+      "explanation": "Use a fianchetto and central control against White’s slower build-up."
+    }
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": "rubinstein",
+    "version": 1,
+    "name": "Rubinstein · e3",
+    "idea": "Combine pressure on the centre with quick development.",
+    "moves": [
+      "d4",
+      "Nf6",
+      "c4",
+      "e6",
+      "Nc3",
+      "Bb4",
+      "e3",
+      "O-O",
+      "Bd3",
+      "d5",
+      "Nf3",
+      "c5",
+      "O-O"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Control e4 with a knight.",
+      "White expands the centre.",
+      "Prepare your bishop’s development.",
+      "White supports an e4 advance.",
+      "Pin the knight and make e4 harder to achieve.",
+      "White supports d4 and opens the f1-bishop’s diagonal.",
+      "Secure your king.",
+      "White develops actively.",
+      "Challenge the centre with a pawn.",
+      "White develops the king’s knight.",
+      "Increase pressure on d4.",
+      "White castles. Develop your b8-knight to add another attacker to d4."
+    ],
+    "challenge": {
+      "prompt": "Develop your queenside knight to increase pressure on d4.",
+      "hint": "Develop your queenside knight to increase pressure on d4.",
+      "answers": [
+        "Nc6"
+      ],
+      "explanation": "Combine pressure on the centre with quick development."
+    }
+  },
+  {
+    "id": "classical",
+    "version": 1,
+    "name": "Classical · Qc2",
+    "idea": "Trade the bishop when useful, then challenge White’s centre.",
+    "moves": [
+      "d4",
+      "Nf6",
+      "c4",
+      "e6",
+      "Nc3",
+      "Bb4",
+      "Qc2",
+      "O-O",
+      "a3",
+      "Bxc3+",
+      "Qxc3",
+      "d5",
+      "Nf3"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Control e4 with a knight.",
+      "White expands the centre.",
+      "Prepare your bishop’s development.",
+      "White supports an e4 advance.",
+      "Pin the knight and make e4 harder to achieve.",
+      "White prepares to recapture on c3 without doubled pawns.",
+      "Secure your king.",
+      "White challenges your bishop.",
+      "Exchange with check.",
+      "White recaptures with the queen and keeps the bishop pair.",
+      "Challenge the centre before White consolidates.",
+      "White develops the knight. Add pressure to d4 with your c-pawn."
+    ],
+    "challenge": {
+      "prompt": "Challenge d4 with the c-pawn.",
+      "hint": "Challenge d4 with the c-pawn.",
+      "answers": [
+        "c5"
+      ],
+      "explanation": "Trade the bishop when useful, then challenge White’s centre."
+    }
+  },
+  {
+    "id": "samisch",
+    "version": 1,
+    "name": "Sämisch · a3",
+    "idea": "Use White’s doubled c-pawns as targets for counterplay.",
+    "moves": [
+      "d4",
+      "Nf6",
+      "c4",
+      "e6",
+      "Nc3",
+      "Bb4",
+      "a3",
+      "Bxc3+",
+      "bxc3",
+      "c5",
+      "e3",
+      "Nc6",
+      "Bd3"
+    ],
+    "notes": [
+      "White takes central space.",
+      "Control e4 with a knight.",
+      "White expands the centre.",
+      "Prepare your bishop’s development.",
+      "White supports an e4 advance.",
+      "Pin the knight and make e4 harder to achieve.",
+      "White asks your bishop to decide immediately.",
+      "Exchange and damage the pawn structure.",
+      "White gains the bishop pair but accepts doubled pawns.",
+      "Challenge d4 before White advances e4.",
+      "White supports the centre.",
+      "Develop and increase the central pressure.",
+      "White develops towards h7. Secure your king before continuing the attack on the centre."
+    ],
+    "challenge": {
+      "prompt": "Castle kingside to secure your king.",
+      "hint": "Castle kingside to secure your king.",
+      "answers": [
+        "O-O"
+      ],
+      "explanation": "Use White’s doubled c-pawns as targets for counterplay."
+    }
+  }
+]
