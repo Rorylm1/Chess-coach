@@ -21,11 +21,15 @@
 .historyDetails > div { padding-top: 6px; }
 .historyDetails a { display: inline-block; font-size: 10px; color: var(--cyan); margin-right: 12px; padding: 8px 0; text-decoration: underline; text-underline-offset: 3px; }
 .historyText .credit { font-size: 10px; }
-.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 18px; border-top: 1px solid var(--hairline-2); border-bottom: 1px solid var(--hairline-2); margin-bottom: 24px; }
-.modeSwitch { display: flex; gap: 24px; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 18px; border-top: 1px solid var(--hairline-2); border-bottom: 1px solid var(--hairline-2); margin-bottom: 24px; padding: 8px 0; }
+.modeSwitch { display: flex; flex-shrink: 0; gap: 24px; }
 .linePicker { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.linePicker label { font: 11px var(--font-mono), monospace; color: var(--ink-soft); }
-.linePicker select { background: var(--panel); color: var(--ink); border: 1px solid var(--hairline-2); border-radius: 3px; min-height: 42px; padding: 8px 30px 8px 12px; font: 14px var(--font-display), sans-serif; max-width: 260px; }
+.lineLabel { font: 11px var(--font-mono), monospace; color: var(--ink-soft); }
+.lineOptions { display: flex; flex-wrap: wrap; gap: 8px; }
+.lineOptions button { background: var(--panel); color: var(--ink-soft); border: 1px solid var(--hairline-2); border-radius: 4px; min-height: 44px; padding: 8px 12px; font: 13px var(--font-display), sans-serif; text-align: left; cursor: pointer; }
+.lineOptions button:hover { color: var(--ink); border-color: var(--cyan); }
+.lineOptions button[aria-pressed="true"] { color: var(--cyan); border-color: var(--cyan); background: #142b2d; }
+.lineOptions button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
 .backToLesson { background: none; border: 0; color: var(--ink-soft); cursor: pointer; min-height: 44px; font-size: 12px; }
 .extras { margin-top: 26px; border-top: 1px solid var(--hairline-2); }
 .extras > summary, .moveDetails > summary, .practiceOptions > summary { color: var(--ink-soft); font-size: 12px; cursor: pointer; padding: 12px 0; min-height: 44px; }
@@ -130,8 +134,8 @@
   .coach h2 { font-size: 21px; margin: 6px 0 8px; }
   .coach p { font-size: 12px; margin-bottom: 12px; }
   .coach :global(.btn) { padding: 10px 14px; min-height: 40px; }
-  .linePicker { flex: 1; min-width: 195px; }
-  .linePicker select { max-width: 100%; }
+  .linePicker { width: 100%; align-items: flex-start; }
+  .lineLabel { padding-top: 15px; }
   .gameIntro h2 { font-size: 36px; }
 }
 @media (prefers-reduced-motion: reduce) {

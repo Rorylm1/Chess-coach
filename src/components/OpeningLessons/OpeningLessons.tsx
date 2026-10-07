@@ -71,19 +71,24 @@ export function OpeningLessons({
         {mode !== "game" ? (
           <>
             <div className={s.linePicker}>
-              <label htmlFor="lesson-line">Line</label>
-              <select
-                id="lesson-line"
-                value={lineId}
-                onChange={(event) => selectLine(event.target.value)}
+              <span className={s.lineLabel}>Line</span>
+              <div
+                className={s.lineOptions}
+                role="group"
+                aria-label="Opening lines"
               >
                 {course.lessons.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-pressed={lineId === item.id}
+                    onClick={() => selectLine(item.id)}
+                  >
+                    {british(item.name)}
                     {progress.progress[progressId(item)]?.clean ? " ✓" : ""}
-                  </option>
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
             <div className={s.modeSwitch} role="group" aria-label="Lesson mode">
               <button
@@ -467,9 +472,17 @@ function LessonWorkspace({
               </div>
             </Reveal>
             {atEnd && (
-              <button className="btn btn-primary" onClick={onPractice}>
-                Now play it yourself →
-              </button>
+              <>
+                <section className="jpanel accent" aria-label="Signature trap">
+                  <span className="jpanel-label">
+                    Signature trap · {british(opening.panels.trap.name)}
+                  </span>
+                  <p>{british(opening.panels.trap.text)}</p>
+                </section>
+                <button className="btn btn-primary" onClick={onPractice}>
+                  Now play it yourself →
+                </button>
+              </>
             )}
           </>
         ) : (
